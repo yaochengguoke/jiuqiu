@@ -540,12 +540,20 @@ class ContentGenerator:
 
         # 4. 政策机遇
         lines.append("### 政策机遇与国家战略")
-        lines.append(f"在'十四五'规划和2035远景目标纲要的战略框架下，"
-                    f"{tech_name}被列为重点发展方向。")
-        # 根据项目行业动态选择政策引用
+        # 使用行业领域名而非工艺名
         _innovations = dp.tech_pool.get("innovations", [])
         _brief = dp.tech_pool.get("project_brief", "")
-        all_text = (_brief + market_data + str(_innovations)).lower()
+        all_text_domain = (_brief + market_data + str(_innovations)).lower()
+        industry_name = tech_name
+        if "钙钛矿" in all_text_domain:
+            industry_name = "钙钛矿光伏材料"
+        elif "液冷" in all_text_domain or "数据中心" in all_text_domain:
+            industry_name = "数据中心液冷技术"
+        elif "半导体" in all_text_domain or "GaN" in all_text_domain:
+            industry_name = "第三代半导体材料"
+        lines.append(f"在《'十四五'规划和2035远景目标纲要》的战略框架下，"
+                    f"{industry_name}被列为国家重点发展方向。")
+        all_text = all_text_domain  # 恢复变量名供后续使用
         policy_map = {
             "半导体": "工信部等七部门《关于推动能源电子产业发展的指导意见》明确将第三代半导体列为重点突破方向。",
             "光伏": "国家能源局《'十四五'可再生能源发展规划》将钙钛矿光伏技术列为前沿突破方向，科技部《'十四五'能源领域科技创新规划》提出2030年实现钙钛矿电池商业化。",
