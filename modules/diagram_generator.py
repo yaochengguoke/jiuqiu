@@ -73,6 +73,11 @@ def _setup_chinese_font():
     plt.rcParams['axes.unicode_minus'] = False
 
 _setup_chinese_font()
+_HAS_CHINESE = _CHINESE_FONT_PATH is not None
+
+def T(cn, en):
+    """中文不可用时自动切换英文标签"""
+    return cn if _HAS_CHINESE else en
 
 
 @dataclass
