@@ -1,0 +1,194 @@
+{
+  "meta": {
+    "competition": "节能减排本科组",
+    "version": "1.0.0",
+    "typical_pages": 55,
+    "typical_words": 14000,
+    "visual_style": "fresh_green",
+    "cover_style": "赛事风高端封面 - 清新环保绿"
+  },
+  "L1_skeleton": {
+    "chapters": [
+      {
+        "id": "executive_summary",
+        "title": "执行摘要",
+        "page_range": "2-3页",
+        "word_count_range": "600-800字",
+        "ratio": 0.05,
+        "order": 1,
+        "required_elements": [
+          "节能减排方案一句话定位",
+          "核心技术指标（能耗降低率/碳排放减少量）",
+          "经济效益与社会效益",
+          "团队核心竞争力",
+          "已取得的验证成果"
+        ],
+        "paragraph_structure": [
+          "方案定位与双碳价值",
+          "核心技术突破与节能指标量化",
+          "经济效益与环境效益",
+          "团队实力与验证结果"
+        ],
+        "rhetoric_tags": ["精炼", "数据驱动", "双碳战略"]
+      },
+      {
+        "id": "background",
+        "title": "项目背景与行业能耗痛点",
+        "page_range": "10-12页",
+        "word_count_range": "2500-3500字",
+        "ratio": 0.18,
+        "order": 2,
+        "required_elements": [
+          "行业能耗数据（权威机构统计）",
+          "当前技术方案的能耗瓶颈",
+          "国家双碳政策导向",
+          "行业节能减排的紧迫性"
+        ],
+        "paragraph_structure": [
+          "行业宏观背景与能耗现状",
+          "权威数据佐证（单位产值能耗/碳排放）",
+          "传统方案技术瓶颈分析",
+          "双碳政策与节能减排必要性",
+          "技术革新方向与机遇"
+        ],
+        "rhetoric_tags": ["宏大叙事", "数据驱动", "双碳战略", "政策导向"],
+        "requires_news_image": true,
+        "image_spec": "20:10横屏节能减排新闻佐证图"
+      },
+      {
+        "id": "technology",
+        "title": "核心技术原理与节能创新",
+        "page_range": "14-18页",
+        "word_count_range": "3500-4500字",
+        "ratio": 0.26,
+        "order": 3,
+        "required_elements": [
+          "节能技术方案名称",
+          "技术原理与节能机制",
+          "核心能效参数（至少3个）",
+          "与传统方案对比（节能率/降碳量）",
+          "技术壁垒与专利"
+        ],
+        "paragraph_structure": [
+          "节能技术方案总览",
+          "核心技术原理详述",
+          "关键性能参数与能效指标",
+          "与传统方案多维度对比",
+          "技术壁垒与知识产权"
+        ],
+        "rhetoric_tags": ["专业硬核", "数据密集", "节能量化", "对比突出"],
+        "requires_tech_diagrams": true,
+        "diagram_types": [
+          "节能系统架构总图",
+          "能效流向图",
+          "工艺优化对比流程图",
+          "能效参数雷达图"
+        ]
+      },
+      {
+        "id": "product_design",
+        "title": "产品设计与应用场景",
+        "page_range": "6-8页",
+        "word_count_range": "1800-2400字",
+        "ratio": 0.13,
+        "order": 4,
+        "required_elements": [
+          "产品/系统规格",
+          "典型应用场景（工业/建筑/交通等）",
+          "节能效果实测数据",
+          "用户反馈"
+        ],
+        "paragraph_structure": [
+          "产品体系总览",
+          "核心产品规格与功能",
+          "多场景应用方案",
+          "实测节能效果与用户验证"
+        ]
+      },
+      {
+        "id": "market_analysis",
+        "title": "市场分析与推广模式",
+        "page_range": "8-10页",
+        "word_count_range": "2200-3000字",
+        "ratio": 0.15,
+        "order": 5,
+        "required_elements": [
+          "节能减排市场规模",
+          "推广模式设计",
+          "政策补贴机制",
+          "碳交易价值分析"
+        ],
+        "paragraph_structure": [
+          "节能市场总览与政策机遇",
+          "目标市场细分与客户画像",
+          "推广模式与盈利路径",
+          "碳交易与绿色金融价值"
+        ],
+        "rhetoric_tags": ["逻辑清晰", "政策契合", "绿色金融"],
+        "requires_business_diagrams": true
+      },
+      {
+        "id": "team_intro",
+        "title": "团队介绍与核心优势",
+        "page_range": "4-6页",
+        "word_count_range": "1200-1800字",
+        "ratio": 0.10,
+        "order": 6,
+        "required_elements": [
+          "核心成员介绍（含节能/环保方向背景）",
+          "指导老师资历",
+          "团队过往成果"
+        ],
+        "paragraph_structure": [
+          "团队总体画像",
+          "核心成员逐一介绍",
+          "指导老师团队",
+          "过往成果与获奖"
+        ]
+      },
+      {
+        "id": "future_plan",
+        "title": "未来规划与社会价值",
+        "page_range": "4-6页",
+        "word_count_range": "1000-1500字",
+        "ratio": 0.13,
+        "order": 7,
+        "required_elements": [
+          "技术迭代路线",
+          "推广计划",
+          "碳减排量化目标",
+          "国家双碳战略响应"
+        ],
+        "paragraph_structure": [
+          "技术迭代与产品升级路线",
+          "市场推广与规模化计划",
+          "碳减排贡献量化预测",
+          "双碳战略响应与愿景"
+        ]
+      }
+    ]
+  },
+  "L2_rhetoric": {
+    "rhetoric_lib_mapping": {
+      "background": "rhetoric_background.json",
+      "technology": "rhetoric_technology.json",
+      "market_analysis": "rhetoric_market.json",
+      "team_intro": "rhetoric_team.json",
+      "executive_summary": "rhetoric_executive.json"
+    }
+  },
+  "L3_visual": {
+    "default_style": "fresh_green",
+    "available_styles": ["fresh_green", "deep_blue", "academic_red"],
+    "style_file_mapping": {
+      "fresh_green": "visual_fresh_green.json"
+    }
+  },
+  "L4_graphic": {
+    "component_library": {
+      "arch_diagrams": "arch_diagram_templates.json",
+      "flow_charts": "flow_chart_templates.json",
+      "chart_styles": "chart_styles.json"
+    }
+  }
+}

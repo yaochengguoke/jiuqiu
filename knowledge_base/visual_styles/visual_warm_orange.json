@@ -1,0 +1,55 @@
+{
+  "name": "活力橙",
+  "id": "warm_orange",
+  "description": "温暖活力的橙金配色，适用于创业类、创意类赛事",
+  "colors": {
+    "primary": "#E65100",
+    "primary_light": "#FF9800",
+    "primary_gradient": "linear-gradient(135deg, #E65100, #FF9800)",
+    "secondary": "#F57C00",
+    "accent": "#2979FF",
+    "background": "#FFF8F0",
+    "text_primary": "#2D1A00",
+    "text_secondary": "#5C3A10",
+    "table_header_bg": "#E65100",
+    "table_header_text": "#FFFFFF",
+    "border_light": "#FFE0B2",
+    "success": "#2E7D32",
+    "warning": "#F57C00",
+    "danger": "#C62828"
+  },
+  "typography": {
+    "cover_title": {"font": "思源黑体 Bold", "size": "58pt", "color": "#FFFFFF"},
+    "cover_subtitle": {"font": "思源黑体 Light", "size": "22pt", "color": "#FFE0B2"},
+    "chapter_title": {"font": "黑体", "size": "二号(22pt)", "align": "center", "color": "#E65100"},
+    "section_title": {"font": "黑体", "size": "三号(16pt)", "align": "left", "color": "#F57C00"},
+    "subsection_title": {"font": "黑体", "size": "四号(14pt)", "align": "left", "color": "#FF9800"},
+    "body_text": {"font": "微软雅黑", "size": "小四(12pt)", "line_height": 1.5, "color": "#2D1A00"},
+    "body_text_english": {"font": "Arial", "size": "11pt"},
+    "caption": {"font": "微软雅黑", "size": "9pt", "color": "#8C6A3A"},
+    "header_footer": {"font": "微软雅黑", "size": "9pt", "color": "#BFAA80"}
+  },
+  "layout": {
+    "page_margin_top": "3.2cm", "page_margin_bottom": "3.0cm",
+    "page_margin_left": "3.2cm", "page_margin_right": "3.2cm",
+    "header_content": "{project_name} | {chapter_name}",
+    "footer_content": "{page_number}"
+  },
+  "table_style": {
+    "type": "暖色三线表", "header_bg": "#E65100", "header_text": "#FFFFFF",
+    "body_font_size": "10pt", "border_style": "1.5pt solid orange",
+    "alternate_row_bg": "#FFF3E0"
+  },
+  "chart_style": {
+    "default_type": "warm_flat",
+    "color_palette": ["#E65100", "#FF9800", "#2979FF", "#FFC107", "#4CAF50"],
+    "font_family": "Microsoft YaHei", "grid_style": "light_dashed",
+    "legend_position": "bottom", "title_font_size": 14
+  },
+  "image_specs": {
+    "background_news_ratio": "20:10", "tech_diagram_style": "warm_orange_flat",
+    "cover_logo_position": "center_top", "min_dpi": 300,
+    "figure_numbering": "图{chapter}-{index}"
+  },
+  "css_template": "warm_orange_style.css"
+}

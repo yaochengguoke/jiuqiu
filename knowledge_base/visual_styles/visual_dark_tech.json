@@ -1,0 +1,65 @@
+{
+  "name": "科技炫酷黑",
+  "id": "dark_tech",
+  "description": "极简暗黑+霓虹蓝点缀，适用于挑战杯、黑客松等硬核科技赛事",
+  "colors": {
+    "primary": "#0B0E14",
+    "primary_light": "#00D4FF",
+    "primary_gradient": "linear-gradient(135deg, #0B0E14, #1A2332)",
+    "secondary": "#252A34",
+    "accent": "#FF007F",
+    "background": "#FAFAFA",
+    "text_primary": "#1A1D24",
+    "text_secondary": "#4A5568",
+    "table_header_bg": "#0B0E14",
+    "table_header_text": "#00D4FF",
+    "border_light": "#E2E8F0",
+    "success": "#00E676",
+    "warning": "#FF9100",
+    "danger": "#FF1744"
+  },
+  "typography": {
+    "cover_title": {"font": "思源黑体 Heavy", "size": "56pt", "color": "#00D4FF"},
+    "cover_subtitle": {"font": "思源黑体 Light", "size": "20pt", "color": "#8899AA"},
+    "chapter_title": {"font": "思源黑体 Bold", "size": "二号(22pt)", "align": "center", "color": "#0B0E14"},
+    "section_title": {"font": "思源黑体 Medium", "size": "三号(16pt)", "align": "left", "color": "#1A2332"},
+    "subsection_title": {"font": "思源黑体 Medium", "size": "四号(14pt)", "align": "left", "color": "#00D4FF"},
+    "body_text": {"font": "微软雅黑", "size": "小四(12pt)", "line_height": 1.6, "color": "#1A1D24"},
+    "body_text_english": {"font": "SF Mono", "size": "11pt"},
+    "caption": {"font": "微软雅黑", "size": "9pt", "color": "#8899AA"},
+    "header_footer": {"font": "微软雅黑", "size": "8pt", "color": "#A0AEC0"}
+  },
+  "layout": {
+    "page_margin_top": "3.0cm",
+    "page_margin_bottom": "2.8cm",
+    "page_margin_left": "3.0cm",
+    "page_margin_right": "3.0cm",
+    "header_content": "{project_name}",
+    "footer_content": "- {page_number} -"
+  },
+  "table_style": {
+    "type": "极简无边框表",
+    "header_bg": "#0B0E14",
+    "header_text": "#00D4FF",
+    "body_font_size": "10pt",
+    "border_style": "none, 1pt header-bottom solid",
+    "alternate_row_bg": "#F0F4F8"
+  },
+  "chart_style": {
+    "default_type": "dark_minimal",
+    "color_palette": ["#00D4FF", "#FF007F", "#7000FF", "#00E676", "#FF9100"],
+    "font_family": "Microsoft YaHei",
+    "grid_style": "none",
+    "legend_position": "right",
+    "title_font_size": 14,
+    "bg_dark": true
+  },
+  "image_specs": {
+    "background_news_ratio": "20:10",
+    "tech_diagram_style": "dark_tech_neon",
+    "cover_logo_position": "center",
+    "min_dpi": 300,
+    "figure_numbering": "Fig.{chapter}.{index}"
+  },
+  "css_template": "dark_tech_style.css"
+}

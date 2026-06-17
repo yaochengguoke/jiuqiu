@@ -1,0 +1,63 @@
+{
+  "description": "流程图模板库 - 工艺制备流程、业务流程、数据处理流程",
+  "templates": [
+    {
+      "id": "process_8step",
+      "name": "8步工艺制备流程",
+      "steps": 8,
+      "step_shape": "rounded_rect",
+      "layout": "horizontal_flow",
+      "arrow_type": "solid_right",
+      "typical_steps": [
+        "原料准备", "预处理", "核心工艺1", "核心工艺2",
+        "质量检测", "后处理", "封装测试", "成品出库"
+      ]
+    },
+    {
+      "id": "decision_tree",
+      "name": "决策分支流程",
+      "steps": "variable",
+      "node_types": ["process(矩形)", "decision(菱形)", "start_end(椭圆)"],
+      "layout": "top_down_tree",
+      "typical_use": "算法流程图、故障诊断流程"
+    },
+    {
+      "id": "data_pipeline",
+      "name": "数据处理流水线",
+      "steps": 5,
+      "layout": "left_to_right_pipeline",
+      "stages": [
+        {"name": "数据采集", "icon": "sensor"},
+        {"name": "数据清洗", "icon": "filter"},
+        {"name": "特征工程", "icon": "transform"},
+        {"name": "模型推理", "icon": "brain"},
+        {"name": "结果输出", "icon": "output"}
+      ]
+    },
+    {
+      "id": "business_flow",
+      "name": "商业模式流程图",
+      "steps": "variable",
+      "layout": "circular_flow",
+      "nodes": ["客户需求", "产品研发", "生产制造", "销售交付", "售后服务"],
+      "loop_back": true,
+      "typical_use": "商业闭环展示、价值流向图"
+    },
+    {
+      "id": "timeline_roadmap",
+      "name": "技术路线时间轴",
+      "structure": "horizontal_timeline",
+      "milestones": 5,
+      "time_span": "未来3-5年",
+      "typical_labels": ["2025", "2026", "2027", "2028", "2029"],
+      "typical_use": "产品迭代路线图、技术发展路线"
+    }
+  ],
+  "shape_definitions": {
+    "process_box": {"shape": "rectangle", "rx": 4, "fill": "#E3F2FD", "stroke": "#1565C0"},
+    "decision_diamond": {"shape": "diamond", "fill": "#FFF3E0", "stroke": "#E65100"},
+    "start_end": {"shape": "ellipse", "fill": "#E8F5E9", "stroke": "#2E7D32"},
+    "data_io": {"shape": "parallelogram", "fill": "#F3E5F5", "stroke": "#7B1FA2"},
+    "connector": {"stroke": "#546E7A", "stroke_width": 2, "arrow_end": true}
+  }
+}

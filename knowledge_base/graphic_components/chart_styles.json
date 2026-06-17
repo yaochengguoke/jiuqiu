@@ -1,0 +1,81 @@
+{
+  "description": "数据图表样式库 - 饼图、柱状图、折线图、雷达图标准样式",
+  "chart_types": {
+    "pie_chart": {
+      "name": "饼图/环形图",
+      "typical_use": ["营收占比", "市场份额", "成本结构"],
+      "style": {
+        "type": "donut",
+        "inner_radius": 0.5,
+        "label_format": "{label}: {percent}%",
+        "explode_slice": 0,
+        "shadow": false
+      }
+    },
+    "bar_chart": {
+      "name": "柱状图/条形图",
+      "typical_use": ["市场对比", "性能比较", "年度数据"],
+      "style": {
+        "type": "grouped",
+        "bar_width": 0.6,
+        "value_labels": true,
+        "grid_axis": "y",
+        "rounded_corners": true
+      }
+    },
+    "line_chart": {
+      "name": "折线图/趋势图",
+      "typical_use": ["市场规模预测", "营收增长曲线", "性能趋势"],
+      "style": {
+        "line_width": 2.5,
+        "marker_size": 6,
+        "fill_area": true,
+        "fill_opacity": 0.1,
+        "smooth": true
+      }
+    },
+    "radar_chart": {
+      "name": "雷达图",
+      "typical_use": ["技术参数对比", "综合能力评估"],
+      "style": {
+        "fill_opacity": 0.2,
+        "grid_lines": 5,
+        "max_value": 100,
+        "axis_label_offset": 10
+      }
+    },
+    "waterfall_chart": {
+      "name": "瀑布图",
+      "typical_use": ["融资用途拆解", "成本分解"],
+      "style": {
+        "increase_color": "#4CAF50",
+        "decrease_color": "#F44336",
+        "total_color": "#2196F3",
+        "connector_line": true
+      }
+    },
+    "gauge_chart": {
+      "name": "仪表盘",
+      "typical_use": ["关键指标展示", "完成度"],
+      "style": {
+        "min": 0,
+        "max": 100,
+        "color_zones": [
+          {"range": [0, 50], "color": "#F44336"},
+          {"range": [50, 75], "color": "#FF9800"},
+          {"range": [75, 100], "color": "#4CAF50"}
+        ]
+      }
+    }
+  },
+  "universal_style": {
+    "figure_background": "transparent",
+    "figure_title_font_size": 14,
+    "axis_label_font_size": 10,
+    "tick_font_size": 9,
+    "spine_visibility": ["bottom", "left"],
+    "title_position": "top_center",
+    "save_format": "svg",
+    "save_dpi": 300
+  }
+}

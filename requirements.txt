@@ -1,0 +1,27 @@
+# 全自动竞赛策划智能体 - 依赖
+
+# LLM API
+anthropic>=0.39.0
+
+# 文档处理
+python-docx>=1.1.0
+PyPDF2>=3.0.0
+markdown>=3.5.0
+
+# PDF生成
+weasyprint>=60.0
+
+# 图表生成
+matplotlib>=3.8.0
+plotly>=5.18.0
+Pillow>=10.0.0
+
+# 数据处理
+pydantic>=2.5.0
+PyYAML>=6.0
+
+# Web界面（可选）
+streamlit>=1.30.0
+
+# 文本处理
+jieba>=0.42.0

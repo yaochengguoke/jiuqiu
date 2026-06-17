@@ -1,0 +1,178 @@
+{
+  "meta": {
+    "competition": "互联网+青年红色筑梦之旅",
+    "version": "1.0.0",
+    "typical_pages": 70,
+    "typical_words": 18000,
+    "visual_style": "academic_red",
+    "cover_style": "赛事风高端封面 - 沉稳学术红金"
+  },
+  "L1_skeleton": {
+    "chapters": [
+      {
+        "id": "executive_summary",
+        "title": "执行摘要",
+        "page_range": "3-4页",
+        "word_count_range": "800-1000字",
+        "ratio": 0.05,
+        "order": 1,
+        "required_elements": [
+          "项目社会价值定位",
+          "核心服务模式",
+          "受益群体与覆盖范围",
+          "已取得的成效",
+          "可持续发展规划"
+        ],
+        "paragraph_structure": [
+          "项目定位与社会使命",
+          "核心服务/产品模式",
+          "受益群体与社会影响",
+          "成效数据与未来愿景"
+        ]
+      },
+      {
+        "id": "background",
+        "title": "项目背景与社会需求",
+        "page_range": "10-14页",
+        "word_count_range": "2800-3800字",
+        "ratio": 0.17,
+        "order": 2,
+        "required_elements": [
+          "社会问题现状数据",
+          "目标群体需求分析",
+          "国家政策导向（乡村振兴/精准扶贫等）",
+          "现有解决方案的不足"
+        ],
+        "paragraph_structure": [
+          "社会问题宏观背景",
+          "目标地区/群体需求详述",
+          "现有解决方案与不足",
+          "政策机遇与红色精神传承"
+        ],
+        "rhetoric_tags": ["人文关怀", "数据驱动", "政策导向", "红色精神"],
+        "requires_news_image": true
+      },
+      {
+        "id": "solution",
+        "title": "解决方案与创新模式",
+        "page_range": "14-18页",
+        "word_count_range": "3500-4500字",
+        "ratio": 0.24,
+        "order": 3,
+        "required_elements": [
+          "服务/产品模式详细描述",
+          "创新点（模式创新/技术创新）",
+          "与传统方案对比",
+          "可持续运营机制"
+        ],
+        "paragraph_structure": [
+          "解决方案总体架构",
+          "核心服务/产品模式详述",
+          "创新点与差异化优势",
+          "可持续运营与造血机制"
+        ],
+        "rhetoric_tags": ["模式创新", "社会价值", "可持续"],
+        "requires_tech_diagrams": true
+      },
+      {
+        "id": "implementation",
+        "title": "实施情况与成效展示",
+        "page_range": "10-14页",
+        "word_count_range": "2500-3500字",
+        "ratio": 0.20,
+        "order": 4,
+        "required_elements": [
+          "实施时间线与里程碑",
+          "受益群体数据",
+          "经济效益与社会效益量化",
+          "媒体报道与社会认可"
+        ],
+        "paragraph_structure": [
+          "实施历程与关键里程碑",
+          "受益群体覆盖数据",
+          "经济与社会效益量化分析",
+          "社会认可与媒体报道"
+        ]
+      },
+      {
+        "id": "market_analysis",
+        "title": "市场分析与推广计划",
+        "page_range": "8-10页",
+        "word_count_range": "2000-2800字",
+        "ratio": 0.14,
+        "order": 5,
+        "required_elements": [
+          "市场空间分析",
+          "可复制性论证",
+          "推广策略与路线",
+          "资源整合方案"
+        ],
+        "paragraph_structure": [
+          "目标市场需求分析",
+          "模式可复制性论证",
+          "分阶段推广策略",
+          "资源整合与合作网络"
+        ]
+      },
+      {
+        "id": "team_intro",
+        "title": "团队介绍与核心优势",
+        "page_range": "4-6页",
+        "word_count_range": "1200-1800字",
+        "ratio": 0.10,
+        "order": 6,
+        "required_elements": [
+          "核心成员介绍（含社会实践经历）",
+          "指导老师资历",
+          "团队社会服务经验"
+        ],
+        "paragraph_structure": [
+          "团队总体画像与情怀",
+          "核心成员逐一介绍",
+          "指导老师与顾问团队",
+          "过往社会实践成果"
+        ]
+      },
+      {
+        "id": "future_plan",
+        "title": "未来规划与社会价值",
+        "page_range": "5-8页",
+        "word_count_range": "1500-2000字",
+        "ratio": 0.10,
+        "order": 7,
+        "required_elements": [
+          "三年发展规划",
+          "社会价值量化预测",
+          "可持续发展保障",
+          "红色精神传承与升华"
+        ],
+        "paragraph_structure": [
+          "发展规划与阶段目标",
+          "社会价值量化预测",
+          "可持续发展保障机制",
+          "红色精神传承与愿景升华"
+        ]
+      }
+    ]
+  },
+  "L2_rhetoric": {
+    "rhetoric_lib_mapping": {
+      "background": "rhetoric_background.json",
+      "team_intro": "rhetoric_team.json",
+      "executive_summary": "rhetoric_executive.json"
+    }
+  },
+  "L3_visual": {
+    "default_style": "academic_red",
+    "style_file_mapping": {
+      "academic_red": "visual_academic_red.json"
+    }
+  },
+  "L4_graphic": {
+    "component_library": {
+      "arch_diagrams": "arch_diagram_templates.json",
+      "flow_charts": "flow_chart_templates.json",
+      "chart_styles": "chart_styles.json"
+    }
+  }
+}

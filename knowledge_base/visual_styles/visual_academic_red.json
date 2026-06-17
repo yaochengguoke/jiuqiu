@@ -1,0 +1,64 @@
+{
+  "name": "沉稳学术红",
+  "id": "academic_red",
+  "description": "大气庄重的红金配色，适用于红色筑梦之旅、创青春等赛事",
+  "colors": {
+    "primary": "#8B1A1A",
+    "primary_light": "#D4380D",
+    "primary_gradient": "linear-gradient(135deg, #8B1A1A, #CF1322)",
+    "secondary": "#A52A2A",
+    "accent": "#D4A017",
+    "background": "#FFFBF5",
+    "text_primary": "#2D1A1A",
+    "text_secondary": "#5C3A3A",
+    "table_header_bg": "#8B1A1A",
+    "table_header_text": "#FFD700",
+    "border_light": "#F0E0D0",
+    "success": "#389E0D",
+    "warning": "#D48806",
+    "danger": "#CF1322"
+  },
+  "typography": {
+    "cover_title": {"font": "思源宋体 Bold", "size": "58pt", "color": "#FFD700"},
+    "cover_subtitle": {"font": "思源宋体", "size": "22pt", "color": "#FFF1CC"},
+    "chapter_title": {"font": "黑体", "size": "二号(22pt)", "align": "center", "color": "#8B1A1A"},
+    "section_title": {"font": "黑体", "size": "三号(16pt)", "align": "left", "color": "#A52A2A"},
+    "subsection_title": {"font": "楷体 Bold", "size": "四号(14pt)", "align": "left", "color": "#D4380D"},
+    "body_text": {"font": "宋体", "size": "小四(12pt)", "line_height": 1.5, "color": "#2D1A1A"},
+    "body_text_english": {"font": "Times New Roman", "size": "12pt"},
+    "caption": {"font": "宋体", "size": "9pt", "color": "#8C6A6A"},
+    "header_footer": {"font": "宋体", "size": "9pt", "color": "#BFAAAA"}
+  },
+  "layout": {
+    "page_margin_top": "3.5cm",
+    "page_margin_bottom": "3.0cm",
+    "page_margin_left": "3.5cm",
+    "page_margin_right": "3.0cm",
+    "header_content": "{chapter_name}",
+    "footer_content": "{page_number}"
+  },
+  "table_style": {
+    "type": "古典三线表",
+    "header_bg": "#8B1A1A",
+    "header_text": "#FFD700",
+    "body_font_size": "10pt",
+    "border_style": "2pt top double, 2pt bottom double, 1pt header-bottom",
+    "alternate_row_bg": "#FFF8F0"
+  },
+  "chart_style": {
+    "default_type": "classic_warm",
+    "color_palette": ["#8B1A1A", "#D4A017", "#D4380D", "#389E0D", "#1677FF"],
+    "font_family": "SimSun",
+    "grid_style": "light_solid",
+    "legend_position": "bottom",
+    "title_font_size": 15
+  },
+  "image_specs": {
+    "background_news_ratio": "20:10",
+    "tech_diagram_style": "classic_warm",
+    "cover_logo_position": "top_center",
+    "min_dpi": 300,
+    "figure_numbering": "图{chapter}-{index}"
+  },
+  "css_template": "academic_red_style.css"
+}

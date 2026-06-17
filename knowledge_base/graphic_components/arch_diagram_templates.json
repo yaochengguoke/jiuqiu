@@ -1,0 +1,77 @@
+{
+  "description": "技术架构图模板库 - 预设标准化的图形组件和连接逻辑",
+  "templates": [
+    {
+      "id": "three_layer_arch",
+      "name": "三层技术架构",
+      "structure": "bottom_to_top",
+      "layers": [
+        {"name": "数据层/感知层", "position": "bottom", "color": "#E3F2FD", "border": "#1565C0"},
+        {"name": "处理层/算法层", "position": "middle", "color": "#BBDEFB", "border": "#1976D2"},
+        {"name": "应用层/展示层", "position": "top", "color": "#90CAF9", "border": "#1E88E5"}
+      ],
+      "arrows": ["upward_flow"],
+      "typical_use": "物联网、AI平台、工业互联网"
+    },
+    {
+      "id": "pipeline_flow",
+      "name": "流水线处理流程",
+      "structure": "left_to_right",
+      "stages": 6,
+      "components": [
+        "输入/采集", "预处理", "特征提取", "核心处理", "后处理", "输出/执行"
+      ],
+      "connectors": "solid_arrow_right",
+      "typical_use": "信号处理、数据流水线、制造工艺"
+    },
+    {
+      "id": "core_module_split",
+      "name": "核心模块拆解图",
+      "structure": "center_with_surrounding",
+      "layout": "1中心模块 + 4-6外围子模块",
+      "center_label": "核心引擎/控制器",
+      "surrounding_labels": ["模块A", "模块B", "模块C", "模块D", "模块E"],
+      "typical_use": "系统架构总览、产品功能拆解"
+    },
+    {
+      "id": "comparison_radar",
+      "name": "多维度竞品雷达对比图",
+      "structure": "radar_chart",
+      "axes": ["性能", "成本", "可靠性", "易用性", "功耗", "集成度"],
+      "typical_use": "技术竞品对比",
+      "max_competitors": 3
+    },
+    {
+      "id": "device_cross_section",
+      "name": "器件截面分层示意图",
+      "structure": "vertical_stack",
+      "layers": [
+        {"name": "封装层", "style": "solid_gray"},
+        {"name": "功能层1", "style": "patterned"},
+        {"name": "功能层2", "style": "dotted"},
+        {"name": "衬底层", "style": "solid_dark"}
+      ],
+      "typical_use": "芯片、材料、器件结构展示"
+    },
+    {
+      "id": "system_block_diagram",
+      "name": "系统功能框图",
+      "structure": "grid_layout",
+      "rows": 2,
+      "cols": 3,
+      "blocks": 6,
+      "interconnections": "all_to_all",
+      "typical_use": "硬件系统、软件架构总览"
+    }
+  ],
+  "rendering_rules": {
+    "font_family": "Microsoft YaHei",
+    "min_font_size": 8,
+    "corner_radius": 6,
+    "shadow_enabled": true,
+    "shadow_opacity": 0.1,
+    "connector_width": 2,
+    "connector_color": "#666666",
+    "label_offset": 5
+  }
+}

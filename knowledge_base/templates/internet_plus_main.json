@@ -1,0 +1,254 @@
+{
+  "meta": {
+    "competition": "互联网+高教主赛道",
+    "version": "1.0.0",
+    "typical_pages": 80,
+    "typical_words": 20000,
+    "visual_style": "deep_blue",
+    "cover_style": "赛事风高端封面 - 深科技蓝渐变"
+  },
+  "L1_skeleton": {
+    "chapters": [
+      {
+        "id": "executive_summary",
+        "title": "执行摘要",
+        "page_range": "3-4页",
+        "word_count_range": "800-1000字",
+        "ratio": 0.05,
+        "order": 1,
+        "description": "全文精华浓缩，让评委3分钟理解整个项目",
+        "required_elements": [
+          "项目一句话定位",
+          "核心技术亮点（2-3个核心指标）",
+          "市场规模与增长潜力",
+          "团队核心竞争力",
+          "已取得的里程碑成果",
+          "融资需求与用途"
+        ],
+        "paragraph_structure": [
+          "项目定位与愿景（1句话）",
+          "核心技术突破与指标量化",
+          "市场机遇与商业价值",
+          "团队实力与竞争优势",
+          "成果证据与融资计划"
+        ],
+        "rhetoric_tags": ["精炼", "亮点密集", "数据驱动", "宏大叙事"]
+      },
+      {
+        "id": "background",
+        "title": "项目背景与行业痛点",
+        "page_range": "12-15页",
+        "word_count_range": "3000-4000字",
+        "ratio": 0.15,
+        "order": 2,
+        "description": "证明赛道有前景，痛点真实且严重",
+        "required_elements": [
+          "权威行业数据（Yole/IHS/中商产业研究院等）",
+          "海外龙头 + 国产化率数据",
+          "具体技术差距（参数对比）",
+          "政策热词（'卡脖子'/'国产替代'/'双碳'等）",
+          "国家战略高度拔高"
+        ],
+        "paragraph_structure": [
+          "宏观概念引入（行业定义与重要性）",
+          "具体材料/技术优势阐述",
+          "权威机构数据佐证与市场趋势预测",
+          "国内外差距对比揭示痛点",
+          "国家战略/政策导向拔高立意"
+        ],
+        "rhetoric_tags": ["宏大叙事", "数据驱动", "痛点尖锐", "国家战略"],
+        "requires_news_image": true,
+        "image_spec": "20:10横屏行业新闻佐证图"
+      },
+      {
+        "id": "technology",
+        "title": "核心技术原理与创新",
+        "page_range": "18-22页",
+        "word_count_range": "4500-5500字",
+        "ratio": 0.25,
+        "order": 3,
+        "description": "最核心章节，展示技术壁垒和原创性",
+        "required_elements": [
+          "自创技术/方法名称（加粗强调）",
+          "具体工艺步骤或算法逻辑",
+          "核心参数数据（至少3个以上数值）",
+          "与国际竞品1:1参数对比表",
+          "最终效果量化（提升X%/降低X%）",
+          "专利/论文支撑"
+        ],
+        "paragraph_structure": [
+          "创新概念命名与总体技术路线",
+          "核心技术手段详细描述（分层/分模块）",
+          "具体参数数据与性能指标",
+          "与国内外竞品多维度对比",
+          "技术壁垒与专利护城河",
+          "效果/价值量化与验证结果"
+        ],
+        "rhetoric_tags": ["专业硬核", "数据密集", "图文对应", "竞品对标"],
+        "requires_tech_diagrams": true,
+        "diagram_types": [
+          "技术架构总图",
+          "核心器件截面分层示意图",
+          "工艺制备流程图（6-8步）",
+          "性能雷达图（本产品 vs 竞品1 vs 竞品2）",
+          "关键技术参数对比表"
+        ]
+      },
+      {
+        "id": "product_design",
+        "title": "产品设计与应用场景",
+        "page_range": "10-12页",
+        "word_count_range": "2500-3000字",
+        "ratio": 0.15,
+        "order": 4,
+        "description": "把技术落地为具体产品，可视化展示",
+        "required_elements": [
+          "产品型号/系列定义",
+          "产品功能参数表",
+          "应用场景具体描述（至少3个场景）",
+          "样机实拍图或渲染图",
+          "用户反馈或测试数据"
+        ],
+        "paragraph_structure": [
+          "产品体系总览与定位",
+          "核心产品详细规格与功能",
+          "多场景应用方案描述",
+          "样机/原型验证结果",
+          "产品迭代路线图"
+        ],
+        "rhetoric_tags": ["可视化", "场景驱动", "用户导向"],
+        "requires_product_images": true
+      },
+      {
+        "id": "market_analysis",
+        "title": "市场分析与商业模式",
+        "page_range": "14-18页",
+        "word_count_range": "3500-4500字",
+        "ratio": 0.20,
+        "order": 5,
+        "description": "证明能赚钱、能做大",
+        "required_elements": [
+          "商业模式名称（XX模式/XX战略）",
+          "分产品线/业务线的收入占比（百分比）",
+          "具体客户品牌或合作伙伴名称",
+          "各业务线的逻辑关系",
+          "SWOT分析",
+          "盈利预测与增长曲线"
+        ],
+        "paragraph_structure": [
+          "商业模式命名与总体架构",
+          "分板块详述（含收入占比和客户举例）",
+          "竞品分析与差异化定位",
+          "SWOT分析总结",
+          "盈利模式与增长路径",
+          "商业闭环总结"
+        ],
+        "rhetoric_tags": ["逻辑清晰", "数据可考", "商业闭环", "落地可信"],
+        "requires_business_diagrams": true,
+        "diagram_types": [
+          "商业模式画布图",
+          "客户-产品-收入流向图",
+          "各业务线营收占比饼图",
+          "市场增长预测曲线图"
+        ]
+      },
+      {
+        "id": "team_intro",
+        "title": "团队介绍与核心优势",
+        "page_range": "6-8页",
+        "word_count_range": "1500-2000字",
+        "ratio": 0.10,
+        "order": 6,
+        "description": "证明这个项目只有这个团队能做",
+        "required_elements": [
+          "核心成员详细介绍（学历/分工/过往成就）",
+          "指导老师资历与学术影响力",
+          "团队过往竞赛获奖清单",
+          "团队互补性分析",
+          "顾问/行业资源介绍"
+        ],
+        "paragraph_structure": [
+          "团队总体画像与核心优势概述",
+          "核心成员逐一介绍（照片+简介+分工）",
+          "指导老师团队介绍",
+          "团队过往成果与奖项展示",
+          "外部顾问与行业资源",
+          "团队协作机制与文化"
+        ],
+        "rhetoric_tags": ["人物立体", "实力展示", "互补性强"]
+      },
+      {
+        "id": "financial",
+        "title": "财务预测与融资计划",
+        "page_range": "4-6页",
+        "word_count_range": "1000-1500字",
+        "ratio": 0.05,
+        "order": 7,
+        "description": "展示清晰的商业路径",
+        "required_elements": [
+          "三年财务预测表",
+          "成本结构分析",
+          "收入预测与依据",
+          "融资额度与用途分配",
+          "估值逻辑"
+        ],
+        "paragraph_structure": [
+          "成本结构与收入模型",
+          "三年财务预测数据",
+          "融资需求与资金用途",
+          "估值与退出机制"
+        ]
+      },
+      {
+        "id": "future_plan",
+        "title": "未来规划与社会价值",
+        "page_range": "4-6页",
+        "word_count_range": "1000-1500字",
+        "ratio": 0.05,
+        "order": 8,
+        "description": "升华立意，呼应国家战略",
+        "required_elements": [
+          "三年技术研发路线图",
+          "市场拓展计划",
+          "社会价值阐述（就业/环保/产业升级等）",
+          "国家战略呼应",
+          "愿景与使命升华"
+        ],
+        "paragraph_structure": [
+          "技术迭代路线图",
+          "市场拓展与产业化计划",
+          "社会价值多维阐述",
+          "国家战略对接",
+          "愿景升华与结语"
+        ],
+        "rhetoric_tags": ["格局宏大", "愿景驱动", "国家战略响应"]
+      }
+    ]
+  },
+  "L2_rhetoric": {
+    "rhetoric_lib_mapping": {
+      "background": "rhetoric_background.json",
+      "technology": "rhetoric_technology.json",
+      "market_analysis": "rhetoric_market.json",
+      "team_intro": "rhetoric_team.json",
+      "executive_summary": "rhetoric_executive.json"
+    }
+  },
+  "L3_visual": {
+    "default_style": "deep_blue",
+    "available_styles": ["deep_blue", "dark_tech", "academic_red", "fresh_green"],
+    "style_file_mapping": {
+      "deep_blue": "visual_deep_blue.json",
+      "dark_tech": "visual_dark_tech.json",
+      "academic_red": "visual_academic_red.json",
+      "fresh_green": "visual_fresh_green.json"
+    }
+  },
+  "L4_graphic": {
+    "component_library": {
+      "arch_diagrams": "arch_diagram_templates.json",
+      "flow_charts": "flow_chart_templates.json",
+      "chart_styles": "chart_styles.json"
+    }
+  }
+}

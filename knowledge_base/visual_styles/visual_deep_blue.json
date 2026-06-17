@@ -1,0 +1,65 @@
+{
+  "name": "深科技蓝",
+  "id": "deep_blue",
+  "description": "沉稳学术+科技感的经典国奖风格，适用于互联网+、挑战杯等主流赛事",
+  "colors": {
+    "primary": "#0A2F5A",
+    "primary_light": "#2B7FFF",
+    "primary_gradient": "linear-gradient(135deg, #0A2F5A, #2B7FFF)",
+    "secondary": "#1E5A99",
+    "accent": "#FF6B35",
+    "background": "#F5F7FA",
+    "text_primary": "#1A1A2E",
+    "text_secondary": "#4A5568",
+    "table_header_bg": "#0A2F5A",
+    "table_header_text": "#FFFFFF",
+    "border_light": "#E2E8F0",
+    "success": "#38A169",
+    "warning": "#DD6B20",
+    "danger": "#E53E3E"
+  },
+  "typography": {
+    "cover_title": {"font": "思源黑体 Bold", "size": "60pt", "color": "#FFFFFF"},
+    "cover_subtitle": {"font": "思源宋体", "size": "24pt", "color": "#E2E8F0"},
+    "chapter_title": {"font": "黑体", "size": "二号(22pt)", "align": "center", "color": "#0A2F5A"},
+    "section_title": {"font": "黑体", "size": "三号(16pt)", "align": "left", "color": "#1E5A99"},
+    "subsection_title": {"font": "黑体", "size": "四号(14pt)", "align": "left", "color": "#2B7FFF"},
+    "body_text": {"font": "微软雅黑", "size": "小四(12pt)", "line_height": 1.5, "color": "#1A1A2E"},
+    "body_text_english": {"font": "Times New Roman", "size": "12pt"},
+    "caption": {"font": "微软雅黑", "size": "9pt", "color": "#718096"},
+    "header_footer": {"font": "微软雅黑", "size": "9pt", "color": "#A0AEC0"}
+  },
+  "layout": {
+    "page_margin_top": "3.5cm",
+    "page_margin_bottom": "3.2cm",
+    "page_margin_left": "3.2cm",
+    "page_margin_right": "3.2cm",
+    "header_content": "{project_name} | {chapter_name}",
+    "footer_content": "{page_number}",
+    "toc_style": "两级目录，章标题加粗，节标题缩进"
+  },
+  "table_style": {
+    "type": "三线表",
+    "header_bg": "#0A2F5A",
+    "header_text": "#FFFFFF",
+    "body_font_size": "10pt",
+    "border_style": "1.5pt top, 1.5pt bottom, 0.5pt header-bottom",
+    "alternate_row_bg": "#F7FAFC"
+  },
+  "chart_style": {
+    "default_type": "flat_rounded",
+    "color_palette": ["#0A2F5A", "#2B7FFF", "#4FD1C5", "#FF6B35", "#9F7AEA", "#ED8936"],
+    "font_family": "Microsoft YaHei",
+    "grid_style": "light_dashed",
+    "legend_position": "bottom",
+    "title_font_size": 14
+  },
+  "image_specs": {
+    "background_news_ratio": "20:10",
+    "tech_diagram_style": "flat_blue_gradient",
+    "cover_logo_position": "center_top",
+    "min_dpi": 300,
+    "figure_numbering": "图{chapter}-{index}"
+  },
+  "css_template": "deep_blue_style.css"
+}

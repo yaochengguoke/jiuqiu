@@ -1,0 +1,184 @@
+{
+  "meta": {
+    "competition": "挑战杯科技发明A类",
+    "version": "1.0.0",
+    "typical_pages": 60,
+    "typical_words": 15000,
+    "visual_style": "dark_tech",
+    "cover_style": "赛事风高端封面 - 科技炫酷黑"
+  },
+  "L1_skeleton": {
+    "chapters": [
+      {
+        "id": "executive_summary",
+        "title": "作品摘要",
+        "page_range": "2-3页",
+        "word_count_range": "600-800字",
+        "ratio": 0.05,
+        "order": 1,
+        "required_elements": [
+          "作品名称与分类",
+          "技术核心亮点",
+          "创新性与先进性",
+          "应用价值",
+          "已获成果"
+        ],
+        "paragraph_structure": [
+          "作品定位与技术领域",
+          "核心技术突破与指标",
+          "创新性与先进性论证",
+          "应用前景与成果"
+        ]
+      },
+      {
+        "id": "background",
+        "title": "研究背景与意义",
+        "page_range": "8-10页",
+        "word_count_range": "2000-2800字",
+        "ratio": 0.15,
+        "order": 2,
+        "required_elements": [
+          "技术领域现状",
+          "国内外研究进展综述",
+          "现有方案不足",
+          "研究意义（理论+应用）"
+        ],
+        "paragraph_structure": [
+          "技术领域概述",
+          "国内外研究现状综述",
+          "现有技术方案瓶颈",
+          "本研究的意义与价值"
+        ],
+        "rhetoric_tags": ["学术严谨", "文献支撑", "问题导向"]
+      },
+      {
+        "id": "technology",
+        "title": "技术方案与创新点",
+        "page_range": "16-20页",
+        "word_count_range": "4000-5000字",
+        "ratio": 0.30,
+        "order": 3,
+        "required_elements": [
+          "总体技术路线",
+          "关键技术创新详述",
+          "实验/仿真数据",
+          "与国内外同行对比",
+          "技术成熟度"
+        ],
+        "paragraph_structure": [
+          "总体技术路线与方案架构",
+          "关键技术创新逐一详述",
+          "实验方法与数据",
+          "与国内外先进水平对比",
+          "技术成熟度与可靠性论证"
+        ],
+        "rhetoric_tags": ["学术严谨", "数据驱动", "创新突出", "对比论证"],
+        "requires_tech_diagrams": true,
+        "diagram_types": [
+          "总体技术路线图",
+          "核心装置/系统结构图",
+          "实验数据图表",
+          "性能对比图"
+        ]
+      },
+      {
+        "id": "verification",
+        "title": "实验验证与结果分析",
+        "page_range": "8-10页",
+        "word_count_range": "2000-2800字",
+        "ratio": 0.15,
+        "order": 4,
+        "required_elements": [
+          "实验设计",
+          "测试数据",
+          "结果分析",
+          "可靠性验证"
+        ],
+        "paragraph_structure": [
+          "实验/测试方案设计",
+          "关键测试数据展示",
+          "结果分析与讨论",
+          "可靠性与重复性验证"
+        ]
+      },
+      {
+        "id": "application",
+        "title": "应用前景与产业化设想",
+        "page_range": "6-8页",
+        "word_count_range": "1500-2000字",
+        "ratio": 0.12,
+        "order": 5,
+        "required_elements": [
+          "应用场景",
+          "产业化路径",
+          "经济效益预测",
+          "社会价值"
+        ],
+        "paragraph_structure": [
+          "典型应用场景",
+          "产业化路径与可行性",
+          "经济效益与社会价值",
+          "知识产权规划"
+        ]
+      },
+      {
+        "id": "team_intro",
+        "title": "团队介绍与研究基础",
+        "page_range": "3-4页",
+        "word_count_range": "800-1200字",
+        "ratio": 0.08,
+        "order": 6,
+        "required_elements": [
+          "核心成员研究背景",
+          "指导老师学术成就",
+          "已有研究成果（论文/专利）"
+        ],
+        "paragraph_structure": [
+          "团队总体研究实力",
+          "核心成员学术背景",
+          "指导老师与科研平台",
+          "已有研究成果清单"
+        ]
+      },
+      {
+        "id": "conclusion",
+        "title": "结论与展望",
+        "page_range": "2-3页",
+        "word_count_range": "600-800字",
+        "ratio": 0.05,
+        "order": 7,
+        "required_elements": [
+          "研究总结",
+          "创新点回顾",
+          "未来研究方向"
+        ],
+        "paragraph_structure": [
+          "主要研究结论",
+          "创新贡献总结",
+          "未来研究方向与展望"
+        ]
+      }
+    ]
+  },
+  "L2_rhetoric": {
+    "rhetoric_lib_mapping": {
+      "background": "rhetoric_background.json",
+      "technology": "rhetoric_technology.json",
+      "team_intro": "rhetoric_team.json",
+      "executive_summary": "rhetoric_executive.json"
+    }
+  },
+  "L3_visual": {
+    "default_style": "dark_tech",
+    "style_file_mapping": {
+      "dark_tech": "visual_dark_tech.json"
+    }
+  },
+  "L4_graphic": {
+    "component_library": {
+      "arch_diagrams": "arch_diagram_templates.json",
+      "flow_charts": "flow_chart_templates.json",
+      "chart_styles": "chart_styles.json"
+    }
+  }
+}

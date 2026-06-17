@@ -1,0 +1,17 @@
+# 输出文件（每次重新生成）
+outputs/*
+!outputs/.gitkeep
+
+# 临时数据
+data_pool/current_project/*
+*.pyc
+__pycache__/
+
+# 环境
+.env
+*.pyo
+.pytest_cache/
+
+# IDE
+.vscode/
+.idea/

@@ -1,0 +1,64 @@
+{
+  "name": "清新环保绿",
+  "id": "fresh_green",
+  "description": "自然清新的绿色科技风，适用于节能减排、环保类赛事",
+  "colors": {
+    "primary": "#1B5E20",
+    "primary_light": "#4CAF50",
+    "primary_gradient": "linear-gradient(135deg, #1B5E20, #388E3C)",
+    "secondary": "#2E7D32",
+    "accent": "#00BCD4",
+    "background": "#F5FFF5",
+    "text_primary": "#1B2E1B",
+    "text_secondary": "#3E5C3E",
+    "table_header_bg": "#1B5E20",
+    "table_header_text": "#E8F5E9",
+    "border_light": "#C8E6C9",
+    "success": "#2E7D32",
+    "warning": "#F57C00",
+    "danger": "#C62828"
+  },
+  "typography": {
+    "cover_title": {"font": "思源黑体 Bold", "size": "56pt", "color": "#FFFFFF"},
+    "cover_subtitle": {"font": "思源黑体 Light", "size": "22pt", "color": "#C8E6C9"},
+    "chapter_title": {"font": "黑体", "size": "二号(22pt)", "align": "center", "color": "#1B5E20"},
+    "section_title": {"font": "黑体", "size": "三号(16pt)", "align": "left", "color": "#2E7D32"},
+    "subsection_title": {"font": "黑体", "size": "四号(14pt)", "align": "left", "color": "#4CAF50"},
+    "body_text": {"font": "微软雅黑", "size": "小四(12pt)", "line_height": 1.5, "color": "#1B2E1B"},
+    "body_text_english": {"font": "Arial", "size": "11pt"},
+    "caption": {"font": "微软雅黑", "size": "9pt", "color": "#6B8E6B"},
+    "header_footer": {"font": "微软雅黑", "size": "9pt", "color": "#8FBC8F"}
+  },
+  "layout": {
+    "page_margin_top": "3.2cm",
+    "page_margin_bottom": "3.0cm",
+    "page_margin_left": "3.2cm",
+    "page_margin_right": "3.2cm",
+    "header_content": "节能减排 | {project_name}",
+    "footer_content": "{page_number}"
+  },
+  "table_style": {
+    "type": "清新三线表",
+    "header_bg": "#1B5E20",
+    "header_text": "#E8F5E9",
+    "body_font_size": "10pt",
+    "border_style": "1.5pt solid green",
+    "alternate_row_bg": "#E8F5E9"
+  },
+  "chart_style": {
+    "default_type": "fresh_nature",
+    "color_palette": ["#1B5E20", "#4CAF50", "#00BCD4", "#8BC34A", "#009688"],
+    "font_family": "Microsoft YaHei",
+    "grid_style": "light_dashed",
+    "legend_position": "bottom",
+    "title_font_size": 14
+  },
+  "image_specs": {
+    "background_news_ratio": "20:10",
+    "tech_diagram_style": "green_eco_flat",
+    "cover_logo_position": "center",
+    "min_dpi": 300,
+    "figure_numbering": "图{chapter}-{index}"
+  },
+  "css_template": "fresh_green_style.css"
+}

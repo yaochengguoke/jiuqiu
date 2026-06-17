@@ -1,0 +1,71 @@
+{
+  "version": "1.0.0",
+  "description": "国奖标准模板知识库索引 - 根据赛事组别匹配对应模板",
+  "last_updated": "2026-06-17",
+  "competitions": {
+    "互联网+高教主赛道": {
+      "template_file": "internet_plus_main.json",
+      "description": "中国国际'互联网+'大学生创新创业大赛高教主赛道国奖模板",
+      "typical_pages": 80,
+      "typical_words": 20000,
+      "visual_style": "deep_blue",
+      "keywords": ["创新创业", "科技成果转化", "商业模式", "高教主赛道"]
+    },
+    "互联网+青年红色筑梦之旅": {
+      "template_file": "internet_plus_red.json",
+      "description": "青年红色筑梦之旅赛道国奖模板",
+      "typical_pages": 70,
+      "typical_words": 18000,
+      "visual_style": "academic_red",
+      "keywords": ["乡村振兴", "精准扶贫", "社会服务", "红色筑梦"]
+    },
+    "挑战杯科技发明A类": {
+      "template_file": "tiaozhan_tech_a.json",
+      "description": "挑战杯全国大学生课外学术科技作品竞赛科技发明A类国奖模板",
+      "typical_pages": 60,
+      "typical_words": 15000,
+      "visual_style": "dark_tech",
+      "keywords": ["科技发明", "硬科技", "技术壁垒", "专利成果"]
+    },
+    "节能减排本科组": {
+      "template_file": "energy_saving_ug.json",
+      "description": "全国大学生节能减排社会实践与科技竞赛本科组国奖模板",
+      "typical_pages": 55,
+      "typical_words": 14000,
+      "visual_style": "fresh_green",
+      "keywords": ["节能减排", "双碳目标", "绿色发展", "环保科技"]
+    },
+    "挑战杯科技发明B类": {
+      "template_file": "tiaozhan_tech_a.json",
+      "description": "挑战杯科技发明B类国奖模板（复用A类框架）",
+      "typical_pages": 55,
+      "typical_words": 14000,
+      "visual_style": "dark_tech",
+      "keywords": ["科技发明", "技术应用", "创新实践"]
+    },
+    "节能减排研究生组": {
+      "template_file": "energy_saving_ug.json",
+      "description": "节能减排研究生组国奖模板（复用本科组框架，强化科研深度）",
+      "typical_pages": 60,
+      "typical_words": 16000,
+      "visual_style": "fresh_green",
+      "keywords": ["节能减排", "双碳目标", "科研创新", "研究生"]
+    },
+    "创青春创业计划赛": {
+      "template_file": "internet_plus_main.json",
+      "description": "创青春中国青年创新创业大赛国奖模板（复用互联网+框架）",
+      "typical_pages": 70,
+      "typical_words": 18000,
+      "visual_style": "deep_blue",
+      "keywords": ["创业计划", "商业模式", "青年创业", "社会价值"]
+    },
+    "三创赛": {
+      "template_file": "internet_plus_main.json",
+      "description": "全国大学生电子商务三创赛国奖模板（复用互联网+框架）",
+      "typical_pages": 60,
+      "typical_words": 15000,
+      "visual_style": "deep_blue",
+      "keywords": ["电子商务", "创新创意", "创业实践"]
+    }
+  }
+}
