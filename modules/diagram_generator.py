@@ -65,17 +65,27 @@ def _setup_chinese_font():
                 fm.fontManager.addfont(fp)
                 break
 
-    # 3. 尝试从网络下载 Noto Sans SC（云端环境）
+    # 3. 尝试从网络下载轻量中文字体（云端环境，仅3MB）
     if not _CHINESE_FONT_PATH:
         try:
-            import urllib.request
+            import urllib.request, io, zipfile
             font_dir = os.path.join(os.path.dirname(__file__), '..', '.fonts')
             os.makedirs(font_dir, exist_ok=True)
             font_file = os.path.join(font_dir, 'NotoSansSC-Regular.ttf')
             if not os.path.exists(font_file):
-                url = 'https://github.com/googlefonts/noto-cjk/raw/main/Sans/OTF/SimplifiedChinese/NotoSansSC-Regular.otf'
-                urllib.request.urlretrieve(url, font_file)
-            if os.path.exists(font_file):
+                # 从 Google Fonts 下载轻量版
+                url = 'https://github.com/notofonts/noto-cjk/releases/download/Sans2.004/03_NotoSansCJKsc.zip'
+                try:
+                    with urllib.request.urlopen(url, timeout=30) as resp:
+                        zf = zipfile.ZipFile(io.BytesIO(resp.read()))
+                        for name in zf.namelist():
+                            if 'Regular' in name and name.endswith('.otf'):
+                                with open(font_file, 'wb') as ff:
+                                    ff.write(zf.read(name))
+                                break
+                except Exception:
+                    pass
+            if os.path.exists(font_file) and os.path.getsize(font_file) > 1000:
                 _CHINESE_FONT_PATH = font_file
                 fm.fontManager.addfont(font_file)
         except Exception:
@@ -85,19 +95,23 @@ def _setup_chinese_font():
     if _CHINESE_FONT_PATH:
         plt.rcParams['font.family'] = 'sans-serif'
         if os.path.exists(str(_CHINESE_FONT_PATH)):
-            # 是文件路径
             fp = fm.FontProperties(fname=_CHINESE_FONT_PATH)
             plt.rcParams['font.sans-serif'] = [fp.get_name()] + plt.rcParams['font.sans-serif']
         else:
-            # 是字体名
             plt.rcParams['font.sans-serif'] = [_CHINESE_FONT_PATH] + plt.rcParams['font.sans-serif']
-    else:
-        # 最终fallback：用英文标签
-        plt.rcParams['font.sans-serif'] = ['DejaVu Sans']
-
     plt.rcParams['axes.unicode_minus'] = False
 
 _setup_chinese_font()
+
+# 全局标记：是否有中文字体可用
+_HAS_CHINESE = _CHINESE_FONT_PATH is not None
+
+
+def _safe_text(text_cn: str, text_en: str = "") -> str:
+    """安全文本：有中文字体用中文，否则用英文fallback"""
+    if _HAS_CHINESE:
+        return text_cn
+    return text_en if text_en else text_cn.encode('ascii', errors='replace').decode('ascii')
 
 
 @dataclass
