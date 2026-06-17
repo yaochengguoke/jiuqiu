@@ -30,14 +30,14 @@ import matplotlib.font_manager as fm
 import numpy as np
 import os
 
-# 中文字体配置：优先使用系统字体，否则下载 Noto Sans SC
+# 中文字体配置：只用系统字体，不联网下载
 _CHINESE_FONT_PATH = None
 
 def _setup_chinese_font():
-    """配置中文字体，确保在任何环境（本地/云端/headless）都能正常显示"""
+    """配置中文字体，仅使用系统已安装的字体"""
     global _CHINESE_FONT_PATH
 
-    # 1. 检查常见系统字体
+    # 1. 按字体名查找
     system_fonts = [
         'Microsoft YaHei', 'SimHei', 'SimSun', 'KaiTi', 'FangSong',
         'Noto Sans CJK SC', 'Noto Sans SC', 'WenQuanYi Micro Hei',
@@ -49,12 +49,10 @@ def _setup_chinese_font():
             _CHINESE_FONT_PATH = font_name
             break
 
-    # 2. 尝试通过字体文件路径查找
+    # 2. 按文件路径查找
     if not _CHINESE_FONT_PATH:
         font_paths = [
-            'C:/Windows/Fonts/msyh.ttc',
-            'C:/Windows/Fonts/simhei.ttf',
-            'C:/Windows/Fonts/simsun.ttc',
+            'C:/Windows/Fonts/msyh.ttc', 'C:/Windows/Fonts/simhei.ttf',
             '/usr/share/fonts/truetype/noto/NotoSansCJK-Regular.ttc',
             '/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc',
             '/usr/share/fonts/noto-cjk/NotoSansCJK-Regular.ttc',
@@ -65,53 +63,16 @@ def _setup_chinese_font():
                 fm.fontManager.addfont(fp)
                 break
 
-    # 3. 尝试从网络下载轻量中文字体（云端环境，仅3MB）
-    if not _CHINESE_FONT_PATH:
-        try:
-            import urllib.request, io, zipfile
-            font_dir = os.path.join(os.path.dirname(__file__), '..', '.fonts')
-            os.makedirs(font_dir, exist_ok=True)
-            font_file = os.path.join(font_dir, 'NotoSansSC-Regular.ttf')
-            if not os.path.exists(font_file):
-                # 从 Google Fonts 下载轻量版
-                url = 'https://github.com/notofonts/noto-cjk/releases/download/Sans2.004/03_NotoSansCJKsc.zip'
-                try:
-                    with urllib.request.urlopen(url, timeout=30) as resp:
-                        zf = zipfile.ZipFile(io.BytesIO(resp.read()))
-                        for name in zf.namelist():
-                            if 'Regular' in name and name.endswith('.otf'):
-                                with open(font_file, 'wb') as ff:
-                                    ff.write(zf.read(name))
-                                break
-                except Exception:
-                    pass
-            if os.path.exists(font_file) and os.path.getsize(font_file) > 1000:
-                _CHINESE_FONT_PATH = font_file
-                fm.fontManager.addfont(font_file)
-        except Exception:
-            pass
-
-    # 4. 应用字体配置
+    # 3. 应用配置
     if _CHINESE_FONT_PATH:
-        plt.rcParams['font.family'] = 'sans-serif'
         if os.path.exists(str(_CHINESE_FONT_PATH)):
             fp = fm.FontProperties(fname=_CHINESE_FONT_PATH)
-            plt.rcParams['font.sans-serif'] = [fp.get_name()] + plt.rcParams['font.sans-serif']
+            plt.rcParams['font.sans-serif'] = [fp.get_name()] + list(plt.rcParams['font.sans-serif'])
         else:
-            plt.rcParams['font.sans-serif'] = [_CHINESE_FONT_PATH] + plt.rcParams['font.sans-serif']
+            plt.rcParams['font.sans-serif'] = [_CHINESE_FONT_PATH] + list(plt.rcParams['font.sans-serif'])
     plt.rcParams['axes.unicode_minus'] = False
 
 _setup_chinese_font()
-
-# 全局标记：是否有中文字体可用
-_HAS_CHINESE = _CHINESE_FONT_PATH is not None
-
-
-def _safe_text(text_cn: str, text_en: str = "") -> str:
-    """安全文本：有中文字体用中文，否则用英文fallback"""
-    if _HAS_CHINESE:
-        return text_cn
-    return text_en if text_en else text_cn.encode('ascii', errors='replace').decode('ascii')
 
 
 @dataclass
