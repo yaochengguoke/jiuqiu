@@ -192,7 +192,7 @@ if st.session_state.get("demo_result"):
         f"{len(agent.current_template.chapters)} 章 · "
         f"{len(agent.current_document.chapters)} 章正文"
     )
-    tab1, tab2 = st.tabs(["策划书正文", "下载文件"])
+    tab1, tab2, tab3 = st.tabs(["策划书正文", "下载文件", "下载图片"])
     with tab1:
         st.markdown(agent.current_document.get_full_text())
     with tab2:
@@ -201,6 +201,19 @@ if st.session_state.get("demo_result"):
             if f.is_file():
                 with open(f, "rb") as fh:
                     st.download_button(_get_download_label(f.name), fh.read(), f.name)
+    with tab3:
+        st.markdown("### 下载生成的图片")
+        st.caption("可单独下载后插入策划书对应位置。")
+        import glob as _glob
+        img_files = sorted(_glob.glob("outputs/current/generated_images/*.png"))
+        if img_files:
+            cols = st.columns(3)
+            for i, f in enumerate(img_files):
+                with cols[i % 3]:
+                    with open(f, "rb") as fh:
+                        st.download_button(f.replace("\\","/").split("/")[-1],
+                                         fh.read(), f.replace("\\","/").split("/")[-1],
+                                         use_container_width=True)
 
 # ── 生成逻辑 ──
 if generate:
@@ -311,7 +324,7 @@ if generate:
         col3.metric("图表数", f"{len(diagrams)} 张")
         col4.metric("数据来源", f"{agent.current_data_pool.numeric_entities and len(agent.current_data_pool.numeric_entities) or 0} 组")
 
-        tab1, tab2, tab3 = st.tabs(["策划书正文", "下载文件", "缺失清单"])
+        tab1, tab2, tab3, tab4 = st.tabs(["策划书正文", "下载文件", "下载图片", "缺失清单"])
 
         with tab1:
             st.markdown(agent.current_document.get_full_text())
@@ -328,6 +341,22 @@ if generate:
                             st.download_button(_get_download_label(f.name), fh.read(), f.name, use_container_width=True)
 
         with tab3:
+            st.markdown("### 下载生成的图片")
+            st.caption("以下图片已自动生成，可单独下载后插入策划书对应位置。")
+            import glob as _glob
+            img_files = sorted(_glob.glob("outputs/current/generated_images/*.png"))
+            if img_files:
+                cols = st.columns(3)
+                for i, f in enumerate(img_files):
+                    with cols[i % 3]:
+                        name = f.replace("\\", "/").split("/")[-1]
+                        with open(f, "rb") as fh:
+                            st.download_button(f"[Chart] {name}", fh.read(), name,
+                                             use_container_width=True)
+            else:
+                st.info("暂无图片，请先生成策划书。")
+
+        with tab4:
             st.markdown(agent.current_document.get_missing_report())
 
 st.sidebar.markdown("---")
