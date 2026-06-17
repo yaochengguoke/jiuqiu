@@ -203,7 +203,7 @@ if st.session_state.get("demo_result"):
                     st.download_button(_get_download_label(f.name), fh.read(), f.name)
     with tab3:
         st.markdown("### 下载生成的图片")
-        st.caption("可单独下载后插入策划书对应位置。")
+        st.warning("云端服务器无中文字体，图片中文可能显示为方块。建议在本地运行获取完美图片。")
         import glob as _glob
         img_files = sorted(_glob.glob("outputs/current/generated_images/*.png"))
         if img_files:
