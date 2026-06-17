@@ -98,25 +98,11 @@ class OutputExporter:
         write_text_file(md_path, full_text)
         result.markdown_path = md_path
 
-        # 2. HTML 美化版（使用本次生成的专属图片目录，避免跨次污染）
-        import shutil
-        from pathlib import Path
-        import sys
-        sys.path.insert(0, str(Path(__file__).parent.parent))
-        from config import OUTPUT_DIR
-        # 每个输出使用独立的图片子目录
-        img_dir = prj_output_dir / "images"
-        ensure_dir(img_dir)
-        # 从共享生成目录拷贝本次生成的图片
-        shared_img = OUTPUT_DIR / "current" / "generated_images"
-        if shared_img.exists():
-            for f in shared_img.glob("*.png"):
-                shutil.copy2(f, img_dir / f.name)
+        # 2. HTML 美化版
         html_content = layout_engine.render_html(
             markdown_content=full_text,
             project_name=document.project_name,
             competition_name=document.competition_name,
-            image_dir=str(img_dir) if img_dir.exists() else None,
         )
         html_path = prj_output_dir / "final_plan.html"
         write_text_file(html_path, html_content)

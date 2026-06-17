@@ -68,21 +68,9 @@ class LayoutEngine:
         markdown_content: str,
         project_name: str,
         competition_name: str,
-        image_dir: str = None,
     ) -> str:
-        """
-        将Markdown内容渲染为HTML文档，自动嵌入图片
-
-        Args:
-            markdown_content: Markdown格式的完整策划书
-            project_name: 项目名称
-            competition_name: 赛事名称
-            image_dir: 图片目录路径，用于自动嵌入生成的图表
-
-        Returns:
-            完整的HTML文档字符串
-        """
-        body_html = self._markdown_to_html(markdown_content, image_dir=image_dir)
+        """将Markdown内容渲染为HTML文档（图片保留占位符，不自动嵌入）"""
+        body_html = self._markdown_to_html(markdown_content)
         html = self._build_html_document(
             body=body_html,
             project_name=project_name,
@@ -439,19 +427,8 @@ img {{
 </html>"""
         return html
 
-    def _markdown_to_html(self, md_text: str, image_dir: str = None) -> str:
-        """简易Markdown→HTML转换，支持自动嵌入图片"""
-        import base64
-        from pathlib import Path
-
-        # 预建图片索引
-        image_index = {}
-        if image_dir:
-            img_path = Path(image_dir)
-            if img_path.exists():
-                for f in img_path.glob("*.png"):
-                    image_index[f.stem.lower()] = f
-
+    def _markdown_to_html(self, md_text: str) -> str:
+        """简易Markdown→HTML转换"""
         lines = md_text.split('\n')
         html_lines = []
         in_table = False
@@ -534,55 +511,15 @@ img {{
                 content = re.sub(r'\*\*(.+?)\*\*', r'<strong>\1</strong>', content)
                 html_lines.append(f'<li>{content}</li>')
 
-            # 图片占位 → 自动匹配嵌入真实图片
+            # 图片占位
             elif stripped.startswith('【此处插入：') and stripped.endswith('】'):
                 img_desc = stripped[6:-1]
-                matched_img = None
-
-                # 在图片索引中搜索匹配（精确优先）
-                if image_dir and image_index:
-                    # 精确映射：占位符关键词 → 图片文件名模式
-                    exact_map = {
-                        "封面": "cover",
-                        "架构": "arch",
-                        "流程": "flow",
-                        "新闻": "news",
-                        "配图": "news",
-                        "画布": "biz",
-                        "商业": "biz",
-                        "路线": "timeline",
-                        "时间轴": "timeline",
-                        "雷达": None,       # 雷达图暂不自动生成，保留占位
-                    }
-                    for kw, target in exact_map.items():
-                        if kw in img_desc:
-                            if target:
-                                for stem, path in image_index.items():
-                                    if target in stem:
-                                        matched_img = path
-                                        break
-                            break  # 找到映射就停止，即使target为None
-
-                if matched_img:
-                    with open(matched_img, "rb") as f:
-                        b64 = base64.b64encode(f.read()).decode()
-                    ext = matched_img.suffix.lower().replace(".", "")
-                    html_lines.append(
-                        f'<div class="figure-container" style="text-align:center; margin:0.8cm 0;">'
-                        f'<img src="data:image/{ext};base64,{b64}" '
-                        f'style="max-width:100%; height:auto; border-radius:6px; '
-                        f'box-shadow:0 4px 16px rgba(0,0,0,0.1);" '
-                        f'alt="{img_desc}">'
-                        f'<p class="figure-caption">图：{img_desc}</p>'
-                        f'</div>'
-                    )
-                else:
-                    html_lines.append(
-                        f'<div class="figure-placeholder" style="border:2px dashed {self.colors.get("border_light", "#ddd")}; '
-                        f'padding:1cm; text-align:center; margin:0.5cm 0; border-radius:8px;">'
-                        f'<p style="color:{self.colors.get("text_secondary", "#888")}; font-size:10pt;">[Chart] {img_desc}</p>'
-                        f'</div>'
-                    )
+                html_lines.append(
+                    f'<div class="figure-placeholder" style="border:2px dashed {self.colors.get("border_light", "#ddd")}; '
+                    f'padding:1cm; text-align:center; margin:0.5cm 0; border-radius:8px;">'
+                    f'<p style="color:{self.colors.get("text_secondary", "#888")}; font-size:10pt;">[Chart] {img_desc}</p>'
+                    f'</div>'
+                )
 
             # 待补充标记
             elif '【待补充' in stripped:
