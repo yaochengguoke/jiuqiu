@@ -72,6 +72,31 @@ def _setup_chinese_font():
             plt.rcParams['font.sans-serif'] = [_CHINESE_FONT_PATH] + list(plt.rcParams['font.sans-serif'])
     plt.rcParams['axes.unicode_minus'] = False
 
+    # 3. 下载轻量中文字体到项目目录（仅云端需要，约4MB）
+    if not _CHINESE_FONT_PATH:
+        try:
+            import urllib.request
+            font_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'fonts')
+            os.makedirs(font_dir, exist_ok=True)
+            font_file = os.path.join(font_dir, 'chinese.otf')
+            if not os.path.exists(font_file):
+                # 使用轻量 WenQuanYi 字体（约3.5MB）
+                url = 'https://github.com/anthonyfok/fonts-wqy-microhei/raw/master/wqy-microhei.ttc'
+                urllib.request.urlretrieve(url, font_file)
+            if os.path.exists(font_file) and os.path.getsize(font_file) > 100000:
+                _CHINESE_FONT_PATH = font_file
+                fm.fontManager.addfont(font_file)
+        except Exception:
+            pass
+
+    # 4. 应用字体配置
+    if _CHINESE_FONT_PATH:
+        if os.path.exists(str(_CHINESE_FONT_PATH)):
+            fp = fm.FontProperties(fname=_CHINESE_FONT_PATH)
+            plt.rcParams['font.sans-serif'] = [fp.get_name()] + list(plt.rcParams['font.sans-serif'])
+        else:
+            plt.rcParams['font.sans-serif'] = [_CHINESE_FONT_PATH] + list(plt.rcParams['font.sans-serif'])
+
 _setup_chinese_font()
 _HAS_CHINESE = _CHINESE_FONT_PATH is not None
 
