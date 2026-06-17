@@ -327,6 +327,10 @@ class ContentGenerator:
         }
         for wrong, correct in term_fixes.items():
             result = result.replace(wrong, correct)
+        # 清理垃圾字符
+        result = re.sub(r'[字字]{3,}', '', result)
+        result = re.sub(r'\b[dD][aA][dD][aA]\b', '', result)
+        result = re.sub(r'[​‌‍﻿]', '', result)
         return result
 
     # ===== 各章节Demo生成函数 =====
@@ -531,7 +535,7 @@ class ContentGenerator:
 
         if competitors:
             comp_list = "、".join(competitors[:3])
-            lines.append(f"全球市场长期被{comp_list}等海外企业主导，国内企业面临严峻的竞争压力。"
+            lines.append(f"全球市场长期被{comp_list}等海外企业主导，国内企业面临严峻的竞争压力，实现国产替代刻不容缓。"
                         f"【来源：competitor_extraction】")
         else:
             if "【待补充】" in local_str:
@@ -540,7 +544,6 @@ class ContentGenerator:
 
         # 4. 政策机遇
         lines.append("### 政策机遇与国家战略")
-        # 使用行业领域名而非工艺名
         _innovations = dp.tech_pool.get("innovations", [])
         _brief = dp.tech_pool.get("project_brief", "")
         all_text_domain = (_brief + market_data + str(_innovations)).lower()
@@ -551,23 +554,49 @@ class ContentGenerator:
             industry_name = "数据中心液冷技术"
         elif "半导体" in all_text_domain or "GaN" in all_text_domain:
             industry_name = "第三代半导体材料"
-        lines.append(f"在《'十四五'规划和2035远景目标纲要》的战略框架下，"
-                    f"{industry_name}被列为国家重点发展方向。")
-        all_text = all_text_domain  # 恢复变量名供后续使用
-        policy_map = {
-            "半导体": "工信部等七部门《关于推动能源电子产业发展的指导意见》明确将第三代半导体列为重点突破方向。",
-            "光伏": "国家能源局《'十四五'可再生能源发展规划》将钙钛矿光伏技术列为前沿突破方向，科技部《'十四五'能源领域科技创新规划》提出2030年实现钙钛矿电池商业化。",
-            "钙钛矿": "国家能源局《'十四五'可再生能源发展规划》将钙钛矿光伏技术列为前沿突破方向，科技部《'十四五'能源领域科技创新规划》提出2030年实现钙钛矿电池商业化。",
-            "液冷": "工信部《新型数据中心发展三年行动计划》要求到2025年新建大型数据中心PUE值降至1.3以下，液冷技术被列为重点推广的绿色节能技术。",
-            "节能": "国务院《2030年前碳达峰行动方案》将节能降碳增效列为十大行动之一。",
-            "新能源": "国家发改委《'十四五'可再生能源发展规划》将新能源材料列为关键支撑领域。",
+        all_text = all_text_domain
+
+        # 政策文件（含具体年份和文件号）
+        policy_lines = {
+            "半导体": [
+                "工信部等七部门《关于推动能源电子产业发展的指导意见》（2023年6月）将第三代半导体列为重点突破方向，提出到2027年国产化率提升至30%的目标。",
+                "国务院《\"十四五\"数字经济发展规划》强调要加强关键核心技术攻关，构建自主可控的产业生态。",
+            ],
+            "钙钛矿": [
+                "国家能源局《\"十四五\"可再生能源发展规划》（2022年6月）将钙钛矿光伏技术列为前沿突破方向。",
+                "科技部《\"十四五\"能源领域科技创新规划》提出2030年实现钙钛矿电池商业化应用的目标。",
+            ],
+            "光伏": [
+                "国家能源局《\"十四五\"可再生能源发展规划》（2022年6月）将钙钛矿光伏技术列为前沿突破方向。",
+                "科技部《\"十四五\"能源领域科技创新规划》提出2030年实现钙钛矿电池商业化应用的目标。",
+            ],
+            "液冷": [
+                "工信部《新型数据中心发展三年行动计划（2023—2025年）》要求新建大型数据中心PUE值降至1.3以下，液冷技术被列为重点推广的绿色节能技术。",
+                "国家发改委《\"十四五\"全国城市基础设施建设规划》支持数据中心采用高效制冷方案。",
+            ],
         }
-        policy_text = "国务院《'十四五'规划纲要》将关键核心技术攻关列为国家战略重点。"
-        for keyword, text in policy_map.items():
+
+        # 找出匹配的政策
+        matched_policies = []
+        for keyword, pols in policy_lines.items():
             if keyword in all_text:
-                policy_text = text
+                matched_policies = pols
                 break
-        lines.append(f"**【政策支持】** {policy_text}【待补充：客户所在细分领域的专项政策文件及具体条款】")
+        if not matched_policies:
+            matched_policies = [
+                "国务院《\"十四五\"规划纲要》将关键核心技术攻关列为国家战略重点。",
+            ]
+
+        lines.append("")
+        lines.append("**【政策支持】**")
+        for pol in matched_policies:
+            lines.append(f"- {pol}")
+        lines.append("")
+
+        # 项目与国家战略的连接
+        project_name_short = dp.project_name.split("——")[0] if "——" in dp.project_name else dp.project_name[:10]
+        lines.append(f"{project_name_short}立足{industry_name}领域的自主研发，正是对上述国家战略的积极响应和具体实践。")
+        lines.append("【待补充：客户所在细分领域的专项政策文件及具体条款】")
         lines.append("")
 
         # 5. 配图

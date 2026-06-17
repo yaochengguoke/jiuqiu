@@ -272,18 +272,18 @@ class MaterialParser:
             r'([一-鿿A-Za-z]{2,8}(?:技术|系统|平台|方案|方法|算法|芯片|器件|材料|散热|冷却|管理))',
             # 排除以年/月/日/获/奖/第/届开头的噪音匹配
         ]
-        # 噪音前缀过滤
-        noise_prefixes = set('年月日获奖第届项篇人次个')
+        # 噪音前缀过滤（虚词、结构助词等无意义开头）
+        noise_prefixes = set('年月日获奖第届项篇人次个的着了过被把让')
+        garbage_words = {'的制备', '的材料', '了技术', '为基础'}
         for pattern in classic_patterns:
             matches = re.findall(pattern, combined)
             if matches:
-                # 过滤噪音（以年/月/日/获奖等开头的匹配）
                 valid = [m for m in matches
                         if 3 <= len(m) <= 20
                         and m[0] not in noise_prefixes
-                        and not m.startswith(('202', '201', '全国'))]
+                        and not m.startswith(('202', '201', '全国'))
+                        and not any(g in m for g in garbage_words)]
                 if valid:
-                    # 按长度排序，取中间值（避免过短和过长）
                     valid.sort(key=len)
                     return valid[len(valid)//2]
 
@@ -293,13 +293,19 @@ class MaterialParser:
         if valid_quoted:
             return min(valid_quoted, key=len)
 
-        # 从项目名提取（取"——"后面的部分或整体中较短的部分）
+        # 从项目名提取（取"——"后面的部分中较短的核心词）
         proj_name = kb.get("project_name", "")
         dash_parts = proj_name.split("——")
         if len(dash_parts) >= 2:
-            return dash_parts[1][:20]
-        if len(proj_name) <= 15:
-            return proj_name
+            # 尝试提取"XX芯片"、"XX系统"等经典模式
+            short = re.findall(r'([一-鿿A-Za-z]{2,10}(?:芯片|系统|材料|技术|器件|电池|平台))', dash_parts[1])
+            if short:
+                return short[0]
+            return dash_parts[1][:15]
+        # 尝试从创新点列表取第一个
+        innovations = kb.get("innovations", [])
+        if innovations and len(innovations[0]) <= 15:
+            return innovations[0]
 
         return "核心技术"
 
