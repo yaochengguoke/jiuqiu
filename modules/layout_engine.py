@@ -539,31 +539,29 @@ img {{
                 img_desc = stripped[6:-1]
                 matched_img = None
 
-                # 在图片索引中搜索匹配
+                # 在图片索引中搜索匹配（精确优先）
                 if image_dir and image_index:
-                    keywords = {
-                        "封面": ["cover"],
-                        "架构": ["arch"],
-                        "流程": ["flow"],
-                        "新闻": ["news"],
-                        "配图": ["news"],
-                        "画布": ["biz", "canvas"],
-                        "商业": ["biz", "canvas"],
-                        "路线": ["timeline"],
-                        "时间轴": ["timeline"],
-                        "雷达": ["news"],
+                    # 精确映射：占位符关键词 → 图片文件名模式
+                    exact_map = {
+                        "封面": "cover",
+                        "架构": "arch",
+                        "流程": "flow",
+                        "新闻": "news",
+                        "配图": "news",
+                        "画布": "biz",
+                        "商业": "biz",
+                        "路线": "timeline",
+                        "时间轴": "timeline",
+                        "雷达": None,       # 雷达图暂不自动生成，保留占位
                     }
-                    for kw, patterns in keywords.items():
+                    for kw, target in exact_map.items():
                         if kw in img_desc:
-                            for p in patterns:
+                            if target:
                                 for stem, path in image_index.items():
-                                    if p in stem:
+                                    if target in stem:
                                         matched_img = path
                                         break
-                                if matched_img:
-                                    break
-                        if matched_img:
-                            break
+                            break  # 找到映射就停止，即使target为None
 
                 if matched_img:
                     with open(matched_img, "rb") as f:

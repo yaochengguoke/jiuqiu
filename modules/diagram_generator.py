@@ -613,12 +613,12 @@ class DiagramGenerator:
             competition_name=competition_name,
         )
 
-        # 2. 技术架构图
-        if tech_modules:
-            diagrams["tech_arch"] = self.generate_tech_architecture(
-                tech_name=tech_name,
-                modules=tech_modules[:5],
-            )
+        # 2. 技术架构图（用创新点作为模块fallback）
+        modules_for_arch = tech_modules if tech_modules else innovations[:5] if innovations else ["核心技术"]
+        diagrams["tech_arch"] = self.generate_tech_architecture(
+            tech_name=tech_name,
+            modules=modules_for_arch[:5],
+        )
 
         # 3. 流程图
         if innovations:
