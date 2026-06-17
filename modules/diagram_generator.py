@@ -28,13 +28,76 @@ import matplotlib.patches as mpatches
 from matplotlib.patches import FancyBboxPatch, FancyArrowPatch, Arc, Rectangle, Polygon
 import matplotlib.font_manager as fm
 import numpy as np
+import os
 
-# 尝试设置中文字体
-try:
-    plt.rcParams['font.sans-serif'] = ['Microsoft YaHei', 'SimHei', 'DejaVu Sans']
+# 中文字体配置：优先使用系统字体，否则下载 Noto Sans SC
+_CHINESE_FONT_PATH = None
+
+def _setup_chinese_font():
+    """配置中文字体，确保在任何环境（本地/云端/headless）都能正常显示"""
+    global _CHINESE_FONT_PATH
+
+    # 1. 检查常见系统字体
+    system_fonts = [
+        'Microsoft YaHei', 'SimHei', 'SimSun', 'KaiTi', 'FangSong',
+        'Noto Sans CJK SC', 'Noto Sans SC', 'WenQuanYi Micro Hei',
+        'WenQuanYi Zen Hei', 'AR PL UMing CN', 'AR PL UKai CN',
+    ]
+    available = {f.name for f in fm.fontManager.ttflist}
+    for font_name in system_fonts:
+        if font_name in available:
+            _CHINESE_FONT_PATH = font_name
+            break
+
+    # 2. 尝试通过字体文件路径查找
+    if not _CHINESE_FONT_PATH:
+        font_paths = [
+            'C:/Windows/Fonts/msyh.ttc',
+            'C:/Windows/Fonts/simhei.ttf',
+            'C:/Windows/Fonts/simsun.ttc',
+            '/usr/share/fonts/truetype/noto/NotoSansCJK-Regular.ttc',
+            '/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc',
+            '/usr/share/fonts/noto-cjk/NotoSansCJK-Regular.ttc',
+        ]
+        for fp in font_paths:
+            if os.path.exists(fp):
+                _CHINESE_FONT_PATH = fp
+                fm.fontManager.addfont(fp)
+                break
+
+    # 3. 尝试从网络下载 Noto Sans SC（云端环境）
+    if not _CHINESE_FONT_PATH:
+        try:
+            import urllib.request
+            font_dir = os.path.join(os.path.dirname(__file__), '..', '.fonts')
+            os.makedirs(font_dir, exist_ok=True)
+            font_file = os.path.join(font_dir, 'NotoSansSC-Regular.ttf')
+            if not os.path.exists(font_file):
+                url = 'https://github.com/googlefonts/noto-cjk/raw/main/Sans/OTF/SimplifiedChinese/NotoSansSC-Regular.otf'
+                urllib.request.urlretrieve(url, font_file)
+            if os.path.exists(font_file):
+                _CHINESE_FONT_PATH = font_file
+                fm.fontManager.addfont(font_file)
+        except Exception:
+            pass
+
+    # 4. 应用字体配置
+    if _CHINESE_FONT_PATH:
+        plt.rcParams['font.family'] = 'sans-serif'
+        if os.path.exists(str(_CHINESE_FONT_PATH)):
+            # 是文件路径
+            fp = fm.FontProperties(fname=_CHINESE_FONT_PATH)
+            plt.rcParams['font.sans-serif'] = [fp.get_name()] + plt.rcParams['font.sans-serif']
+        else:
+            # 是字体名
+            plt.rcParams['font.sans-serif'] = [_CHINESE_FONT_PATH] + plt.rcParams['font.sans-serif']
+    else:
+        # 最终fallback：用英文标签
+        plt.rcParams['font.sans-serif'] = ['DejaVu Sans']
+
     plt.rcParams['axes.unicode_minus'] = False
-except Exception:
-    pass
+
+_setup_chinese_font()
 
 
 @dataclass
