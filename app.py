@@ -107,15 +107,47 @@ with st.sidebar:
         use_container_width=True,
     )
 
+# ── 示例数据 ──
+DEMO_DATA = {
+    "project_name": "晶源新材——钙钛矿光伏电池关键材料国产化",
+    "project_brief": "钙钛矿太阳能电池效率十年间从3.8%跃升至26.1%，但核心材料高纯度碘化铅长期依赖进口，进口试剂纯度仅99.99%且价格高达每克800-1200元。晶源新材团队自主研发了梯度结晶纯化工艺，将碘化铅纯度提升至99.999%（5N级），杂质离子浓度控制在10ppm以下。产品通过中国赛宝实验室验证，电池效率达25.3%（NREL认证），优于进口试剂制备的24.1%。已申请发明专利5项，发表SCI论文4篇，在苏州建成年产10吨级中试线，产品向天合光能、晶科能源等头部企业送样测试反馈良好。",
+    "tech_principles": "核心技术包含三大模块：\n1. 溶剂络合分离：利用PbI₂与DMSO/DMF混合体系形成络合物，低温选择性溶解，杂质从500ppm降至50ppm以下。\n2. 温控梯度析出：基于PbI₂溶解度温度差异（25→100℃变化5倍），控制降温速率1-5℃/min，晶种诱导使粒径均匀控制在50-200μm。\n3. 多级重结晶联用：3次循环重结晶+活性炭吸附+0.22μm微孔过滤，最终纯度99.999%。",
+    "innovations_str": "溶剂络合选择性分离,温控梯度析出,多级重结晶联用",
+    "market_data": "据QYResearch报告，2023年全球钙钛矿光伏材料市场规模约4.2亿美元，预计2030年突破50亿美元，CAGR超42%。中国占全球需求45%，高纯碘化铅进口依赖度超80%。",
+    "leader": "周明辉",
+    "team_text": "吴子涵,材料物理与化学,博士研究生,纯化工艺负责人,发表SCI论文6篇\n赵子昂,化学工程,硕士研究生,中试放大负责人,全国化工设计竞赛一等奖\n林心怡,工商管理,硕士研究生,市场商务负责人,挑战杯省赛金奖",
+    "advisor": "孙丽华",
+    "advisor_title": "教授、博士生导师、国家杰出青年科学基金获得者",
+    "past_awards_str": "2025年挑战杯省赛特等奖\n全国大学生化学实验竞赛一等奖",
+    "patents": "5项发明专利（2项已授权）",
+}
+
 # ── 空状态提示 ──
 if "generated" not in st.session_state:
     st.session_state.generated = False
 
 if not st.session_state.generated:
-    st.info(
-        "[INFO] 请在左侧填写项目资料，然后点击「开始生成策划书」按钮。\n\n"
-        "系统将自动完成：模板匹配 → 素材解析 → 国奖框架重写 → 自动制图 → 排版美化 → 成品输出",
-    )
+    col_a, col_b = st.columns([3, 1])
+    with col_a:
+        st.info(
+            "[INFO] 请在左侧填写项目资料，然后点击「开始生成策划书」按钮。\n\n"
+            "系统将自动完成：模板匹配 → 素材解析 → 国奖框架重写 → 自动制图 → 排版美化 → 成品输出",
+        )
+    with col_b:
+        if st.button("[GEM] 一键体验演示案例", use_container_width=True, type="secondary"):
+            st.session_state.run_demo = True
+
+    if st.session_state.get("run_demo"):
+        st.success("正在运行演示案例（晶源新材·挑战杯科技发明A类）...")
+        with st.spinner(""):
+            progress = st.progress(0, text="正在初始化...")
+            agent = CompetitionAgent()
+            progress.progress(30, text="生成中...")
+            agent.run_demo()
+            progress.progress(100, text="完成！")
+            st.session_state.generated = True
+            st.session_state.demo_result = agent
+            st.rerun()
 
     with st.expander("这是什么？"):
         st.markdown("""
@@ -132,6 +164,25 @@ if not st.session_state.generated:
 
         **适用赛事：** 互联网+、挑战杯、节能减排、创青春、三创赛 等 8 个主流赛事
         """)
+
+# ── 显示演示结果 ──
+if st.session_state.get("demo_result"):
+    agent = st.session_state.demo_result
+    st.success(
+        f"演示案例生成完毕！"
+        f"共 {agent.current_document.total_word_count} 字 · "
+        f"{len(agent.current_template.chapters)} 章 · "
+        f"{len(agent.current_document.chapters)} 章正文"
+    )
+    tab1, tab2 = st.tabs(["策划书正文", "下载文件"])
+    with tab1:
+        st.markdown(agent.current_document.get_full_text())
+    with tab2:
+        export_dir = agent.current_export.output_dir
+        for f in sorted(export_dir.glob("*")):
+            if f.is_file():
+                with open(f, "rb") as fh:
+                    st.download_button(f.name, fh.read(), f.name)
 
 # ── 生成逻辑 ──
 if generate:
@@ -176,8 +227,8 @@ if generate:
             },
         }
 
-        with st.spinner("智能体运行中，正在为您生成国奖级策划书..."):
-            progress = st.progress(0, text="正在初始化...")
+        with st.spinner(""):
+            progress = st.progress(0, text="正在初始化引擎...")
             status = st.empty()
 
             agent = CompetitionAgent()
@@ -185,24 +236,28 @@ if generate:
             # 阶段1
             progress.progress(10, text="[1/7] 校验资料完整性...")
             submission, completeness = agent.input_processor.process_submission(raw_data)
+            status.info(f"资料完整度 {completeness.score:.0%}，{completeness.level.value}")
 
             # 阶段2
             progress.progress(20, text="[2/7] 匹配国奖模板...")
             agent.current_template = agent.template_matcher.match_template(competition)
+            status.info(f"已匹配「{agent.current_template.competition_name}」模板，共 {len(agent.current_template.chapters)} 章")
 
             # 阶段3
-            progress.progress(35, text="[3/7] 解析项目素材，构建知识库...")
+            progress.progress(35, text="[3/7] 解析项目素材，提取关键数据...")
             customer_kb = agent.input_processor.build_customer_knowledge_base()
             agent.current_data_pool = agent.material_parser.parse_and_build_pool(
                 customer_kb, agent.current_template.chapters)
+            status.info(f"已提取 {len(agent.current_data_pool.numeric_entities)} 组数据实体")
 
             # 阶段4+5
-            progress.progress(55, text="[4/7] 按国奖框架逐章撰写正文...")
+            progress.progress(50, text="[4/7] 按国奖框架逐章撰写正文...")
             agent.current_document = agent.content_generator.generate_all_chapters(
                 agent.current_template, agent.current_data_pool)
+            status.info(f"正文 {agent.current_document.total_word_count} 字，共 {len(agent.current_document.chapters)} 章")
 
             # 阶段6
-            progress.progress(70, text="[5/7] 自动生成图表（封面/架构/流程图/配图）...")
+            progress.progress(75, text="[5/7] 自动绘制图表（封面/架构/流程图/配图）...")
             user_visual = agent._load_visual_style(color_theme)
             from modules.diagram_generator import DiagramGenerator
             dg = DiagramGenerator(visual_style=user_visual)
@@ -210,17 +265,19 @@ if generate:
             diagrams = dg.generate_all_diagrams_for_document(
                 project_name=project_name, competition_name=competition,
                 tech_name=tech_name, tech_modules=[], innovations=innovations)
+            status.info(f"已生成 {len(diagrams)} 张图表")
 
             # 阶段7
-            progress.progress(90, text="[6/7] 排版美化，导出多格式文件...")
+            progress.progress(90, text="[6/7] 排版美化 + 导出文件...")
             from modules.layout_engine import LayoutEngine
             from modules.output_exporter import OutputExporter
             layout = LayoutEngine(user_visual)
             exporter = OutputExporter()
             agent.current_export = exporter.export_all(
                 document=agent.current_document, layout_engine=layout)
+            status.info(f"已导出 Markdown + HTML + Word 三种格式")
 
-            progress.progress(100, text="[7/7] 生成完成！")
+            progress.progress(100, text="[7/7] 策划书生成完毕！")
 
         # ── 结果展示 ──
         st.success(
