@@ -17,6 +17,24 @@ st.set_page_config(
     initial_sidebar_state="expanded",
 )
 
+# ── 工具函数 ──
+def _get_download_label(filename: str) -> str:
+    """将英文文件名映射为中文下载标签"""
+    mapping = {
+        "final_plan.md": "策划书正文 (Markdown)",
+        "final_plan.html": "策划书正文 (网页版)",
+        "final_plan.docx": "策划书正文 (Word)",
+        "quality_report.md": "质量检查报告",
+        "missing_checklist.md": "待补充信息清单",
+        "client_supplement_guide.md": "客户补充资料引导问卷",
+        "financial_questionnaire.md": "财务预测补充问卷",
+        "defense_prep_report.md": "答辩预演手册",
+        "DATA_PRIVACY.txt": "数据隐私承诺书",
+        "change_log.md": "修改日志",
+        "metadata.json": "元数据",
+    }
+    return mapping.get(filename, filename)
+
 # ── 主页标题 ──
 st.title("[Award] 全自动竞赛策划智能体")
 st.caption("双库驱动 · 国奖模板仿写 · 零虚构 · 全自动制图排版 · 一键输出成品策划书")
@@ -182,7 +200,7 @@ if st.session_state.get("demo_result"):
         for f in sorted(export_dir.glob("*")):
             if f.is_file():
                 with open(f, "rb") as fh:
-                    st.download_button(f.name, fh.read(), f.name)
+                    st.download_button(_get_download_label(f.name), fh.read(), f.name)
 
 # ── 生成逻辑 ──
 if generate:
@@ -306,15 +324,8 @@ if generate:
             for i, f in enumerate(files):
                 if f.is_file():
                     with cols[i % 3]:
-                        label = f.name
-                        if f.suffix == ".md":
-                            label = f"[MD] {f.name}"
-                        elif f.suffix == ".html":
-                            label = f"[HTML] {f.name}"
-                        elif f.suffix == ".docx":
-                            label = f"[DOCX] {f.name}"
                         with open(f, "rb") as fh:
-                            st.download_button(label, fh.read(), f.name, use_container_width=True)
+                            st.download_button(_get_download_label(f.name), fh.read(), f.name, use_container_width=True)
 
         with tab3:
             st.markdown(agent.current_document.get_missing_report())
