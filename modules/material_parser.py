@@ -266,6 +266,11 @@ class MaterialParser:
         tech = kb.get("tech_principles", "")
         combined = brief + " " + tech
 
+        # 最高优先级：从创新点取第一个作为技术名
+        innovations = kb.get("innovations", [])
+        if innovations and 3 <= len(innovations[0]) <= 20:
+            return innovations[0][:20]
+
         # 优先匹配"XX技术"、"XX系统"等经典模式（限制在20字以内）
         classic_patterns = [
             # "AI自适应液冷"、"相变散热系统"这种2-8字+技术/系统类
@@ -273,8 +278,8 @@ class MaterialParser:
             # 排除以年/月/日/获/奖/第/届开头的噪音匹配
         ]
         # 噪音前缀过滤（虚词、结构助词等无意义开头）
-        noise_prefixes = set('年月日获奖第届项篇人次个的着了过被把让')
-        garbage_words = {'的制备', '的材料', '了技术', '为基础'}
+        noise_prefixes = set('年月日获奖第届项篇人次个的着了过被把让为在与和从以可而')
+        garbage_words = {'的制备', '的材料', '了技术', '为基础', '为高性能', '的制备奠定'}
         for pattern in classic_patterns:
             matches = re.findall(pattern, combined)
             if matches:
