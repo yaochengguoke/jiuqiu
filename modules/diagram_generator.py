@@ -605,6 +605,12 @@ class DiagramGenerator:
         Returns:
             Dict[str, Path]: 图表类型 -> 文件路径
         """
+        # 清空共享图片目录，确保本次生成的图不与旧图混淆
+        import shutil
+        if self.output_dir.exists():
+            for f in self.output_dir.glob("*.png"):
+                f.unlink()
+
         diagrams = {}
 
         # 1. 封面
