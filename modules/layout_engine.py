@@ -68,15 +68,11 @@ class LayoutEngine:
         markdown_content: str,
         project_name: str,
         competition_name: str,
+        image_dir: str = None,
     ) -> str:
-        """将Markdown内容渲染为HTML文档（图片保留占位符，不自动嵌入）"""
-        body_html = self._markdown_to_html(markdown_content)
-        html = self._build_html_document(
-            body=body_html,
-            project_name=project_name,
-            competition_name=competition_name,
-        )
-        return html
+        """将Markdown内容渲染为HTML，自动嵌入图片"""
+        body_html = self._markdown_to_html(markdown_content, image_dir=image_dir)
+        return self._build_html_document(body_html, project_name, competition_name)
 
     def render_pdf_ready_html(
         self,
@@ -427,8 +423,18 @@ img {{
 </html>"""
         return html
 
-    def _markdown_to_html(self, md_text: str) -> str:
-        """简易Markdown→HTML转换"""
+    def _markdown_to_html(self, md_text: str, image_dir: str = None) -> str:
+        """简易Markdown→HTML转换，支持自动嵌入图片"""
+        import base64
+        from pathlib import Path
+
+        image_index = {}
+        if image_dir:
+            p = Path(image_dir)
+            if p.exists():
+                for f in p.glob("*.png"):
+                    image_index[f.stem.lower()] = f
+
         lines = md_text.split('\n')
         html_lines = []
         in_table = False
@@ -511,15 +517,33 @@ img {{
                 content = re.sub(r'\*\*(.+?)\*\*', r'<strong>\1</strong>', content)
                 html_lines.append(f'<li>{content}</li>')
 
-            # 图片占位
+            # 图片占位 → 自动匹配嵌入
             elif stripped.startswith('【此处插入：') and stripped.endswith('】'):
                 img_desc = stripped[6:-1]
-                html_lines.append(
-                    f'<div class="figure-placeholder" style="border:2px dashed {self.colors.get("border_light", "#ddd")}; '
-                    f'padding:1cm; text-align:center; margin:0.5cm 0; border-radius:8px;">'
-                    f'<p style="color:{self.colors.get("text_secondary", "#888")}; font-size:10pt;">[Chart] {img_desc}</p>'
-                    f'</div>'
-                )
+                matched = None
+                if image_dir and image_index:
+                    m = {"封面":"cover","架构":"arch","流程":"flow","新闻":"news",
+                         "配图":"news","画布":"biz","商业":"biz","路线":"timeline","时间轴":"timeline"}
+                    for kw, pat in m.items():
+                        if kw in img_desc:
+                            for stem, path in image_index.items():
+                                if pat in stem:
+                                    matched = path
+                                    break
+                            break
+                if matched:
+                    with open(matched, "rb") as f:
+                        b64 = base64.b64encode(f.read()).decode()
+                    html_lines.append(
+                        f'<div style="text-align:center;margin:0.8cm 0;">'
+                        f'<img src="data:image/png;base64,{b64}" '
+                        f'style="max-width:100%;border-radius:6px;box-shadow:0 4px 16px rgba(0,0,0,0.1);" '
+                        f'alt="{img_desc}"><p style="font-size:9pt;color:#888;">图：{img_desc}</p></div>')
+                else:
+                    html_lines.append(
+                        f'<div class="figure-placeholder" style="border:2px dashed {self.colors.get("border_light", "#ddd")}; '
+                        f'padding:1cm;text-align:center;margin:0.5cm 0;border-radius:8px;">'
+                        f'<p style="color:{self.colors.get("text_secondary", "#888")};font-size:10pt;">[Chart] {img_desc}</p></div>')
 
             # 待补充标记
             elif '【待补充' in stripped:
