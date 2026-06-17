@@ -507,7 +507,15 @@ class ContentGenerator:
         # 2. 权威数据佐证
         lines.append("### 市场数据与趋势")
         if market_data and "【待补充】" not in market_size_str:
-            lines.append(f"据权威行业报告显示，全球{tech_name}市场规模已达{market_size_str}，"
+            # 优先从市场数据中提取正确的行业名词
+            market_topic = tech_name
+            if "钙钛矿" in market_data:
+                market_topic = "钙钛矿光伏材料"
+            elif "液冷" in market_data or "数据中心" in market_data:
+                market_topic = "数据中心液冷"
+            elif "GaN" in market_data or "半导体" in market_data:
+                market_topic = "GaN功率器件"
+            lines.append(f"据权威行业报告显示，全球{market_topic}市场规模已达{market_size_str}，"
                         f"年复合增长率超过{cagr_str}。【来源：market_data】")
             # 使用实际的市场数据内容
             lines.append(f"")
