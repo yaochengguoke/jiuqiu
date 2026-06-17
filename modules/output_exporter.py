@@ -98,11 +98,17 @@ class OutputExporter:
         write_text_file(md_path, full_text)
         result.markdown_path = md_path
 
-        # 2. HTML 美化版
+        # 2. HTML 美化版（自动嵌入生成的图片）
+        from pathlib import Path
+        import sys
+        sys.path.insert(0, str(Path(__file__).parent.parent))
+        from config import OUTPUT_DIR
+        img_dir = OUTPUT_DIR / "current" / "generated_images"
         html_content = layout_engine.render_html(
             markdown_content=full_text,
             project_name=document.project_name,
             competition_name=document.competition_name,
+            image_dir=str(img_dir) if img_dir.exists() else None,
         )
         html_path = prj_output_dir / "final_plan.html"
         write_text_file(html_path, html_content)
