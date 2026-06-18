@@ -26,16 +26,12 @@ st.markdown("""
     .main .block-container { padding: 2rem 3rem; max-width: 900px; }
     /* 侧边栏 */
     [data-testid="stSidebar"] { background: rgba(245,245,247,0.8); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-right: 0.5px solid rgba(0,0,0,0.08); }
-    [data-testid="stSidebar"] label { color: var(--text) !important; font-size: 0.9rem !important; font-weight: 500 !important; }
+    [data-testid="stSidebar"] label { color: var(--text) !important; }
     [data-testid="stSidebar"] [data-testid="stExpander"] { background: #fff; border-radius: 18px; border: 1px solid rgba(0,0,0,0.06); box-shadow: 0 2px 8px rgba(0,0,0,0.04); margin-bottom: 0.5rem; }
     [data-testid="stSidebar"] hr { border-color: rgba(0,0,0,0.06); margin: 1rem 0; }
-    /* 输入框 - pill shaped */
-    .stTextInput input, .stTextArea textarea, .stSelectbox [data-baseweb="select"] > div {
-        border-radius: 12px !important; border: 1px solid var(--border) !important;
-        background: #fff !important; font-size: 0.9rem !important; padding: 0.6rem 0.9rem !important;
-        transition: border-color 0.15s, box-shadow 0.15s !important;
-    }
-    .stTextInput input:focus, .stTextArea textarea:focus { border-color: var(--blue) !important; box-shadow: 0 0 0 4px rgba(0,113,227,0.12) !important; outline: none !important; }
+    /* 输入框 - 仅颜色不碰尺寸 */
+    .stTextInput input, .stTextArea textarea { border-radius: 10px !important; border-color: #d2d2d7 !important; background: #fff !important; }
+    .stTextInput input:focus, .stTextArea textarea:focus { border-color: var(--blue) !important; box-shadow: 0 0 0 3px rgba(0,113,227,0.12) !important; }
     /* 按钮 - pill */
     .stButton > button {
         background: var(--blue) !important; color: #fff !important; border: none !important;
