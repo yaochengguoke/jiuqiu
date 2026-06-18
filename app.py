@@ -11,11 +11,27 @@ from main import CompetitionAgent
 from config import SUPPORTED_COMPETITIONS, SUPPORTED_THEMES
 
 st.set_page_config(
-    page_title="全自动竞赛策划智能体",
-    page_icon="[Award]",
+    page_title="竞赛策划智能体",
+    page_icon="🏆",
     layout="wide",
     initial_sidebar_state="expanded",
 )
+
+# ── 全局样式 ──
+st.markdown("""
+<style>
+    [data-testid="stSidebar"] { background: linear-gradient(180deg, #0A2F5A 0%, #0F3B6E 100%); }
+    [data-testid="stSidebar"] * { color: rgba(255,255,255,0.9) !important; }
+    [data-testid="stSidebar"] h1, [data-testid="stSidebar"] h2, [data-testid="stSidebar"] h3, [data-testid="stSidebar"] label { color: #fff !important; }
+    [data-testid="stSidebar"] [data-testid="stExpander"] { background: rgba(255,255,255,0.1); border-radius: 8px; border: 1px solid rgba(255,255,255,0.15); }
+    [data-testid="stSidebar"] hr { border-color: rgba(255,255,255,0.2); }
+    [data-testid="stSidebar"] .stButton > button { background: #FF6B35 !important; border: none !important; font-weight: 600 !important; border-radius: 8px !important; }
+    [data-testid="stSidebar"] .stButton > button:hover { background: #e85d2c !important; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(255,107,53,0.3); }
+    .stProgress > div > div > div > div { background: #FF6B35 !important; }
+    h1 { color: #0A2F5A !important; }
+    .stButton > button { border-radius: 8px; }
+</style>
+""", unsafe_allow_html=True)
 
 # ── 工具函数 ──
 def _get_download_label(filename: str) -> str:
@@ -36,12 +52,12 @@ def _get_download_label(filename: str) -> str:
     return mapping.get(filename, filename)
 
 # ── 主页标题 ──
-st.title("[Award] 全自动竞赛策划智能体")
-st.caption("双库驱动 · 国奖模板仿写 · 零虚构 · 全自动制图排版 · 一键输出成品策划书")
+st.title("🏆 竞赛策划智能体")
+st.caption("输入项目资料，自动生成国奖级竞赛策划书")
 
-# ── 侧边栏：项目资料输入 ──
+# ── 侧边栏 ──
 with st.sidebar:
-    st.header("[INFO] 第一步：填写项目资料")
+    st.markdown("### 📋 项目资料")
 
     competition = st.selectbox(
         "赛事组别",
@@ -54,7 +70,7 @@ with st.sidebar:
         placeholder="例：晶源新材——钙钛矿光伏电池关键材料国产化",
     )
 
-    with st.expander("[Pin] 项目核心资料", expanded=True):
+    with st.expander("项目核心资料", expanded=True):
         project_brief = st.text_area(
             "项目简介 【必填】",
             height=130,
@@ -79,7 +95,7 @@ with st.sidebar:
             placeholder="例：已与XX公司达成合作，产品在XX场景完成验证（可选）",
         )
 
-    with st.expander("[Pin] 团队信息"):
+    with st.expander("团队信息"):
         leader = st.text_input("项目负责人姓名")
         team_text = st.text_area(
             "团队成员",
@@ -95,7 +111,7 @@ with st.sidebar:
             placeholder="每行一项，例：\n2025年全国大学生节能减排大赛一等奖\n2024年挑战杯省赛金奖",
         )
 
-    with st.expander("[Pin] 文稿定制"):
+    with st.expander("文稿定制"):
         col1, col2 = st.columns(2)
         with col1:
             pages = st.number_input("目标页数", 30, 150, 80)
@@ -106,7 +122,7 @@ with st.sidebar:
                 format_func=lambda x: SUPPORTED_THEMES[x],
             )
 
-    with st.expander("[Pin] 佐证材料"):
+    with st.expander("佐证材料"):
         patents = st.text_area(
             "专利 / 软著",
             height=50,
@@ -120,7 +136,7 @@ with st.sidebar:
 
     st.markdown("---")
     generate = st.button(
-        "[ROCKET] 开始生成策划书",
+        "🚀 开始生成策划书",
         type="primary",
         use_container_width=True,
     )
@@ -148,15 +164,15 @@ if not st.session_state.generated:
     col_a, col_b = st.columns([3, 1])
     with col_a:
         st.info(
-            "[INFO] 请在左侧填写项目资料，然后点击「开始生成策划书」按钮。\n\n"
-            "系统将自动完成：模板匹配 → 素材解析 → 国奖框架重写 → 自动制图 → 排版美化 → 成品输出",
+            "在左侧填写资料 → 点击「开始生成策划书」→ 右侧下载文件。\n\n"
+            "点击「一键体验演示案例」可快速查看效果。",
         )
     with col_b:
-        if st.button("[GEM] 一键体验演示案例", use_container_width=True, type="secondary"):
+        if st.button("⚡ 体验演示案例", use_container_width=True, type="secondary"):
             st.session_state.run_demo = True
 
     if st.session_state.get("run_demo"):
-        st.success("正在运行演示案例（晶源新材·挑战杯科技发明A类）...")
+        st.success("正在生成演示案例...")
         with st.spinner(""):
             progress = st.progress(0, text="正在初始化...")
             agent = CompetitionAgent()
@@ -174,11 +190,11 @@ if not st.session_state.generated:
         一个 AI 驱动的竞赛策划书自动生成系统，专为大学生顶级竞赛设计。
 
         **核心能力：**
-        - [Pin] **双库驱动**：国奖模板库 + 客户专属知识库
-        - [Pin] **1:1 仿写国奖结构**：章节、字数、话术完全对标
-        - [Pin] **零虚构**：所有内容来自客户资料，绝不编造
-        - [Pin] **全自动制图**：封面、架构图、流程图、配图一键生成
-        - [Pin] **多格式输出**：Markdown + HTML + Word 三种格式
+        - **双库驱动**：国奖模板库 + 客户专属知识库
+        - **1:1 仿写国奖结构**：章节、字数、话术完全对标
+        - **零虚构**：所有内容来自客户资料，绝不编造
+        - **全自动制图**：封面、架构图、流程图、配图一键生成
+        - **多格式输出**：Markdown + HTML + Word 三种格式
 
         **适用赛事：** 互联网+、挑战杯、节能减排、创青春、三创赛 等 8 个主流赛事
         """)
