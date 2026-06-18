@@ -21,15 +21,11 @@ st.set_page_config(
 st.markdown("""
 <style>
     [data-testid="stSidebar"] { background: linear-gradient(180deg, #0A2F5A 0%, #0F3B6E 100%); }
-    [data-testid="stSidebar"] * { color: rgba(255,255,255,0.9) !important; }
     [data-testid="stSidebar"] h1, [data-testid="stSidebar"] h2, [data-testid="stSidebar"] h3, [data-testid="stSidebar"] label { color: #fff !important; }
     [data-testid="stSidebar"] [data-testid="stExpander"] { background: rgba(255,255,255,0.1); border-radius: 8px; border: 1px solid rgba(255,255,255,0.15); }
-    [data-testid="stSidebar"] hr { border-color: rgba(255,255,255,0.2); }
-    [data-testid="stSidebar"] .stButton > button { background: #FF6B35 !important; border: none !important; font-weight: 600 !important; border-radius: 8px !important; }
-    [data-testid="stSidebar"] .stButton > button:hover { background: #e85d2c !important; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(255,107,53,0.3); }
+    [data-testid="stSidebar"] .stButton > button { background: #FF6B35 !important; border: none !important; font-weight: 600 !important; border-radius: 8px !important; color: #fff !important; }
     .stProgress > div > div > div > div { background: #FF6B35 !important; }
     h1 { color: #0A2F5A !important; }
-    .stButton > button { border-radius: 8px; }
 </style>
 """, unsafe_allow_html=True)
 
