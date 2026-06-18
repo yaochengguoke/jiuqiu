@@ -398,8 +398,10 @@ if generate:
         with tab4:
             st.markdown(agent.current_document.get_missing_report())
 
-st.sidebar.markdown("---")
-st.sidebar.caption(
-    "双库驱动 · 国奖模板 · 零虚构 · 全自动制图排版\n\n"
-    "Powered by Claude Agent SDK"
-)
+# ── 底部品牌 ──
+st.markdown("""
+<div style="text-align:center;padding:3rem 0 2rem;color:#86868b;font-size:0.85rem;">
+    <p style="margin:0;">双库驱动 · 国奖模板 · 零虚构 · 全自动制图排版</p>
+    <p style="margin:0.3rem 0 0;font-size:0.75rem;color:#aeaeb2;">Powered by Claude</p>
+</div>
+""", unsafe_allow_html=True)
