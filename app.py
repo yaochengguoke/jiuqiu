@@ -17,39 +17,42 @@ st.set_page_config(
     initial_sidebar_state="expanded",
 )
 
-# ── Apple 风格全局样式 ──
+# ── Apple 官网风格 ──
 st.markdown("""
 <style>
-    /* 背景 */
-    .stApp { background: #f5f5f7; }
-    /* 标题 */
-    h1 { font-size: 2.5rem !important; font-weight: 700 !important; color: #1d1d1f !important; letter-spacing: -0.5px; }
+    :root { --blue: #0071e3; --gray: #f5f5f7; --text: #1d1d1f; --secondary: #86868b; --border: #d2d2d7; }
+    .stApp { background: var(--gray); }
+    /* 主区域卡片 */
+    .main .block-container { padding: 2rem 3rem; max-width: 900px; }
     /* 侧边栏 */
-    [data-testid="stSidebar"] { background: #f5f5f7; border-right: 1px solid #e8e8ed; }
-    [data-testid="stSidebar"] label { color: #1d1d1f !important; font-size: 0.85rem !important; font-weight: 500 !important; }
-    [data-testid="stSidebar"] [data-testid="stExpander"] { background: #fff; border-radius: 14px; border: 1px solid #e8e8ed; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
-    /* 输入框 */
-    .stTextInput input, .stTextArea textarea, .stSelectbox > div > div {
-        border-radius: 10px !important; border: 1px solid #d2d2d7 !important;
-        background: #fff !important; font-size: 0.9rem !important;
-        transition: border-color 0.2s, box-shadow 0.2s !important;
+    [data-testid="stSidebar"] { background: rgba(245,245,247,0.8); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-right: 0.5px solid rgba(0,0,0,0.08); }
+    [data-testid="stSidebar"] label { color: var(--text) !important; font-size: 0.8rem !important; font-weight: 600 !important; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.2rem !important; }
+    [data-testid="stSidebar"] [data-testid="stExpander"] { background: #fff; border-radius: 18px; border: 1px solid rgba(0,0,0,0.06); box-shadow: 0 2px 8px rgba(0,0,0,0.04); margin-bottom: 0.5rem; }
+    [data-testid="stSidebar"] hr { border-color: rgba(0,0,0,0.06); margin: 1rem 0; }
+    /* 输入框 - pill shaped */
+    .stTextInput input, .stTextArea textarea, .stSelectbox [data-baseweb="select"] > div {
+        border-radius: 12px !important; border: 1px solid var(--border) !important;
+        background: #fff !important; font-size: 0.9rem !important; padding: 0.6rem 0.9rem !important;
+        transition: border-color 0.15s, box-shadow 0.15s !important;
     }
-    .stTextInput input:focus, .stTextArea textarea:focus { border-color: #0071e3 !important; box-shadow: 0 0 0 4px rgba(0,113,227,0.1) !important; }
-    /* 按钮 */
+    .stTextInput input:focus, .stTextArea textarea:focus { border-color: var(--blue) !important; box-shadow: 0 0 0 4px rgba(0,113,227,0.12) !important; outline: none !important; }
+    /* 按钮 - pill */
     .stButton > button {
-        background: #0071e3 !important; color: #fff !important; border: none !important;
-        border-radius: 12px !important; padding: 0.7rem 2rem !important;
-        font-size: 0.95rem !important; font-weight: 500 !important;
-        letter-spacing: -0.2px; transition: all 0.2s !important;
+        background: var(--blue) !important; color: #fff !important; border: none !important;
+        border-radius: 980px !important; padding: 0.6rem 1.6rem !important;
+        font-size: 0.9rem !important; font-weight: 500 !important;
+        letter-spacing: -0.2px; transition: all 0.15s ease !important;
     }
-    .stButton > button:hover { background: #0077ED !important; transform: scale(1.01); box-shadow: 0 4px 16px rgba(0,113,227,0.2); }
+    .stButton > button:hover { background: #0077ED !important; filter: brightness(1.05); box-shadow: 0 4px 16px rgba(0,113,227,0.2); }
     /* 进度条 */
-    .stProgress > div > div > div > div { background: #0071e3 !important; border-radius: 10px; }
-    .stProgress > div > div { background: #e8e8ed !important; border-radius: 10px; }
+    .stProgress > div { background: #e8e8ed !important; border-radius: 980px; height: 6px !important; }
+    .stProgress > div > div > div { background: var(--blue) !important; border-radius: 980px; }
     /* 信息框 */
-    [data-testid="stAlert"] { border-radius: 14px !important; border: 1px solid #e8e8ed !important; background: #fff !important; }
-    /* 展开内容 */
-    .stExpander > div > div > div { background: transparent !important; }
+    [data-testid="stAlert"] { border-radius: 18px !important; border: 1px solid rgba(0,0,0,0.06) !important; background: #fff !important; box-shadow: 0 2px 8px rgba(0,0,0,0.04); padding: 1.25rem 1.5rem !important; }
+    /* 下载按钮 */
+    .stDownloadButton > button { border-radius: 980px !important; font-size: 0.85rem !important; }
+    /* 响应式 */
+    @media (max-width: 768px) { .main .block-container { padding: 1rem; } h1 { font-size: 1.8rem !important; } }
 </style>
 """, unsafe_allow_html=True)
 
@@ -71,13 +74,21 @@ def _get_download_label(filename: str) -> str:
     }
     return mapping.get(filename, filename)
 
-# ── 主页标题 ──
-st.markdown('<h1 style="text-align:center;margin-bottom:0;">竞赛策划智能体</h1>', unsafe_allow_html=True)
-st.markdown('<p style="text-align:center;color:#86868b;font-size:1.1rem;margin-top:0.3rem;">输入项目资料，自动生成国奖级竞赛策划书</p>', unsafe_allow_html=True)
+# ── Hero ──
+st.markdown("""
+<div style="text-align:center;padding:2.5rem 1rem 1.5rem;">
+    <h1 style="font-size:3rem;font-weight:700;color:#1d1d1f;letter-spacing:-0.8px;margin:0;line-height:1.1;">
+        竞赛策划智能体
+    </h1>
+    <p style="font-size:1.2rem;color:#86868b;margin-top:0.6rem;font-weight:400;letter-spacing:-0.2px;">
+        输入项目资料，自动生成国奖级竞赛策划书
+    </p>
+</div>
+""", unsafe_allow_html=True)
 
 # ── 侧边栏 ──
 with st.sidebar:
-    st.markdown('<p style="font-size:1.2rem;font-weight:600;color:#1d1d1f;margin-bottom:0.5rem;">项目资料</p>', unsafe_allow_html=True)
+    st.markdown('<p style="font-size:0.75rem;font-weight:600;color:#86868b;text-transform:uppercase;letter-spacing:1px;margin-bottom:1rem;">项目资料</p>', unsafe_allow_html=True)
 
     competition = st.selectbox(
         "赛事组别",
@@ -154,12 +165,7 @@ with st.sidebar:
             placeholder="产品照片描述、检测报告、合作协议等（可选）",
         )
 
-    st.markdown("---")
-    generate = st.button(
-        "🚀 开始生成策划书",
-        type="primary",
-        use_container_width=True,
-    )
+    generate = st.button("生成策划书", type="primary", use_container_width=True)
 
 # ── 示例数据 ──
 DEMO_DATA = {
@@ -183,12 +189,9 @@ if "generated" not in st.session_state:
 if not st.session_state.generated:
     col_a, col_b = st.columns([3, 1])
     with col_a:
-        st.info(
-            "在左侧填写资料 → 点击「开始生成策划书」→ 右侧下载文件。\n\n"
-            "点击「一键体验演示案例」可快速查看效果。",
-        )
+        st.info("在左侧填写项目资料，点击「生成策划书」，右侧下载文件。")
     with col_b:
-        if st.button("⚡ 体验演示案例", use_container_width=True, type="secondary"):
+        if st.button("查看示例", use_container_width=True, type="secondary"):
             st.session_state.run_demo = True
 
     if st.session_state.get("run_demo"):
