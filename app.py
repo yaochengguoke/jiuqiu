@@ -17,15 +17,39 @@ st.set_page_config(
     initial_sidebar_state="expanded",
 )
 
-# ── 全局样式 ──
+# ── Apple 风格全局样式 ──
 st.markdown("""
 <style>
-    [data-testid="stSidebar"] { background: linear-gradient(180deg, #0A2F5A 0%, #0F3B6E 100%); }
-    [data-testid="stSidebar"] h1, [data-testid="stSidebar"] h2, [data-testid="stSidebar"] h3, [data-testid="stSidebar"] label { color: #fff !important; }
-    [data-testid="stSidebar"] [data-testid="stExpander"] { background: rgba(255,255,255,0.1); border-radius: 8px; border: 1px solid rgba(255,255,255,0.15); }
-    [data-testid="stSidebar"] .stButton > button { background: #FF6B35 !important; border: none !important; font-weight: 600 !important; border-radius: 8px !important; color: #fff !important; }
-    .stProgress > div > div > div > div { background: #FF6B35 !important; }
-    h1 { color: #0A2F5A !important; }
+    /* 背景 */
+    .stApp { background: #f5f5f7; }
+    /* 标题 */
+    h1 { font-size: 2.5rem !important; font-weight: 700 !important; color: #1d1d1f !important; letter-spacing: -0.5px; }
+    /* 侧边栏 */
+    [data-testid="stSidebar"] { background: #f5f5f7; border-right: 1px solid #e8e8ed; }
+    [data-testid="stSidebar"] label { color: #1d1d1f !important; font-size: 0.85rem !important; font-weight: 500 !important; }
+    [data-testid="stSidebar"] [data-testid="stExpander"] { background: #fff; border-radius: 14px; border: 1px solid #e8e8ed; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
+    /* 输入框 */
+    .stTextInput input, .stTextArea textarea, .stSelectbox > div > div {
+        border-radius: 10px !important; border: 1px solid #d2d2d7 !important;
+        background: #fff !important; font-size: 0.9rem !important;
+        transition: border-color 0.2s, box-shadow 0.2s !important;
+    }
+    .stTextInput input:focus, .stTextArea textarea:focus { border-color: #0071e3 !important; box-shadow: 0 0 0 4px rgba(0,113,227,0.1) !important; }
+    /* 按钮 */
+    .stButton > button {
+        background: #0071e3 !important; color: #fff !important; border: none !important;
+        border-radius: 12px !important; padding: 0.7rem 2rem !important;
+        font-size: 0.95rem !important; font-weight: 500 !important;
+        letter-spacing: -0.2px; transition: all 0.2s !important;
+    }
+    .stButton > button:hover { background: #0077ED !important; transform: scale(1.01); box-shadow: 0 4px 16px rgba(0,113,227,0.2); }
+    /* 进度条 */
+    .stProgress > div > div > div > div { background: #0071e3 !important; border-radius: 10px; }
+    .stProgress > div > div { background: #e8e8ed !important; border-radius: 10px; }
+    /* 信息框 */
+    [data-testid="stAlert"] { border-radius: 14px !important; border: 1px solid #e8e8ed !important; background: #fff !important; }
+    /* 展开内容 */
+    .stExpander > div > div > div { background: transparent !important; }
 </style>
 """, unsafe_allow_html=True)
 
@@ -48,12 +72,12 @@ def _get_download_label(filename: str) -> str:
     return mapping.get(filename, filename)
 
 # ── 主页标题 ──
-st.title("🏆 竞赛策划智能体")
-st.caption("输入项目资料，自动生成国奖级竞赛策划书")
+st.markdown('<h1 style="text-align:center;margin-bottom:0;">竞赛策划智能体</h1>', unsafe_allow_html=True)
+st.markdown('<p style="text-align:center;color:#86868b;font-size:1.1rem;margin-top:0.3rem;">输入项目资料，自动生成国奖级竞赛策划书</p>', unsafe_allow_html=True)
 
 # ── 侧边栏 ──
 with st.sidebar:
-    st.markdown("### 📋 项目资料")
+    st.markdown('<p style="font-size:1.2rem;font-weight:600;color:#1d1d1f;margin-bottom:0.5rem;">项目资料</p>', unsafe_allow_html=True)
 
     competition = st.selectbox(
         "赛事组别",
