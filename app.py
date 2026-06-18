@@ -26,7 +26,7 @@ st.markdown("""
     .main .block-container { padding: 2rem 3rem; max-width: 900px; }
     /* 侧边栏 */
     [data-testid="stSidebar"] { background: rgba(245,245,247,0.8); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-right: 0.5px solid rgba(0,0,0,0.08); }
-    [data-testid="stSidebar"] label { color: var(--text) !important; font-size: 0.8rem !important; font-weight: 600 !important; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.2rem !important; }
+    [data-testid="stSidebar"] label { color: var(--text) !important; font-size: 0.9rem !important; font-weight: 500 !important; }
     [data-testid="stSidebar"] [data-testid="stExpander"] { background: #fff; border-radius: 18px; border: 1px solid rgba(0,0,0,0.06); box-shadow: 0 2px 8px rgba(0,0,0,0.04); margin-bottom: 0.5rem; }
     [data-testid="stSidebar"] hr { border-color: rgba(0,0,0,0.06); margin: 1rem 0; }
     /* 输入框 - pill shaped */
@@ -142,7 +142,7 @@ with st.sidebar:
             placeholder="每行一项，例：\n2025年全国大学生节能减排大赛一等奖\n2024年挑战杯省赛金奖",
         )
 
-    with st.expander("文稿定制"):
+    with st.expander("文稿定制", expanded=True):
         col1, col2 = st.columns(2)
         with col1:
             pages = st.number_input("目标页数", 30, 150, 80)
