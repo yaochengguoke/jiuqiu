@@ -293,79 +293,39 @@ if generate:
             },
         }
 
-        with st.spinner(""):
-            progress = st.progress(0, text="正在初始化引擎...")
-            status = st.empty()
+        progress = st.progress(0, text="正在准备...")
+        agent = CompetitionAgent()
 
-            agent = CompetitionAgent()
+        progress.progress(20, text="校验资料 + 匹配模板...")
+        submission, _ = agent.input_processor.process_submission(raw_data)
+        agent.current_template = agent.template_matcher.match_template(competition)
+        kb = agent.input_processor.build_customer_knowledge_base()
+        agent.current_data_pool = agent.material_parser.parse_and_build_pool(kb, agent.current_template.chapters)
 
-            # 阶段1
-            progress.progress(10, text="[1/7] 校验资料完整性...")
-            submission, completeness = agent.input_processor.process_submission(raw_data)
-            status.info(f"资料完整度 {completeness.score:.0%}，{completeness.level.value}")
+        progress.progress(50, text="撰写正文...")
+        agent.current_document = agent.content_generator.generate_all_chapters(agent.current_template, agent.current_data_pool)
 
-            # 阶段2
-            progress.progress(20, text="[2/7] 匹配国奖模板...")
-            agent.current_template = agent.template_matcher.match_template(competition)
-            status.info(f"已匹配「{agent.current_template.competition_name}」模板，共 {len(agent.current_template.chapters)} 章")
+        progress.progress(75, text="绘制图表...")
+        user_visual = agent._load_visual_style(color_theme)
+        from modules.diagram_generator import DiagramGenerator
+        dg = DiagramGenerator(visual_style=user_visual)
+        tech_name = agent.current_data_pool.tech_pool.get("technology_name", "")
+        diagrams = dg.generate_all_diagrams_for_document(project_name=project_name, competition_name=competition, tech_name=tech_name, tech_modules=[], innovations=innovations)
 
-            # 阶段3
-            progress.progress(35, text="[3/7] 解析项目素材，提取关键数据...")
-            customer_kb = agent.input_processor.build_customer_knowledge_base()
-            agent.current_data_pool = agent.material_parser.parse_and_build_pool(
-                customer_kb, agent.current_template.chapters)
-            status.info(f"已提取 {len(agent.current_data_pool.numeric_entities)} 组数据实体")
+        from modules.layout_engine import LayoutEngine
+        from modules.output_exporter import OutputExporter
+        agent.current_export = OutputExporter().export_all(document=agent.current_document, layout_engine=LayoutEngine(user_visual))
 
-            # 阶段4+5
-            progress.progress(50, text="[4/7] 按国奖框架逐章撰写正文...")
-            agent.current_document = agent.content_generator.generate_all_chapters(
-                agent.current_template, agent.current_data_pool)
-            status.info(f"正文 {agent.current_document.total_word_count} 字，共 {len(agent.current_document.chapters)} 章")
+        progress.empty()
 
-            # 阶段6
-            progress.progress(75, text="[5/7] 自动绘制图表（封面/架构/流程图/配图）...")
-            user_visual = agent._load_visual_style(color_theme)
-            from modules.diagram_generator import DiagramGenerator
-            dg = DiagramGenerator(visual_style=user_visual)
-            tech_name = agent.current_data_pool.tech_pool.get("technology_name", "")
-            diagrams = dg.generate_all_diagrams_for_document(
-                project_name=project_name, competition_name=competition,
-                tech_name=tech_name, tech_modules=[], innovations=innovations)
-            status.info(f"已生成 {len(diagrams)} 张图表")
+        st.success(f"已生成 · {agent.current_document.total_word_count} 字 · {len(agent.current_template.chapters)} 章 · {len(diagrams)} 张图表")
 
-            # 阶段7
-            progress.progress(90, text="[6/7] 排版美化 + 导出文件...")
-            from modules.layout_engine import LayoutEngine
-            from modules.output_exporter import OutputExporter
-            layout = LayoutEngine(user_visual)
-            exporter = OutputExporter()
-            agent.current_export = exporter.export_all(
-                document=agent.current_document, layout_engine=layout)
-            status.info(f"已导出 Markdown + HTML + Word 三种格式")
-
-            progress.progress(100, text="[7/7] 策划书生成完毕！")
-
-        # ── 结果展示 ──
-        st.success(
-            f"策划书生成完毕！"
-            f"共 {agent.current_document.total_word_count} 字 · "
-            f"{len(agent.current_template.chapters)} 章 · "
-            f"{len(diagrams)} 张图表"
-        )
-
-        col1, col2, col3, col4 = st.columns(4)
-        col1.metric("总字数", f"{agent.current_document.total_word_count} 字")
-        col2.metric("章节数", f"{len(agent.current_template.chapters)} 章")
-        col3.metric("图表数", f"{len(diagrams)} 张")
-        col4.metric("数据来源", f"{agent.current_data_pool.numeric_entities and len(agent.current_data_pool.numeric_entities) or 0} 组")
-
-        tab1, tab2, tab3, tab4 = st.tabs(["策划书正文", "下载文件", "下载图片", "缺失清单"])
+        tab1, tab2 = st.tabs(["策划书正文", "下载文件"])
 
         with tab1:
             st.markdown(agent.current_document.get_full_text())
 
         with tab2:
-            st.markdown("### 下载策划书文件")
             export_dir = agent.current_export.output_dir
             files = sorted(export_dir.glob("*"))
             cols = st.columns(3)
@@ -374,25 +334,6 @@ if generate:
                     with cols[i % 3]:
                         with open(f, "rb") as fh:
                             st.download_button(_get_download_label(f.name), fh.read(), f.name, use_container_width=True)
-
-        with tab3:
-            st.markdown("### 下载生成的图片")
-            st.caption("以下图片已自动生成，可单独下载后插入策划书对应位置。")
-            import glob as _glob
-            img_files = sorted(_glob.glob("outputs/current/generated_images/*.png"))
-            if img_files:
-                cols = st.columns(3)
-                for i, f in enumerate(img_files):
-                    with cols[i % 3]:
-                        name = f.replace("\\", "/").split("/")[-1]
-                        with open(f, "rb") as fh:
-                            st.download_button(f"[Chart] {name}", fh.read(), name,
-                                             use_container_width=True)
-            else:
-                st.info("暂无图片，请先生成策划书。")
-
-        with tab4:
-            st.markdown(agent.current_document.get_missing_report())
 
 # ── 底部品牌 ──
 st.markdown("""

@@ -535,9 +535,9 @@ img {{
                     with open(matched, "rb") as f:
                         b64 = base64.b64encode(f.read()).decode()
                     html_lines.append(
-                        f'<div style="text-align:center;margin:0.8cm 0;">'
+                        f'<div style="text-align:center;margin:0.6cm 0;">'
                         f'<img src="data:image/png;base64,{b64}" '
-                        f'style="max-width:100%;border-radius:6px;box-shadow:0 4px 16px rgba(0,0,0,0.1);" '
+                        f'style="max-width:80%;max-height:500px;border-radius:6px;box-shadow:0 4px 16px rgba(0,0,0,0.1);" '
                         f'alt="{img_desc}"><p style="font-size:9pt;color:#888;">图：{img_desc}</p></div>')
                 else:
                     html_lines.append(
