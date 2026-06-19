@@ -39,29 +39,7 @@ def _label(fn):
          "financial_questionnaire.md":"财务补充问卷","defense_prep_report.md":"答辩预演手册","DATA_PRIVACY.txt":"数据隐私承诺"}
     return m.get(fn, fn)
 
-DEMO = {
-    "project_name": "智冷科技——数据中心AI自适应液冷节能系统",
-    "project_brief": "全球数据中心能耗持续攀升，传统风冷系统能耗占比高达40%，已成为制约行业绿色发展的核心瓶颈。智冷科技团队自主研发了基于AI预测模型的智能液冷管理系统，通过实时感知服务器负载和温度分布，动态调节冷却液流量和温度，实现精准按需供冷。系统搭载自研的微通道冷板技术和智能流体控制算法，全年综合能效比（AEER）达6.8，较传统精密空调（AEER≈3.5）节能48%。产品已在中科院某超算中心完成6个月稳定试运行，实测数据与理论模拟误差小于3%。项目累计申请发明专利6项，发表SCI论文4篇。",
-    "tech_principles": "本项目核心技术包括三大模块。\n智能预测算法：基于LSTM神经网络对服务器未来15分钟的负载进行预测，提前调节冷却参数，预测准确率达94.2%。\n微通道冷板技术：采用3D打印工艺制造仿生分形流道，换热系数达8500W/(m²·K)，较传统平板冷板提升3.2倍。\n智能流体控制系统：采用变频泵组+电子膨胀阀联动控制，响应时间小于3秒，相比传统PID控制节能12%。",
-    "innovations_str": "AI预测驱动的动态冷却调度,仿生分形微通道冷板,变频泵阀联动控制,多目标能效优化算法",
-    "market_data": "据IDC报告，2023年全球数据中心液冷市场规模达26亿美元，预计2028年将突破120亿美元，年复合增长率超35%。中国液冷数据中心市场2023年规模约80亿元，三大运营商已明确2025年新建数据中心液冷渗透率不低于50%。",
-    "competition": "互联网+高教主赛道",
-    "leader": "陈思远",
-    "team_text": "林雪,控制科学与工程,博士研究生,算法负责人,发表SCI论文6篇\n王浩宇,机械工程,硕士研究生,冷板设计负责人,全国大学生机械创新设计大赛一等奖\n张雨桐,工商管理,硕士研究生,市场运营负责人,曾任职于知名投资机构",
-    "advisor": "刘建国",
-    "advisor_title": "教授、博士生导师、国家万人计划入选者",
-    "past_awards_str": "2025年全国大学生节能减排大赛全国一等奖,2024年挑战杯省赛金奖",
-    "pages": 80,
-    "color_theme": "deep_blue",
-    "patents": "6项发明专利（已受理）、2项实用新型（已授权）",
-    "cooperation": "产品已在中科院某超算中心完成6个月稳定试运行，正在与万国数据、秦淮数据洽谈合作",
-    "evidence_text": "",
-}
-
 # ── Session state init ──
-for k, v in DEMO.items():
-    if k not in st.session_state:
-        st.session_state[k] = ""
 if "generated" not in st.session_state:
     st.session_state.generated = False
 
@@ -75,55 +53,35 @@ st.markdown("""<div style="text-align:center;padding:2rem 1rem 1rem;">
 with st.sidebar:
     st.markdown('<p style="font-size:0.75rem;font-weight:600;color:#86868b;text-transform:uppercase;letter-spacing:1px;">项目资料</p>', unsafe_allow_html=True)
 
-    # 改动1：加载演示按钮
-    if st.button("📋 加载演示项目", use_container_width=True, type="secondary"):
-        for k, v in DEMO.items():
-            st.session_state[k] = v
-        st.rerun()
+    competition = st.selectbox("赛事组别", SUPPORTED_COMPETITIONS)
 
-    competition = st.selectbox("赛事组别", SUPPORTED_COMPETITIONS,
-        index=SUPPORTED_COMPETITIONS.index(st.session_state.competition) if st.session_state.competition in SUPPORTED_COMPETITIONS else 0,
-        key="_comp")
-
-    # 改动2：必填项加 *
-    project_name = st.text_input("项目名称 *", placeholder="例：晶源新材——钙钛矿光伏电池关键材料国产化", value=st.session_state.project_name, key="_pn")
+    # 必填项加 *
+    project_name = st.text_input("项目名称 *", placeholder="例：晶源新材——钙钛矿光伏电池关键材料国产化")
 
     with st.expander("项目核心资料", expanded=True):
-        project_brief = st.text_area("项目简介 *", height=120, value=st.session_state.project_brief, key="_pb",
-            placeholder="请描述：项目做什么、核心技术、成果、市场前景")
-        tech_principles = st.text_area("技术原理与核心创新", height=90, value=st.session_state.tech_principles, key="_tp",
-            placeholder="越详细生成质量越高")
-        innovations_str = st.text_input("核心创新点", value=st.session_state.innovations_str, key="_in",
-            placeholder="逗号分隔，例：AI预测调度,微通道冷板,泵阀联动")
-        market_data = st.text_area("市场调研数据", height=70, value=st.session_state.market_data, key="_md",
-            placeholder="市场规模、增长率、竞争格局等")
-        cooperation = st.text_input("项目合作 / 落地应用", value=st.session_state.cooperation, key="_co",
-            placeholder="已与XX达成合作，在XX完成验证")
+        project_brief = st.text_area("项目简介 *", height=120, placeholder="请描述：项目做什么、核心技术、成果、市场前景")
+        tech_principles = st.text_area("技术原理与核心创新", height=90, placeholder="越详细生成质量越高")
+        innovations_str = st.text_input("核心创新点", placeholder="逗号分隔，例：AI预测调度,微通道冷板,泵阀联动")
+        market_data = st.text_area("市场调研数据", height=70, placeholder="市场规模、增长率、竞争格局等")
+        cooperation = st.text_input("项目合作 / 落地应用", placeholder="已与XX达成合作，在XX完成验证")
 
     with st.expander("团队信息"):
-        leader = st.text_input("项目负责人 *", value=st.session_state.leader, key="_ld")
-        team_text = st.text_area("团队成员", height=90, value=st.session_state.team_text, key="_tm",
-            placeholder="每行一人：姓名,专业,学历,分工,成就")
-        advisor = st.text_input("指导教师 *", value=st.session_state.advisor, key="_ad")
-        advisor_title = st.text_input("指导教师职称 / 资历", value=st.session_state.advisor_title, key="_at")
-        past_awards_str = st.text_input("团队过往获奖", value=st.session_state.past_awards_str, key="_pa",
-            placeholder="逗号分隔")
+        leader = st.text_input("项目负责人 *")
+        team_text = st.text_area("团队成员", height=90, placeholder="每行一人：姓名,专业,学历,分工,成就")
+        advisor = st.text_input("指导教师 *")
+        advisor_title = st.text_input("指导教师职称 / 资历")
+        past_awards_str = st.text_input("团队过往获奖", placeholder="逗号分隔")
 
     with st.expander("文稿定制", expanded=True):
         c1, c2 = st.columns(2)
         with c1:
-            pages = st.number_input("目标页数", 30, 150, value=st.session_state.pages if isinstance(st.session_state.pages, int) else 80, key="_pg")
+            pages = st.number_input("目标页数", 30, 150, 80)
         with c2:
-            theme_keys = list(SUPPORTED_THEMES.keys())
-            default_idx = theme_keys.index(st.session_state.color_theme) if st.session_state.color_theme in theme_keys else 0
-            color_theme = st.selectbox("配色方案", theme_keys, index=default_idx,
-                format_func=lambda x: SUPPORTED_THEMES[x], key="_ct")
+            color_theme = st.selectbox("配色方案", list(SUPPORTED_THEMES.keys()), format_func=lambda x: SUPPORTED_THEMES[x])
 
     with st.expander("佐证材料"):
-        patents = st.text_input("专利 / 软著", value=st.session_state.patents, key="_pt",
-            placeholder="例：发明专利5项（2项已授权）")
-        evidence_text = st.text_area("其他佐证", height=50, value=st.session_state.evidence_text, key="_ev",
-            placeholder="产品照片描述、检测报告等")
+        patents = st.text_input("专利 / 软著", placeholder="例：发明专利5项（2项已授权）")
+        evidence_text = st.text_area("其他佐证", height=50, placeholder="产品照片描述、检测报告等")
 
     generate = st.button("生成策划书", type="primary", use_container_width=True)
 
@@ -131,7 +89,7 @@ with st.sidebar:
 if not st.session_state.generated:
     col_a, col_b = st.columns([3, 1])
     with col_a:
-        st.info("在左侧填写项目资料，或点击「📋 加载演示项目」快速体验。")
+        st.info("在左侧填写项目资料，点击「生成策划书」，或点「查看示例」体验演示。")
     with col_b:
         if st.button("查看示例", use_container_width=True, type="secondary"):
             st.session_state.run_demo = True
