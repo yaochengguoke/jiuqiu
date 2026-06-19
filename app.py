@@ -194,35 +194,39 @@ if generate:
             "evidence": {"patent_certificates":[patents] if patents.strip() else [],"product_photos":evidence_list},
         }
 
-        # 改动3：8阶段进度（单元素，无冲突）
+        # 改动3：文字在上，进度条在下
         steps = [("匹配国奖模板...",5),("撰写执行摘要...",20),("撰写项目背景...",35),("撰写核心技术...",50),("撰写市场分析...",65),("生成技术图表...",80),("排版美化...",95),("完成",100)]
-        bar = st.progress(0, text=steps[0][0])
+        txt = st.empty()
+        bar = st.progress(0)
         agent = CompetitionAgent()
 
-        def advance(text, pct):
-            bar.progress(pct, text=text)
+        def update(text, pct):
+            txt.markdown(f"##### {text}")
+            bar.progress(pct)
 
+        update(steps[0][0], steps[0][1])
         submission, _ = agent.input_processor.process_submission(raw_data)
         agent.current_template = agent.template_matcher.match_template(competition)
         kb = agent.input_processor.build_customer_knowledge_base()
         agent.current_data_pool = agent.material_parser.parse_and_build_pool(kb, agent.current_template.chapters)
-        advance(steps[1][0], steps[1][1])
+        update(steps[1][0], steps[1][1])
 
         agent.current_document = agent.content_generator.generate_all_chapters(agent.current_template, agent.current_data_pool)
-        advance(steps[4][0], steps[4][1])
+        update(steps[4][0], steps[4][1])
 
-        advance(steps[5][0], steps[5][1])
+        update(steps[5][0], steps[5][1])
         user_visual = agent._load_visual_style(color_theme)
         from modules.diagram_generator import DiagramGenerator
         dg = DiagramGenerator(visual_style=user_visual)
         diagrams = dg.generate_all_diagrams_for_document(project_name=project_name, competition_name=competition, tech_name=agent.current_data_pool.tech_pool.get("technology_name",""), tech_modules=[], innovations=innovations)
 
-        advance(steps[6][0], steps[6][1])
+        update(steps[6][0], steps[6][1])
         from modules.layout_engine import LayoutEngine
         from modules.output_exporter import OutputExporter
         agent.current_export = OutputExporter().export_all(document=agent.current_document, layout_engine=LayoutEngine(user_visual))
-        advance(steps[7][0], 100)
+        update(steps[7][0], 100)
 
+        txt.empty()
         bar.empty()
         st.success(f"已生成 · {agent.current_document.total_word_count} 字 · {len(agent.current_template.chapters)} 章 · {len(diagrams)} 张图表")
 
