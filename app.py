@@ -12,22 +12,21 @@ from config import SUPPORTED_COMPETITIONS, SUPPORTED_THEMES
 
 st.set_page_config(page_title="竞赛策划智能体", page_icon="🏆", layout="wide", initial_sidebar_state="expanded")
 
-# ── Apple 风格 ──
+# ── 极简白风格 ──
 st.markdown("""<style>
-    :root { --blue: #0071e3; --gray: #f5f5f7; --text: #1d1d1f; }
-    .stApp { background: var(--gray); }
+    .stApp { background: #FFFFFF; }
     .main .block-container { padding: 2rem 3rem; max-width: 900px; }
-    [data-testid="stSidebar"] { background: rgba(245,245,247,0.8); backdrop-filter: blur(20px); border-right: 0.5px solid rgba(0,0,0,0.08); }
-    [data-testid="stSidebar"] label { color: var(--text) !important; }
-    [data-testid="stSidebar"] [data-testid="stExpander"] { background: #fff; border-radius: 18px; border: 1px solid rgba(0,0,0,0.06); box-shadow: 0 2px 8px rgba(0,0,0,0.04); margin-bottom: 0.5rem; }
-    .stTextInput input, .stTextArea textarea { border-radius: 10px !important; border-color: #d2d2d7 !important; background: #fff !important; }
-    .stTextInput input:focus, .stTextArea textarea:focus { border-color: var(--blue) !important; box-shadow: 0 0 0 3px rgba(0,113,227,0.12) !important; }
-    .stButton > button { background: var(--blue) !important; color: #fff !important; border: none !important; border-radius: 980px !important; padding: 0.6rem 1.6rem !important; font-size: 0.9rem !important; font-weight: 500 !important; letter-spacing: -0.2px; }
-    .stButton > button:hover { filter: brightness(1.05); box-shadow: 0 4px 16px rgba(0,113,227,0.2); }
-    .stProgress > div { background: #e8e8ed !important; border-radius: 980px; height: 6px !important; }
-    .stProgress > div > div > div { background: var(--blue) !important; border-radius: 980px; }
-    [data-testid="stAlert"] { border-radius: 18px !important; border: 1px solid rgba(0,0,0,0.06) !important; background: #fff !important; }
-    .stDownloadButton > button { border-radius: 980px !important; font-size: 0.85rem !important; }
+    [data-testid="stSidebar"] { background: #FAFBFC; border-right: 1px solid #E5E7EB; }
+    [data-testid="stSidebar"] label { color: #1F2937 !important; }
+    [data-testid="stSidebar"] [data-testid="stExpander"] { background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%); border-radius: 12px; border: 1px solid #E5E7EB; border-top: 3px solid #111827; box-shadow: 0 1px 3px rgba(0,0,0,0.04); margin-bottom: 0.5rem; }
+    .stTextInput input, .stTextArea textarea { border-radius: 8px !important; border: 1px solid #E5E7EB !important; background: #FAFBFC !important; color: #1F2937 !important; }
+    .stTextInput input:focus, .stTextArea textarea:focus { border-color: #111827 !important; box-shadow: 0 0 0 4px rgba(17,24,39,0.08) !important; }
+    .stButton > button { background: #111827 !important; color: #fff !important; border: none !important; border-radius: 8px !important; padding: 0.6rem 1.6rem !important; font-size: 0.9rem !important; font-weight: 500 !important; transition: all 0.3s cubic-bezier(0.4,0,0.2,1) !important; }
+    .stButton > button:hover { transform: translateY(-2px) !important; box-shadow: 0 8px 30px rgba(17,24,39,0.25) !important; }
+    .stProgress > div { background: #E5E7EB !important; border-radius: 20px !important; height: 6px !important; }
+    .stProgress > div > div > div { background: linear-gradient(90deg, #111827, #3B82F6) !important; border-radius: 20px !important; }
+    [data-testid="stAlert"] { border-radius: 12px !important; border: 1px solid #E5E7EB !important; background: #FAFBFC !important; }
+    .stDownloadButton > button { border-radius: 8px !important; font-size: 0.85rem !important; }
     .required label::after { content: " *"; color: #e53e3e; font-weight: 700; }
     @media (max-width: 768px) { .main .block-container { padding: 1rem; } }
 </style>""", unsafe_allow_html=True)
@@ -45,8 +44,8 @@ if "generated" not in st.session_state:
 
 # ── Hero ──
 st.markdown("""<div style="text-align:center;padding:2rem 1rem 1rem;">
-    <h1 style="font-size:3rem;font-weight:700;color:#1d1d1f;letter-spacing:-0.8px;margin:0;">竞赛策划智能体</h1>
-    <p style="font-size:1.1rem;color:#86868b;margin-top:0.5rem;">输入项目资料，自动生成国奖级竞赛策划书</p>
+    <h1 style="font-size:3rem;font-weight:700;color:#111827;letter-spacing:-0.8px;margin:0;">⚡ 竞赛策划智能体</h1>
+    <p style="font-size:1.1rem;color:#6B7280;margin-top:0.5rem;">输入项目资料，自动生成国奖级竞赛策划书</p>
 </div>""", unsafe_allow_html=True)
 
 # ── 侧边栏 ──
@@ -201,6 +200,6 @@ if generate:
 
 # ── 底部 ──
 st.markdown("""<div style="text-align:center;padding:3rem 0 2rem;color:#86868b;font-size:0.85rem;">
-    <p style="margin:0;">双库驱动 · 国奖模板 · 零虚构 · 全自动制图排版</p>
-    <p style="margin:0.3rem 0 0;font-size:0.75rem;color:#aeaeb2;">Powered by Claude</p>
+    <p style="margin:0;color:#6B7280;">双库驱动 · 国奖模板 · 零虚构 · 全自动制图排版</p>
+    <p style="margin:0.3rem 0 0;font-size:0.75rem;color:#9CA3AF;">Powered by Claude</p>
 </div>""", unsafe_allow_html=True)
