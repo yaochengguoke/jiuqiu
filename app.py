@@ -152,34 +152,35 @@ if generate:
             "evidence": {"patent_certificates":[patents] if patents.strip() else [],"product_photos":evidence_list},
         }
 
-        steps = [("匹配国奖模板...",5),("撰写执行摘要...",20),("撰写项目背景...",35),("撰写核心技术...",50),("撰写市场分析...",65),("生成技术图表...",80),("排版美化...",95)]
-        title = st.empty()
-        step_text = st.empty()
-        bar = st.progress(0)
-        title.markdown("##### ⏳ 正在生成策划书...")
+        with st.status("正在生成策划书...", expanded=True) as status:
+            agent = CompetitionAgent()
 
-        agent = CompetitionAgent()
-        submission, _ = agent.input_processor.process_submission(raw_data)
-        agent.current_template = agent.template_matcher.match_template(competition)
-        kb = agent.input_processor.build_customer_knowledge_base()
-        agent.current_data_pool = agent.material_parser.parse_and_build_pool(kb, agent.current_template.chapters)
-        step_text.markdown(f"🔍 {steps[0][0]}"); bar.progress(steps[0][1])
+            status.update(label="校验资料 + 匹配模板...", state="running")
+            submission, _ = agent.input_processor.process_submission(raw_data)
+            agent.current_template = agent.template_matcher.match_template(competition)
+            kb = agent.input_processor.build_customer_knowledge_base()
+            agent.current_data_pool = agent.material_parser.parse_and_build_pool(kb, agent.current_template.chapters)
 
-        agent.current_document = agent.content_generator.generate_all_chapters(agent.current_template, agent.current_data_pool)
-        step_text.markdown(f"🔍 {steps[3][0]}"); bar.progress(steps[3][1])
+            total_chapters = len(agent.current_template.chapters)
+            def chapter_cb(cur, total, name):
+                status.update(label=f"撰写正文 ({cur}/{total})：{name}", state="running")
 
-        user_visual = agent._load_visual_style(color_theme)
-        from modules.diagram_generator import DiagramGenerator
-        dg = DiagramGenerator(visual_style=user_visual)
-        diagrams = dg.generate_all_diagrams_for_document(project_name=project_name, competition_name=competition, tech_name=agent.current_data_pool.tech_pool.get("technology_name",""), tech_modules=[], innovations=innovations)
-        step_text.markdown(f"🔍 {steps[5][0]}"); bar.progress(steps[5][1])
+            status.update(label=f"撰写正文 (0/{total_chapters})", state="running")
+            agent.current_document = agent.content_generator.generate_all_chapters(
+                agent.current_template, agent.current_data_pool, progress_callback=chapter_cb)
 
-        from modules.layout_engine import LayoutEngine
-        from modules.output_exporter import OutputExporter
-        agent.current_export = OutputExporter().export_all(document=agent.current_document, layout_engine=LayoutEngine(user_visual))
-        step_text.markdown(f"🔍 {steps[6][0]}"); bar.progress(steps[6][1])
+            status.update(label="生成图表...", state="running")
+            user_visual = agent._load_visual_style(color_theme)
+            from modules.diagram_generator import DiagramGenerator
+            dg = DiagramGenerator(visual_style=user_visual)
+            diagrams = dg.generate_all_diagrams_for_document(project_name=project_name, competition_name=competition, tech_name=agent.current_data_pool.tech_pool.get("technology_name",""), tech_modules=[], innovations=innovations)
 
-        title.empty(); step_text.empty(); bar.empty()
+            status.update(label="排版导出...", state="running")
+            from modules.layout_engine import LayoutEngine
+            from modules.output_exporter import OutputExporter
+            agent.current_export = OutputExporter().export_all(document=agent.current_document, layout_engine=LayoutEngine(user_visual))
+
+            status.update(label="生成完毕", state="complete")
         st.success(f"已生成 · {agent.current_document.total_word_count} 字 · {len(agent.current_template.chapters)} 章 · {len(diagrams)} 张图表")
 
         # 改动4：下载区分优先级
