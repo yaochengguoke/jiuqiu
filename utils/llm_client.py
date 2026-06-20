@@ -72,13 +72,24 @@ class LLMClient:
 
         # 初始化客户端
         self.client = None
-        if self.provider == "anthropic" and HAS_ANTHROPIC and self.api_key:
-            self.client = anthropic.Anthropic(api_key=self.api_key)
-        elif self.provider == "deepseek" and HAS_OPENAI and self.api_key:
-            self.client = OpenAI(api_key=self.api_key, base_url="https://api.deepseek.com/v1")
-        elif HAS_ANTHROPIC and self.api_key:
-            self.client = anthropic.Anthropic(api_key=self.api_key)
-            self.provider = "anthropic"
+        if self.api_key:
+            if self.provider == "deepseek":
+                if HAS_OPENAI:
+                    self.client = OpenAI(api_key=self.api_key, base_url="https://api.deepseek.com/v1")
+                else:
+                    self._use_raw_http = True  # fallback to raw HTTP
+            elif self.provider == "anthropic" and HAS_ANTHROPIC:
+                self.client = anthropic.Anthropic(api_key=self.api_key)
+            elif HAS_OPENAI:
+                self.client = OpenAI(api_key=self.api_key, base_url="https://api.deepseek.com/v1")
+                self.provider = "deepseek"
+            elif HAS_ANTHROPIC:
+                self.client = anthropic.Anthropic(api_key=self.api_key)
+                self.provider = "anthropic"
+            else:
+                self._use_raw_http = True
+                self.provider = "deepseek"
+        self._use_raw_http = getattr(self, '_use_raw_http', False)
 
         # 会话上下文
         self.conversation_history: List[Dict[str, Any]] = []
@@ -109,6 +120,8 @@ class LLMClient:
         max_tok = max_tokens or self.max_tokens
 
         try:
+            if getattr(self, '_use_raw_http', False):
+                return self._chat_raw_http(user_message, sys_prompt, temp, max_tok)
             if self.provider == "deepseek":
                 messages = []
                 if sys_prompt:
@@ -309,6 +322,20 @@ class LLMClient:
             return data_pool
 
         return {k: v for k, v in data_pool.items() if k in matched_keys}
+
+    def _chat_raw_http(self, user_msg, sys_prompt, temp, max_tok):
+        """Raw HTTP fallback for DeepSeek API"""
+        import urllib.request
+        msgs = []
+        if sys_prompt: msgs.append({"role":"system","content":sys_prompt})
+        msgs.append({"role":"user","content":user_msg})
+        data = json.dumps({"model":"deepseek-chat","messages":msgs,"temperature":temp,"max_tokens":max_tok}).encode()
+        req = urllib.request.Request("https://api.deepseek.com/v1/chat/completions", data=data,
+            headers={"Authorization":f"Bearer {self.api_key}","Content-Type":"application/json"})
+        with urllib.request.urlopen(req, timeout=120) as resp:
+            result = json.loads(resp.read())
+        content = result["choices"][0]["message"]["content"]
+        return LLMResponse(content=content, model="deepseek-chat", tokens_used=0, stop_reason="stop")
 
     def _extract_text(self, response) -> str:
         """从Anthropic响应中提取文本"""
