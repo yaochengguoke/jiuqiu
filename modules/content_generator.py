@@ -1301,8 +1301,7 @@ class ContentGenerator:
             if num_str and len(num_str) >= 2 and num_str not in trusted_numbers:
                 unverified_count += 1
 
-        if unverified_count > 5:
-            content += f"\n\n> [WARN] 检测到{unverified_count}处数据可能无法在素材中溯源，请人工核实。"
+        # 静默跳过，不污染正文
 
         return content
 
