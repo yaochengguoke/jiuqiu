@@ -125,14 +125,7 @@ with st.sidebar:
         api_key = st.text_input("AI 密钥", type="password", placeholder="sk-ant-...", label_visibility="collapsed")
         if api_key:
             import os; os.environ["ANTHROPIC_API_KEY"] = api_key
-            # 快速验证密钥是否有效
-            try:
-                from anthropic import Anthropic
-                c = Anthropic(api_key=api_key)
-                c.models.list(limit=1)
-                st.success("AI 密钥验证通过，内容质量将大幅提升")
-            except Exception as e:
-                st.error(f"密钥无效: {str(e)[:80]}")
+            st.success("AI 密钥已设置，生成时将自动启用 AI 模式")
 
     st.markdown('<hr style="margin:0.6rem 0;border-color:#E5E7EB;">', unsafe_allow_html=True)
     project_name = st.text_input("项目名称 *", placeholder="例：晶源新材——钙钛矿光伏电池关键材料国产化")
