@@ -183,6 +183,11 @@ if st.session_state.get("demo_result"):
     ca = pptg.format_competitor_table(pptg.analyze_competitors(ft))
     if ca:
         write_text_file(out / "competitor_analysis.md", ca)
+    # PDF via fpdf2
+    try:
+        from modules.output_exporter import OutputExporter
+        OutputExporter()._export_pdf(ft, out)
+    except: pass
 
     st.success(f"已生成 · {a.current_document.total_word_count}字 · {len(a.current_template.chapters)}章")
     t1, t2 = st.tabs(["策划书正文", "下载文件"])
