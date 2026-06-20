@@ -95,9 +95,11 @@ with st.sidebar:
     # 必填项加 *
     with st.expander("📂 导入资料 · 🤖 AI 生成配置", expanded=False):
         st.caption("上传 JSON / Word / TXT 文件，自动填充下方表单")
-        uploaded = st.file_uploader("选择文件", type=["json", "txt", "docx"], label_visibility="collapsed")
-        if uploaded:
+        uploaded = st.file_uploader("选择文件", type=["json", "txt", "docx"], label_visibility="collapsed",
+                                     key="import_file")
+        if uploaded and not st.session_state.get("_import_done"):
             try:
+                st.session_state._import_done = True
                 if uploaded.name.endswith('.json'):
                     data = json.loads(uploaded.read())
                     if "project_material" in data:
@@ -121,6 +123,7 @@ with st.sidebar:
                     st.rerun()
             except Exception as e:
                 st.error(f"导入失败: {e}")
+                st.session_state._import_done = False
         st.markdown('<p style="font-size:0.7rem;color:#9CA3AF;margin:0.3rem 0;">🤖 AI 增强生成（可选）</p>', unsafe_allow_html=True)
         api_key = st.text_input("AI 密钥", type="password", placeholder="sk-ant-...", label_visibility="collapsed")
         if api_key:
