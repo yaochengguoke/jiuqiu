@@ -126,7 +126,7 @@ with st.sidebar:
                 st.session_state._import_done = False
         st.markdown('<p style="font-size:0.7rem;color:#9CA3AF;margin:0.3rem 0;">🤖 接入 AI 模型（可选，免费试用）</p>', unsafe_allow_html=True)
         api_key = st.text_input("API 密钥", type="password", placeholder="DeepSeek 或 Anthropic 密钥", label_visibility="collapsed")
-        st.caption("去 platform.deepseek.com 免费注册获取")
+        st.caption("去 platform.deepseek.com 免费注册获取，输入后直接生成勿刷新")
         if api_key:
             import os
             if api_key.startswith("sk-ant"):
@@ -167,6 +167,7 @@ with st.sidebar:
     filled = sum(1 for v in fields_check if v and (isinstance(v, str) and len(v.strip()) > 0))
     st.markdown(f'<p style="font-size:0.72rem;color:#9CA3AF;text-align:center;margin:0.3rem 0;">已填写 {filled}/{len(fields_check)} 项核心字段</p>', unsafe_allow_html=True)
     generate = st.button("生成策划书", type="primary", use_container_width=True)
+    st.caption("生成后请立即下载，勿刷新或点击其他位置")
 
 # ── 空状态提示 ──
 if not st.session_state.generated:
