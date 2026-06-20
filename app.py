@@ -12,31 +12,22 @@ from config import SUPPORTED_COMPETITIONS, SUPPORTED_THEMES
 
 st.set_page_config(page_title="竞赛策划智能体", page_icon="🏆", layout="wide", initial_sidebar_state="expanded")
 
-# ── 面板化风格 ──
+# ── 极简白风格 ──
 st.markdown("""<style>
-    .stApp { background: #F8F9FA; }
-    .main .block-container { padding: 2rem 2.5rem; max-width: 960px; }
-    /* 侧边栏操作台 */
-    [data-testid="stSidebar"] { background: #FAFBFC; border-right: 1px solid #E5E7EB; box-shadow: 2px 0 12px rgba(0,0,0,0.03); }
-    [data-testid="stSidebar"] label { color: #374151 !important; font-weight: 500 !important; font-size: 0.85rem !important; margin-bottom: 0.2rem !important; }
-    [data-testid="stSidebar"] [data-testid="stExpander"] { background: #fff; border-radius: 10px; border: 1px solid #E5E7EB; border-left: 3px solid #111827; box-shadow: 0 1px 4px rgba(0,0,0,0.03); margin-bottom: 0.6rem; padding: 0.5rem 0.8rem; }
-    [data-testid="stSidebar"] hr { border-color: #E5E7EB; margin: 0.8rem 0; }
-    /* 输入框 */
-    .stTextInput input, .stTextArea textarea { border-radius: 8px !important; border: 1px solid #D1D5DB !important; background: #fff !important; color: #1F2937 !important; padding: 0.5rem 0.75rem !important; }
-    .stTextInput input:focus, .stTextArea textarea:focus { border-color: #111827 !important; box-shadow: 0 0 0 3px rgba(17,24,39,0.08) !important; }
-    .stTextInput input::placeholder, .stTextArea textarea::placeholder { color: #9CA3AF !important; font-size: 0.82rem !important; }
-    /* 选择框 */
-    .stSelectbox [data-baseweb="select"] > div { border-radius: 8px !important; border-color: #D1D5DB !important; background: #fff !important; }
-    /* 按钮 */
-    .stButton > button { background: #111827 !important; color: #fff !important; border: none !important; border-radius: 8px !important; padding: 0.6rem 1.6rem !important; font-size: 0.9rem !important; font-weight: 500 !important; transition: all 0.25s ease !important; }
-    .stButton > button:hover { transform: translateY(-1px) !important; box-shadow: 0 4px 20px rgba(17,24,39,0.2) !important; }
-    /* 进度条 */
-    .stProgress > div { background: #E5E7EB !important; border-radius: 20px !important; height: 5px !important; }
-    .stProgress > div > div > div { background: #111827 !important; border-radius: 20px !important; }
-    /* 小标题 */
-    .section-label { font-size: 0.7rem; font-weight: 600; color: #9CA3AF; text-transform: uppercase; letter-spacing: 0.8px; padding: 0.4rem 0 0.3rem 0.5rem; border-left: 2px solid #D1D5DB; margin: 0.5rem 0 0.3rem 0; }
-    /* 必填 */
-    .required label::after { content: " *"; color: #e53e3e; font-weight: 600; }
+    .stApp { background: #FFFFFF; }
+    .main .block-container { padding: 2rem 3rem; max-width: 900px; }
+    [data-testid="stSidebar"] { background: #FAFBFC; border-right: 1px solid #E5E7EB; }
+    [data-testid="stSidebar"] label { color: #1F2937 !important; }
+    [data-testid="stSidebar"] [data-testid="stExpander"] { background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%); border-radius: 12px; border: 1px solid #E5E7EB; border-top: 3px solid #111827; box-shadow: 0 1px 3px rgba(0,0,0,0.04); margin-bottom: 0.5rem; }
+    .stTextInput input, .stTextArea textarea { border-radius: 8px !important; border: 1px solid #E5E7EB !important; background: #FAFBFC !important; color: #1F2937 !important; }
+    .stTextInput input:focus, .stTextArea textarea:focus { border-color: #111827 !important; box-shadow: 0 0 0 4px rgba(17,24,39,0.08) !important; }
+    .stButton > button { background: #111827 !important; color: #fff !important; border: none !important; border-radius: 8px !important; padding: 0.6rem 1.6rem !important; font-size: 0.9rem !important; font-weight: 500 !important; transition: all 0.3s cubic-bezier(0.4,0,0.2,1) !important; }
+    .stButton > button:hover { transform: translateY(-2px) !important; box-shadow: 0 8px 30px rgba(17,24,39,0.25) !important; }
+    .stProgress > div { background: #E5E7EB !important; border-radius: 20px !important; height: 6px !important; }
+    .stProgress > div > div > div { background: linear-gradient(90deg, #111827, #3B82F6) !important; border-radius: 20px !important; }
+    [data-testid="stAlert"] { border-radius: 12px !important; border: 1px solid #E5E7EB !important; background: #FAFBFC !important; }
+    .stDownloadButton > button { border-radius: 8px !important; font-size: 0.85rem !important; }
+    .required label::after { content: " *"; color: #e53e3e; font-weight: 700; }
     @media (max-width: 768px) { .main .block-container { padding: 1rem; } }
 </style>""", unsafe_allow_html=True)
 
@@ -95,22 +86,19 @@ st.markdown("""<div style="text-align:center;padding:2rem 1rem 1rem;">
 
 # ── 侧边栏 ──
 with st.sidebar:
-    st.markdown('<p style="font-size:1rem;font-weight:700;color:#111827;margin-bottom:0.3rem;">项目资料</p>', unsafe_allow_html=True)
+    st.markdown('<p style="font-size:0.75rem;font-weight:600;color:#86868b;text-transform:uppercase;letter-spacing:1px;">项目资料</p>', unsafe_allow_html=True)
 
     competition = st.selectbox("赛事组别", SUPPORTED_COMPETITIONS)
 
     # 必填项加 *
     project_name = st.text_input("项目名称 *", placeholder="例：晶源新材——钙钛矿光伏电池关键材料国产化")
 
-	with st.expander("项目核心资料", expanded=True):
-		st.markdown('<p class="section-label">基础概况</p>', unsafe_allow_html=True)
-		project_brief = st.text_area("项目简介 *", height=130, placeholder="项目做什么、核心技术、成果、市场前景")
-		st.markdown('<p class="section-label">技术创新模块</p>', unsafe_allow_html=True)
-		tech_principles = st.text_area("技术原理与核心创新", height=90, placeholder="越详细生成质量越高")
-		innovations_str = st.text_input("核心创新点", placeholder="逗号分隔，例：AI预测调度,微通道冷板,泵阀联动")
-		st.markdown('<p class="section-label">市场落地模块</p>', unsafe_allow_html=True)
-		market_data = st.text_area("市场调研数据", height=70, placeholder="市场规模、增长率、竞争格局等")
-		cooperation = st.text_input("项目合作 / 落地应用", placeholder="已与XX达成合作，在XX完成验证")
+    with st.expander("项目核心资料", expanded=True):
+        project_brief = st.text_area("项目简介 *", height=120, placeholder="请描述：项目做什么、核心技术、成果、市场前景")
+        tech_principles = st.text_area("技术原理与核心创新", height=90, placeholder="越详细生成质量越高")
+        innovations_str = st.text_input("核心创新点", placeholder="逗号分隔，例：AI预测调度,微通道冷板,泵阀联动")
+        market_data = st.text_area("市场调研数据", height=70, placeholder="市场规模、增长率、竞争格局等")
+        cooperation = st.text_input("项目合作 / 落地应用", placeholder="已与XX达成合作，在XX完成验证")
 
     with st.expander("团队信息"):
         leader = st.text_input("项目负责人 *")
@@ -130,10 +118,6 @@ with st.sidebar:
         patents = st.text_input("专利 / 软著", placeholder="例：发明专利5项（2项已授权）")
         evidence_text = st.text_area("其他佐证", height=50, placeholder="产品照片描述、检测报告等")
 
-	# 填写进度
-	fields = [project_name, project_brief, leader, advisor, tech_principles, market_data]
-	filled = sum(1 for v in fields if v and (isinstance(v, str) and len(v.strip()) > 0))
-	st.markdown(f'<p style="font-size:0.75rem;color:#9CA3AF;text-align:center;margin:0.3rem 0;">已填写 {filled}/{len(fields)} 项核心字段</p>', unsafe_allow_html=True)
     generate = st.button("生成策划书", type="primary", use_container_width=True)
 
 # ── 空状态提示 ──
