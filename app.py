@@ -41,7 +41,11 @@ def _label(fn):
 # ── Session state init ──
 if "generated" not in st.session_state:
     st.session_state.generated = False
-
+# API密钥持久化
+if st.session_state.get("_api_key"):
+    import os as _os
+    k = st.session_state._api_key
+    _os.environ["DEEPSEEK_API_KEY" if not k.startswith("sk-ant") else "ANTHROPIC_API_KEY"] = k
 
 def _show_downloads(out_dir):
     """分类展示下载文件"""
@@ -128,12 +132,13 @@ with st.sidebar:
         api_key = st.text_input("API 密钥", type="password", placeholder="DeepSeek 或 Anthropic 密钥", label_visibility="collapsed")
         st.caption("去 platform.deepseek.com 免费注册获取，输入后直接生成勿刷新")
         if api_key:
+            st.session_state._api_key = api_key
             import os
             if api_key.startswith("sk-ant"):
                 os.environ["ANTHROPIC_API_KEY"] = api_key
             else:
                 os.environ["DEEPSEEK_API_KEY"] = api_key
-            st.success("AI 已接入，生成质量将大幅提升")
+            st.success("AI 已接入，生成时将使用 AI 生成内容")
 
     st.markdown('<hr style="margin:0.6rem 0;border-color:#E5E7EB;">', unsafe_allow_html=True)
     project_name = st.text_input("项目名称 *", value=st.session_state.get("project_name",""), placeholder="例：晶源新材——钙钛矿光伏电池关键材料国产化")
