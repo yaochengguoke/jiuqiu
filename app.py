@@ -214,11 +214,12 @@ if generate:
             write_text_file(out / "executive_summary.md", dp.generate_summary(full_text, agent.current_document.project_name))
             status.update(label="生成答辩手册...", state="running")
             write_text_file(out / "defense_prep_report.md", dp.print_report(dp.generate_defense_prep(full_text, agent.current_document.project_name)))
-            # 生成PPT
-    from modules.ppt_generator import PPTGenerator
-    pptg = PPTGenerator()
-    ppt_path = out / "defense.pptx"
-    pptg.generate_ppt(ft, agent.current_document.project_name, ppt_path)
+            # 生成PPT+竞品对标
+            from modules.ppt_generator import PPTGenerator
+            pptg = PPTGenerator()
+            pptg.generate_ppt(full_text, agent.current_document.project_name, out / "defense.pptx")
+            ca = pptg.format_competitor_table(pptg.analyze_competitors(full_text))
+            if ca: write_text_file(out / "competitor_analysis.md", ca)
 
             status.update(label="生成完毕", state="complete")
         st.success(f"已生成 · {agent.current_document.total_word_count} 字 · {len(agent.current_template.chapters)} 章 · {len(diagrams)} 张图表")
