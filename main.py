@@ -350,6 +350,9 @@ class CompetitionAgent:
             self.current_document.project_name
         )
         write_text_file(prj_out / "executive_summary.md", summary2)
+        # 生成PPT
+        from modules.ppt_generator import PPTGenerator
+        PPTGenerator().generate_ppt(self.current_document.get_full_text(), self.current_document.project_name, prj_out / "defense.pptx")
 
         if verbose:
             print(f"  [Dir] 输出目录：{self.current_export.output_dir}")
