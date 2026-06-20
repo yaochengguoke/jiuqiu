@@ -33,7 +33,7 @@ st.markdown("""<style>
 
 # ── 工具 ──
 def _label(fn):
-    m = {"final_plan.md":"策划书正文(Markdown)","final_plan.html":"网页预览版","final_plan.docx":"Word可编辑版",
+    m = {"final_plan.md":"策划书正文(Markdown)","final_plan.html":"网页预览版","final_plan.docx":"Word可编辑版","final_plan.pdf":"PDF提交版",
          "quality_report.md":"质量检查报告","missing_checklist.md":"待补充清单","client_supplement_guide.md":"补充资料引导",
          "financial_questionnaire.md":"财务补充问卷","defense_prep_report.md":"答辩预演手册","DATA_PRIVACY.txt":"数据隐私承诺"}
     return m.get(fn, fn)
@@ -186,7 +186,7 @@ if generate:
         exp = agent.current_export.output_dir
         st.markdown("### 推荐下载")
         c1, c2 = st.columns(2)
-        for i, (col, key) in enumerate(zip([c1, c2], ["final_plan.docx", "final_plan.html"])):
+        for i, (col, key) in enumerate(zip([c1, c2], ["final_plan.pdf", "final_plan.docx"])):
             with col:
                 fp = exp / key
                 if fp.exists():

@@ -208,16 +208,16 @@ class OutputExporter:
         )
 
     def _export_pdf(self, html_content: str, output_dir: Path) -> Optional[Path]:
-        """HTML → PDF 转换"""
+        """HTML → PDF (weasyprint, cloud OK / Windows needs GTK)"""
+        pdf_path = output_dir / "final_plan.pdf"
         try:
             from weasyprint import HTML
-            pdf_path = output_dir / "final_plan.pdf"
             HTML(string=html_content).write_pdf(str(pdf_path))
             return pdf_path
-        except ImportError:
-            raise
+        except ImportError as e:
+            print(f"[OutputExporter] weasyprint未安装: {e}")
         except Exception as e:
-            raise
+            print(f"[OutputExporter] PDF生成跳过(可装weasyprint解决): {str(e)[:100]}")
 
     def _export_docx(self, markdown_text: str, project_name: str, output_dir: Path) -> Optional[Path]:
         """Markdown → Word (.docx) 转换"""
