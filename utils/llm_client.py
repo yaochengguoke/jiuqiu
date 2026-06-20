@@ -98,7 +98,7 @@ class LLMClient:
     @property
     def is_available(self) -> bool:
         """检查LLM服务是否可用"""
-        return self.client is not None
+        return self.client is not None or getattr(self, '_use_raw_http', False)
 
     def reset_conversation(self) -> None:
         """重置对话上下文"""
