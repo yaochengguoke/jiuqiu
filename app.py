@@ -125,9 +125,13 @@ with st.sidebar:
                 st.error(f"导入失败: {e}")
                 st.session_state._import_done = False
         st.markdown('<p style="font-size:0.7rem;color:#9CA3AF;margin:0.3rem 0;">🤖 AI 增强生成（可选）</p>', unsafe_allow_html=True)
-        api_key = st.text_input("AI 密钥", type="password", placeholder="sk-ant-...", label_visibility="collapsed")
+        api_key = st.text_input("AI 密钥", type="password", placeholder="sk-... DeepSeek或Anthropic密钥", label_visibility="collapsed")
         if api_key:
-            import os; os.environ["ANTHROPIC_API_KEY"] = api_key
+            import os
+            if api_key.startswith("sk-ant"):
+                os.environ["ANTHROPIC_API_KEY"] = api_key
+            else:
+                os.environ["DEEPSEEK_API_KEY"] = api_key
             st.success("AI 密钥已设置，生成时将自动启用 AI 模式")
 
     st.markdown('<hr style="margin:0.6rem 0;border-color:#E5E7EB;">', unsafe_allow_html=True)

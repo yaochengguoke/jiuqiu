@@ -11,12 +11,18 @@ import time
 from typing import Optional, Dict, Any, List
 from dataclasses import dataclass
 
-# 尝试导入 anthropic SDK
+# 尝试导入 SDK
 try:
     import anthropic
     HAS_ANTHROPIC = True
 except ImportError:
     HAS_ANTHROPIC = False
+
+try:
+    from openai import OpenAI
+    HAS_OPENAI = True
+except ImportError:
+    HAS_OPENAI = False
 
 
 @dataclass
@@ -45,18 +51,34 @@ class LLMClient:
         system_prompt: Optional[str] = None,
         max_tokens: int = 4096,
         temperature: float = 0.7,
+        provider: str = "auto",
     ):
-        self.api_key = api_key or os.getenv("ANTHROPIC_API_KEY", "")
-        self.model = model or os.getenv("ANTHROPIC_MODEL", "claude-sonnet-4-6")
+        # 自动检测provider：优先检查环境变量
+        self.api_key = api_key
+        if not self.api_key:
+            self.api_key = os.getenv("ANTHROPIC_API_KEY", "") or os.getenv("DEEPSEEK_API_KEY", "")
+        if provider == "auto":
+            if os.getenv("DEEPSEEK_API_KEY"):
+                provider = "deepseek"
+            elif os.getenv("ANTHROPIC_API_KEY"):
+                provider = "anthropic"
+            elif self.api_key:
+                provider = "deepseek"  # default to deepseek since it's more accessible
+        self.provider = provider
+        self.model = model or (os.getenv("ANTHROPIC_MODEL", "deepseek-chat"))
         self.system_prompt = system_prompt or ""
         self.max_tokens = max_tokens
         self.temperature = temperature
 
         # 初始化客户端
-        if HAS_ANTHROPIC and self.api_key:
+        self.client = None
+        if self.provider == "anthropic" and HAS_ANTHROPIC and self.api_key:
             self.client = anthropic.Anthropic(api_key=self.api_key)
-        else:
-            self.client = None
+        elif self.provider == "deepseek" and HAS_OPENAI and self.api_key:
+            self.client = OpenAI(api_key=self.api_key, base_url="https://api.deepseek.com/v1")
+        elif HAS_ANTHROPIC and self.api_key:
+            self.client = anthropic.Anthropic(api_key=self.api_key)
+            self.provider = "anthropic"
 
         # 会话上下文
         self.conversation_history: List[Dict[str, Any]] = []
@@ -65,7 +87,7 @@ class LLMClient:
     @property
     def is_available(self) -> bool:
         """检查LLM服务是否可用"""
-        return HAS_ANTHROPIC and self.client is not None
+        return self.client is not None
 
     def reset_conversation(self) -> None:
         """重置对话上下文"""
@@ -79,18 +101,6 @@ class LLMClient:
         temperature: Optional[float] = None,
         max_tokens: Optional[int] = None,
     ) -> LLMResponse:
-        """
-        发送单轮对话消息
-
-        Args:
-            user_message: 用户消息内容
-            system_prompt: 覆盖默认系统提示词
-            temperature: 覆盖默认温度
-            max_tokens: 覆盖默认最大token数
-
-        Returns:
-            LLMResponse: 模型响应
-        """
         if not self.is_available:
             return self._mock_response(user_message)
 
@@ -99,51 +109,36 @@ class LLMClient:
         max_tok = max_tokens or self.max_tokens
 
         try:
-            response = self.client.messages.create(
-                model=self.model,
-                max_tokens=max_tok,
-                system=sys_prompt,
-                temperature=temp,
-                messages=[
-                    {"role": "user", "content": user_message}
-                ],
-            )
-
-            content = self._extract_text(response)
-            tokens = response.usage.output_tokens if hasattr(response, 'usage') else 0
-            self.total_tokens_used += tokens
-
-            return LLMResponse(
-                content=content,
-                model=self.model,
-                tokens_used=tokens,
-                stop_reason=response.stop_reason or "end_turn",
-            )
-
-        except Exception as e:
-            print(f"[LLMClient] API调用异常: {e}")
-            # 重试一次
-            time.sleep(2)
-            try:
+            if self.provider == "deepseek":
+                messages = []
+                if sys_prompt:
+                    messages.append({"role": "system", "content": sys_prompt})
+                messages.append({"role": "user", "content": user_message})
+                response = self.client.chat.completions.create(
+                    model="deepseek-chat",
+                    messages=messages,
+                    temperature=temp,
+                    max_tokens=max_tok,
+                )
+                content = response.choices[0].message.content
+                tokens = response.usage.total_tokens if hasattr(response, 'usage') else 0
+                self.total_tokens_used += tokens
+                return LLMResponse(content=content, model="deepseek-chat", tokens_used=tokens, stop_reason="stop")
+            else:
                 response = self.client.messages.create(
                     model=self.model,
                     max_tokens=max_tok,
                     system=sys_prompt,
                     temperature=temp,
-                    messages=[
-                        {"role": "user", "content": user_message}
-                    ],
+                    messages=[{"role": "user", "content": user_message}],
                 )
                 content = self._extract_text(response)
-                return LLMResponse(
-                    content=content,
-                    model=self.model,
-                    tokens_used=response.usage.output_tokens if hasattr(response, 'usage') else 0,
-                    stop_reason=response.stop_reason or "end_turn",
-                )
-            except Exception as e2:
-                print(f"[LLMClient] 重试失败: {e2}")
-                return self._mock_response(user_message)
+                tokens = response.usage.output_tokens if hasattr(response, 'usage') else 0
+                self.total_tokens_used += tokens
+                return LLMResponse(content=content, model=self.model, tokens_used=tokens, stop_reason=response.stop_reason or "end_turn")
+        except Exception as e:
+            print(f"[LLMClient] API调用异常: {e}")
+            return self._mock_response(user_message)
 
     def generate_chapter(
         self,
