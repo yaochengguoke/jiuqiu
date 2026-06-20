@@ -45,13 +45,14 @@ if "generated" not in st.session_state:
 
 def _show_downloads(out_dir):
     """分类展示下载文件"""
+    icons = {"项目核心文稿": "📄", "调研辅助材料": "📊", "合规/财务/检测": "🛡️", "配置文件": "⚙️"}
+    subtitles = {"项目核心文稿": "用于申报提交与答辩展示", "调研辅助材料": "竞品对标与资料补全参考", "合规/财务/检测": "查重、隐私、财务合规文件", "配置文件": "系统元数据与变更记录"}
     categories = {
         "项目核心文稿": ["final_plan.docx", "final_plan.html", "final_plan.md", "final_plan.pdf", "executive_summary.md", "defense_prep_report.md", "defense.pptx"],
         "调研辅助材料": ["competitor_analysis.md", "client_supplement_guide.md", "missing_checklist.md"],
         "合规/财务/检测": ["DATA_PRIVACY.txt", "financial_questionnaire.md", "plagiarism_report.md", "quality_report.md"],
         "配置文件": ["metadata.json", "change_log.md"],
     }
-    # Flat list of all handled files
     all_handled = set()
     for files in categories.values():
         all_handled.update(files)
@@ -59,14 +60,15 @@ def _show_downloads(out_dir):
     for cat_name, cat_files in categories.items():
         existing = [(f, out_dir / f) for f in cat_files if (out_dir / f).exists()]
         if existing:
-            st.markdown(f"**{cat_name}**")
+            icon = icons.get(cat_name, "")
+            sub = subtitles.get(cat_name, "")
+            st.markdown(f'<div class="download-cat">{icon} {cat_name}<span>{sub}</span></div>', unsafe_allow_html=True)
             cols = st.columns(min(len(existing), 3))
             for i, (fname, fpath) in enumerate(existing):
                 with cols[i % 3]:
                     with open(fpath, "rb") as fh:
                         st.download_button(_label(fname), fh.read(), fname, use_container_width=True)
     
-    # Others
     remaining = [f for f in sorted(out_dir.glob("*")) if f.is_file() and f.name not in all_handled]
     if remaining:
         with st.expander("其他文件"):
