@@ -35,7 +35,7 @@ st.markdown("""<style>
 def _label(fn):
     m = {"final_plan.md":"策划书正文(Markdown)","final_plan.html":"网页预览版","final_plan.docx":"Word可编辑版","final_plan.pdf":"PDF提交版",
          "quality_report.md":"质量检查报告","missing_checklist.md":"待补充清单","plagiarism_report.md":"查重预检报告","executive_summary.md":"执行摘要+路演稿",
-         "client_supplement_guide.md":"补充资料引导","financial_questionnaire.md":"财务补充问卷","defense_prep_report.md":"答辩预演手册","DATA_PRIVACY.txt":"数据隐私承诺"}
+         "client_supplement_guide.md":"补充资料引导","financial_questionnaire.md":"财务补充问卷","defense_prep_report.md":"答辩预演手册","defense.pptx":"答辩PPT","DATA_PRIVACY.txt":"数据隐私承诺","competitor_analysis.md":"竞品对标分析"}
     return m.get(fn, fn)
 
 # ── Session state init ──
@@ -126,6 +126,15 @@ if st.session_state.get("demo_result"):
     dp = DefensePrep()
     write_text_file(out / "executive_summary.md", dp.generate_summary(ft, a.current_document.project_name))
     write_text_file(out / "defense_prep_report.md", dp.print_report(dp.generate_defense_prep(ft, a.current_document.project_name)))
+    # 生成PPT
+    from modules.ppt_generator import PPTGenerator
+    pptg = PPTGenerator()
+    ppt_path = out / "defense.pptx"
+    pptg.generate_ppt(ft, a.current_document.project_name, ppt_path)
+    # 竞品对标
+    ca = pptg.format_competitor_table(pptg.analyze_competitors(ft))
+    if ca:
+        write_text_file(out / "competitor_analysis.md", ca)
 
     st.success(f"已生成 · {a.current_document.total_word_count}字 · {len(a.current_template.chapters)}章")
     t1, t2 = st.tabs(["策划书正文", "下载文件"])
@@ -205,6 +214,11 @@ if generate:
             write_text_file(out / "executive_summary.md", dp.generate_summary(full_text, agent.current_document.project_name))
             status.update(label="生成答辩手册...", state="running")
             write_text_file(out / "defense_prep_report.md", dp.print_report(dp.generate_defense_prep(full_text, agent.current_document.project_name)))
+            # 生成PPT
+    from modules.ppt_generator import PPTGenerator
+    pptg = PPTGenerator()
+    ppt_path = out / "defense.pptx"
+    pptg.generate_ppt(ft, agent.current_document.project_name, ppt_path)
 
             status.update(label="生成完毕", state="complete")
         st.success(f"已生成 · {agent.current_document.total_word_count} 字 · {len(agent.current_template.chapters)} 章 · {len(diagrams)} 张图表")
