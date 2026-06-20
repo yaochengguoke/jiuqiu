@@ -133,12 +133,21 @@ with st.sidebar:
         st.caption("去 platform.deepseek.com 免费注册获取，输入后直接生成勿刷新")
         if api_key:
             st.session_state._api_key = api_key
-            import os
+            import os, urllib.request, json as _json
             if api_key.startswith("sk-ant"):
                 os.environ["ANTHROPIC_API_KEY"] = api_key
+                st.success("Anthropic 密钥已设置")
             else:
                 os.environ["DEEPSEEK_API_KEY"] = api_key
-            st.success("AI 已接入，生成时将使用 AI 生成内容")
+                # 快速验证密钥
+                try:
+                    req = urllib.request.Request("https://api.deepseek.com/v1/models",
+                        headers={"Authorization": f"Bearer {api_key}"})
+                    urllib.request.urlopen(req, timeout=10)
+                    st.success("DeepSeek 密钥验证通过，AI 已就绪")
+                except Exception as e:
+                    st.error(f"密钥无效: {str(e)[:60]}")
+                    st.session_state._api_key = ""
 
     st.markdown('<hr style="margin:0.6rem 0;border-color:#E5E7EB;">', unsafe_allow_html=True)
     project_name = st.text_input("项目名称 *", value=st.session_state.get("project_name",""), placeholder="例：晶源新材——钙钛矿光伏电池关键材料国产化")
