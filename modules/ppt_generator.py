@@ -81,20 +81,25 @@ class PPTGenerator:
             elif current and line.strip(): chapters[current].append(line.strip())
         return chapters
 
-    def _extract_bullets(self, chapters: dict, keywords: List[str], max_items: int = 5) -> list:
+    def _extract_bullets(self, chapters: dict, keywords: List[str], max_items: int = 6) -> list:
         items = []
         for k, v in chapters.items():
             if any(kw in k for kw in keywords):
                 for line in v:
+                    # 彻底过滤标记行
+                    if '【待补充】' in line or '【来源】' in line:
+                        continue
                     clean = re.sub(r'^[-*#>\d\.\s【】]+', '', line).strip()
-                    # 过滤太短、太长的、标记行
-                    if 12 < len(clean) < 120 and '【待补充】' not in clean and '【来源】' not in clean:
-                        items.append(clean)
+                    # 过滤太短或纯标记
+                    if len(clean) < 10 or clean.startswith('【') or clean.startswith('>'):
+                        continue
+                    items.append(clean[:130])
         # 去重
         seen = set(); result = []
         for item in items:
-            key = item[:20]
+            key = item[:25]
             if key not in seen: seen.add(key); result.append(item)
+        # 返回更完整的列表
         return result[:max_items]
 
     def _add_slide_number(self, slide):
@@ -147,6 +152,9 @@ class PPTGenerator:
         p.font.bold = True; p.font.color.rgb = RGBColor(0xFF, 0xFF, 0xFF)
 
     def _content_slide(self, prs, title, bullets, subtitle="", highlight_nums=None):
+        # 跳过无内容的页
+        if not bullets:
+            return
         slide = prs.slides.add_slide(prs.slide_layouts[6])
         self._title_bar(slide, title)
 
@@ -158,14 +166,14 @@ class PPTGenerator:
             p.font.size = Pt(13); p.font.color.rgb = RGBColor(0x6B, 0x72, 0x80)
             y += 0.6
 
-        # Bullet points
+        # Bullet points - 更多、更紧凑
         if bullets:
             tb2 = slide.shapes.add_textbox(Inches(1.2), Inches(y), Inches(11.3), Inches(5.5 - (y - 1.8)))
             tf2 = tb2.text_frame; tf2.word_wrap = True
-            for i, b in enumerate(bullets[:6]):
+            for i, b in enumerate(bullets[:8]):
                 p = tf2.add_paragraph() if i > 0 else tf2.paragraphs[0]
-                p.text = f"▸ {b[:130]}"; p.font.size = Pt(15)
-                p.font.color.rgb = RGBColor(0x1F, 0x29, 0x37); p.space_after = Pt(12)
+                p.text = f"▸ {b[:140]}"; p.font.size = Pt(15)
+                p.font.color.rgb = RGBColor(0x1F, 0x29, 0x37); p.space_after = Pt(10)
 
         # Highlight numbers at the bottom
         if highlight_nums:
