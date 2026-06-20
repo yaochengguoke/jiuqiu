@@ -124,15 +124,16 @@ with st.sidebar:
             except Exception as e:
                 st.error(f"导入失败: {e}")
                 st.session_state._import_done = False
-        st.markdown('<p style="font-size:0.7rem;color:#9CA3AF;margin:0.3rem 0;">🤖 AI 增强生成（可选）</p>', unsafe_allow_html=True)
-        api_key = st.text_input("AI 密钥", type="password", placeholder="sk-... DeepSeek或Anthropic密钥", label_visibility="collapsed")
+        st.markdown('<p style="font-size:0.7rem;color:#9CA3AF;margin:0.3rem 0;">🤖 接入 AI 模型（可选，免费试用）</p>', unsafe_allow_html=True)
+        api_key = st.text_input("API 密钥", type="password", placeholder="DeepSeek 或 Anthropic 密钥", label_visibility="collapsed")
+        st.caption("去 platform.deepseek.com 免费注册获取")
         if api_key:
             import os
             if api_key.startswith("sk-ant"):
                 os.environ["ANTHROPIC_API_KEY"] = api_key
             else:
                 os.environ["DEEPSEEK_API_KEY"] = api_key
-            st.success("AI 密钥已设置，生成时将自动启用 AI 模式")
+            st.success("AI 已接入，生成质量将大幅提升")
 
     st.markdown('<hr style="margin:0.6rem 0;border-color:#E5E7EB;">', unsafe_allow_html=True)
     project_name = st.text_input("项目名称 *", value=st.session_state.get("project_name",""), placeholder="例：晶源新材——钙钛矿光伏电池关键材料国产化")

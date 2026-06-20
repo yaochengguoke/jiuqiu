@@ -72,11 +72,9 @@ class CompetitionAgent:
         self.use_ai = self.llm_client.is_available
 
         if self.use_ai:
-            print("[OK] LLM API已连接，将使用AI生成国奖级内容")
+            print("[OK] AI 模式已启用")
         else:
-            print("[WARN]  演示模式：将使用模板化规则生成内容")
-            print("   要启用AI生成，请设置环境变量 ANTHROPIC_API_KEY")
-            print()
+            print("  离线模板模式（填入 API Key 可启用 AI 增强）")
 
         # 初始化各模块
         self.input_processor = InputProcessor()
