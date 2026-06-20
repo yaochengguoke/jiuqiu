@@ -281,11 +281,11 @@ class CompetitionAgent:
         plagiarism = PlagiarismChecker()
         plagiarism_report = plagiarism.check(self.current_document.get_full_text())
         plagiarism_text = plagiarism.format_markdown(plagiarism_report)
-        # 保存到输出目录
+        # 保存到项目输出目录
         from utils.helpers import write_text_file, ensure_dir
-        pr = OUTPUT_DIR / "current"
-        ensure_dir(pr)
-        write_text_file(pr / "plagiarism_report.md", plagiarism_text)
+        prj_out = self.current_export.output_dir if self.current_export else (OUTPUT_DIR / "current")
+        ensure_dir(prj_out)
+        write_text_file(prj_out / "plagiarism_report.md", plagiarism_text)
         if verbose:
             print(f"  查重风险：{plagiarism_report.overall_risk}（{plagiarism_report.risk_score}分）")
             print(f"  风险点：{len(plagiarism_report.findings)}处")
@@ -309,7 +309,7 @@ class CompetitionAgent:
             self.current_document.get_full_text(),
             self.current_document.project_name
         )
-        write_text_file(defense_output_dir / "executive_summary.md", summary_text)
+        write_text_file(prj_out / "executive_summary.md", summary_text)
 
         if verbose:
             print(f"  生成潜在问题：{len(defense_report.questions)}个（覆盖{len(set(q.category for q in defense_report.questions))}个维度）")
@@ -318,7 +318,7 @@ class CompetitionAgent:
             print()
 
         # 保存答辩报告到输出目录
-        write_text_file(defense_output_dir / "defense_prep_report.md", defense_text)
+        write_text_file(prj_out / "defense_prep_report.md", defense_text)
 
         # ===== 阶段9：输出导出 =====
         self._print_stage(9, "多格式输出")
@@ -329,6 +329,27 @@ class CompetitionAgent:
             layout_engine=self.layout_engine,
             quality_report_text=quality_text,
         )
+
+        # 保存查重报告
+        from utils.helpers import ensure_dir, write_text_file
+        prj_out = self.current_export.output_dir
+        ensure_dir(prj_out)
+        plagiarism2 = PlagiarismChecker()
+        pr2 = plagiarism2.check(self.current_document.get_full_text())
+        write_text_file(prj_out / "plagiarism_report.md", plagiarism2.format_markdown(pr2))
+
+        # 保存答辩+摘要
+        defense_prep2 = DefensePrep(llm_client=self.llm_client if self.use_ai else None)
+        defense_report2 = defense_prep2.generate_defense_prep(
+            full_text=self.current_document.get_full_text(),
+            project_name=self.current_document.project_name,
+        )
+        write_text_file(prj_out / "defense_prep_report.md", defense_prep2.print_report(defense_report2))
+        summary2 = defense_prep2.generate_summary(
+            self.current_document.get_full_text(),
+            self.current_document.project_name
+        )
+        write_text_file(prj_out / "executive_summary.md", summary2)
 
         if verbose:
             print(f"  [Dir] 输出目录：{self.current_export.output_dir}")
