@@ -334,10 +334,14 @@ if generate:
             if ca: write_text_file(out / "competitor_analysis.md", ca)
 
             status.update(label="生成完毕", state="complete")
-        st.success(f"已生成 · {agent.current_document.total_word_count} 字 · {len(agent.current_template.chapters)} 章 · {len(diagrams)} 张图表")
+        st.session_state._result_agent = agent
+        st.rerun()
 
-        # 分类下载
-        _show_downloads(agent.current_export.output_dir)
+# 持久化显示
+if st.session_state.get("_result_agent"):
+    a = st.session_state._result_agent
+    st.success(f"已生成 · {a.current_document.total_word_count} 字 · {len(a.current_template.chapters)} 章")
+    _show_downloads(a.current_export.output_dir)
 
         with st.expander("查看正文"): st.markdown(agent.current_document.get_full_text())
 
