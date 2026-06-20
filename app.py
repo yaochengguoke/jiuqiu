@@ -334,11 +334,15 @@ if generate:
 
             status.update(label="生成完毕", state="complete")
 
-        st.success(f"已生成 · {agent.current_document.total_word_count} 字 · {len(agent.current_template.chapters)} 章 · {len(diagrams)} 张图表")
-        st.caption("PDF/PPT/报告正在后台生成，稍后刷新即可下载")
-        _show_downloads(agent.current_export.output_dir)
+        st.session_state._result = agent
+        st.rerun()
 
-        with st.expander("查看正文"): st.markdown(agent.current_document.get_full_text())
+# 持久化显示（生成后不会消失）
+if st.session_state.get("_result"):
+    a = st.session_state._result
+    st.success(f"已生成 · {a.current_document.total_word_count} 字 · {len(a.current_template.chapters)} 章")
+    _show_downloads(a.current_export.output_dir)
+    with st.expander("查看正文"): st.markdown(a.current_document.get_full_text())
 
 # ── 底部 ──
 st.markdown("""<div style="text-align:center;padding:3rem 0 2rem;color:#86868b;font-size:0.85rem;">
