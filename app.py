@@ -128,19 +128,19 @@ with st.sidebar:
             st.success("AI 密钥已设置，生成时将自动启用 AI 模式")
 
     st.markdown('<hr style="margin:0.6rem 0;border-color:#E5E7EB;">', unsafe_allow_html=True)
-    project_name = st.text_input("项目名称 *", placeholder="例：晶源新材——钙钛矿光伏电池关键材料国产化")
+    project_name = st.text_input("项目名称 *", value=st.session_state.get("project_name",""), placeholder="例：晶源新材——钙钛矿光伏电池关键材料国产化")
     st.markdown('<p style="font-size:0.7rem;color:#9CA3AF;text-transform:uppercase;letter-spacing:1px;margin:0 0 0.3rem;">✏️ 手动填写</p>', unsafe_allow_html=True)
     with st.expander("项目核心资料", expanded=True):
-        project_brief = st.text_area("项目简介 *", height=120, placeholder="请描述：项目做什么、核心技术、成果、市场前景")
-        tech_principles = st.text_area("技术原理与核心创新", height=90, placeholder="越详细生成质量越高")
+        project_brief = st.text_area("项目简介 *", value=st.session_state.get("project_brief",""), height=120, placeholder="请描述：项目做什么、核心技术、成果、市场前景")
+        tech_principles = st.text_area("技术原理与核心创新", value=st.session_state.get("tech_principles",""), height=90, placeholder="越详细生成质量越高")
         innovations_str = st.text_input("核心创新点", placeholder="逗号分隔，例：AI预测调度,微通道冷板,泵阀联动")
-        market_data = st.text_area("市场调研数据", height=70, placeholder="市场规模、增长率、竞争格局等")
+        market_data = st.text_area("市场调研数据", value=st.session_state.get("market_data",""), height=70, placeholder="市场规模、增长率、竞争格局等")
         cooperation = st.text_input("项目合作 / 落地应用", placeholder="已与XX达成合作，在XX完成验证")
 
     with st.expander("团队信息"):
-        leader = st.text_input("项目负责人 *")
+        leader = st.text_input("项目负责人 *", value=st.session_state.get("leader",""))
         team_text = st.text_area("团队成员", height=90, placeholder="每行一人：姓名,专业,学历,分工,成就")
-        advisor = st.text_input("指导教师 *")
+        advisor = st.text_input("指导教师 *", value=st.session_state.get("advisor",""))
         advisor_title = st.text_input("指导教师职称 / 资历")
         past_awards_str = st.text_input("团队过往获奖", placeholder="逗号分隔")
 
