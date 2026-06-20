@@ -41,11 +41,6 @@ def _label(fn):
 # ── Session state init ──
 if "generated" not in st.session_state:
     st.session_state.generated = False
-# 持久化 API 密钥（防止 rerun 丢失）
-if st.session_state.get("_api_key"):
-    import os
-    k = st.session_state._api_key
-    os.environ["DEEPSEEK_API_KEY" if not k.startswith("sk-ant") else "ANTHROPIC_API_KEY"] = k
 
 
 def _show_downloads(out_dir):
@@ -138,8 +133,7 @@ with st.sidebar:
                 os.environ["ANTHROPIC_API_KEY"] = api_key
             else:
                 os.environ["DEEPSEEK_API_KEY"] = api_key
-            st.session_state._api_key = api_key
-                    st.success("AI 已接入")
+            st.success("AI 已接入，生成质量将大幅提升")
 
     st.markdown('<hr style="margin:0.6rem 0;border-color:#E5E7EB;">', unsafe_allow_html=True)
     project_name = st.text_input("项目名称 *", value=st.session_state.get("project_name",""), placeholder="例：晶源新材——钙钛矿光伏电池关键材料国产化")
