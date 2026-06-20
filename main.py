@@ -39,6 +39,7 @@ from modules.content_generator import ContentGenerator
 from modules.diagram_generator import DiagramGenerator
 from modules.layout_engine import LayoutEngine
 from modules.quality_checker import QualityChecker
+from modules.plagiarism_checker import PlagiarismChecker
 from modules.defense_prep import DefensePrep
 from modules.output_exporter import OutputExporter
 
@@ -273,6 +274,21 @@ class CompetitionAgent:
 
         if verbose:
             print(quality_text)
+            print()
+
+        # ===== 阶段8.3：查重预检 =====
+        self._print_stage(8.3, "查重预检")
+        plagiarism = PlagiarismChecker()
+        plagiarism_report = plagiarism.check(self.current_document.get_full_text())
+        plagiarism_text = plagiarism.format_markdown(plagiarism_report)
+        # 保存到输出目录
+        from utils.helpers import write_text_file, ensure_dir
+        pr = OUTPUT_DIR / "current"
+        ensure_dir(pr)
+        write_text_file(pr / "plagiarism_report.md", plagiarism_text)
+        if verbose:
+            print(f"  查重风险：{plagiarism_report.overall_risk}（{plagiarism_report.risk_score}分）")
+            print(f"  风险点：{len(plagiarism_report.findings)}处")
             print()
 
         # ===== 阶段8.5：答辩预演 =====
