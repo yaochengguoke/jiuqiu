@@ -114,17 +114,30 @@ AI 驱动的竞赛策划书自动生成系统。
 # ── 演示结果 ──
 if st.session_state.get("demo_result"):
     a = st.session_state.demo_result
+    out = a.current_export.output_dir
+    # ensure reports
+    from modules.plagiarism_checker import PlagiarismChecker
+    from modules.defense_prep import DefensePrep
+    from utils.helpers import ensure_dir, write_text_file
+    ft = a.current_document.get_full_text()
+    ensure_dir(out)
+    PlagiarismChecker(); pc = PlagiarismChecker()
+    write_text_file(out / "plagiarism_report.md", PlagiarismChecker().format_markdown(pc.check(ft)))
+    dp = DefensePrep()
+    write_text_file(out / "executive_summary.md", dp.generate_summary(ft, a.current_document.project_name))
+    write_text_file(out / "defense_prep_report.md", dp.print_report(dp.generate_defense_prep(ft, a.current_document.project_name)))
+
     st.success(f"已生成 · {a.current_document.total_word_count}字 · {len(a.current_template.chapters)}章")
     t1, t2 = st.tabs(["策划书正文", "下载文件"])
-    with t1: st.markdown(a.current_document.get_full_text())
+    with t1: st.markdown(ft)
     with t2:
         st.markdown("### 推荐下载")
         for key in ["final_plan.docx", "final_plan.html"]:
-            fp = a.current_export.output_dir / key
+            fp = out / key
             if fp.exists():
                 with open(fp, "rb") as fh: st.download_button(_label(key), fh.read(), key)
         with st.expander("其他文件"):
-            for f in sorted(a.current_export.output_dir.glob("*")):
+            for f in sorted(out.glob("*")):
                 if f.is_file() and f.name not in ["final_plan.docx", "final_plan.html"]:
                     with open(f, "rb") as fh: st.download_button(_label(f.name), fh.read(), f.name)
 
