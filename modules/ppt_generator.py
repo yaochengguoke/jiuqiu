@@ -197,26 +197,33 @@ class PPTGenerator:
         slide = prs.slides.add_slide(prs.slide_layouts[6])
         self._title_bar(slide, "团队介绍与核心优势")
 
-        # Filter actual member info
         members = []
         for item in team_items:
             if any(kw in item for kw in ['博士', '硕士', '教授', '导师', '负责人', '指导', '成员']):
-                members.append(item[:80])
+                # 按逗号拆成多行显示
+                parts = [p.strip() for p in item.split(',') if p.strip()]
+                members.append(parts[:4])  # 最多4行
         members = members[:6]
 
-        for i, m in enumerate(members):
+        for i, parts in enumerate(members):
             col, row = i % 3, i // 3
             x, y = 1.2 + col * 3.8, 2.2 + row * 2.5
             card = slide.shapes.add_shape(1, Inches(x), Inches(y), Inches(3.4), Inches(2))
             card.fill.solid(); card.fill.fore_color.rgb = RGBColor(0xFF, 0xFF, 0xFF)
             card.line.color.rgb = RGBColor(0xE5, 0xE7, 0xEB)
-            # Orange top accent
             accent = slide.shapes.add_shape(1, Inches(x), Inches(y), Inches(3.4), Inches(0.06))
             accent.fill.solid(); accent.fill.fore_color.rgb = RGBColor(0xFF, 0x6B, 0x35)
             accent.line.fill.background()
-            tb = slide.shapes.add_textbox(Inches(x+0.3), Inches(y+0.4), Inches(2.8), Inches(1.3))
-            p = tb.text_frame.paragraphs[0]; p.text = m; p.font.size = Pt(12)
-            p.font.color.rgb = RGBColor(0x1F, 0x29, 0x37); p.alignment = PP_ALIGN.CENTER
+            tb = slide.shapes.add_textbox(Inches(x+0.2), Inches(y+0.3), Inches(3), Inches(1.5))
+            tf = tb.text_frame; tf.word_wrap = True
+            for j, part in enumerate(parts):
+                p = tf.add_paragraph() if j > 0 else tf.paragraphs[0]
+                p.text = part[:40]
+                p.font.size = Pt(10) if j > 0 else Pt(11)
+                p.font.bold = (j == 0)
+                p.font.color.rgb = RGBColor(0x1F, 0x29, 0x37) if j == 0 else RGBColor(0x6B, 0x72, 0x80)
+                p.alignment = PP_ALIGN.CENTER
+                p.space_after = Pt(2)
 
         slide.notes_slide.notes_text_frame.text = "【演讲提示】\n- 强调团队互补性和技术积累\n- 突出指导老师的行业影响力"
         self._add_slide_number(slide)
