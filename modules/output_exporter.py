@@ -208,16 +208,44 @@ class OutputExporter:
         )
 
     def _export_pdf(self, html_content: str, output_dir: Path) -> Optional[Path]:
-        """HTML → PDF (weasyprint, cloud OK / Windows needs GTK)"""
+        """HTML -> PDF"""
         pdf_path = output_dir / "final_plan.pdf"
         try:
             from weasyprint import HTML
             HTML(string=html_content).write_pdf(str(pdf_path))
             return pdf_path
-        except ImportError as e:
-            print(f"[OutputExporter] weasyprint未安装: {e}")
+        except Exception:
+            pass
+        try:
+            from fpdf import FPDF
+            import re as _re, os as _os
+            pdf = FPDF()
+            pdf.add_page()
+            for fp in [r"C:\Windows\Fonts\msyh.ttc", r"C:\Windows\Fonts\simhei.ttf",
+                        r"C:\Windows\Fonts\simsun.ttc", r"C:\Windows\Fonts\STXIHEI.TTF"]:
+                if _os.path.exists(fp):
+                    try:
+                        pdf.add_font("zh", "", fp)
+                        pdf.set_font("zh", "", 10)
+                        break
+                    except:
+                        continue
+            if pdf.font_family == "":
+                pdf.set_font("Helvetica", "", 10)
+            text = _re.sub(r'<[^>]+>', '', html_content)
+            text = _re.sub(r'\n{3,}', '\n\n', text)
+            for line in text.split('\n'):
+                clean = line.strip()
+                if clean:
+                    try:
+                        pdf.multi_cell(0, 6, clean[:150])
+                    except Exception:
+                        pass
+            pdf.output(str(pdf_path))
+            return pdf_path
         except Exception as e:
-            print(f"[OutputExporter] PDF生成跳过(可装weasyprint解决): {str(e)[:100]}")
+            pass
+        return None
 
     def _export_docx(self, markdown_text: str, project_name: str, output_dir: Path) -> Optional[Path]:
         """Markdown → Word (.docx) 转换"""
