@@ -232,8 +232,17 @@ if st.session_state.get("demo_result"):
 
 # ── 生成逻辑 ──
 if generate:
-    if not project_name or not project_brief:
-        st.error("请填写项目名称和项目简介")
+    # 输入校验
+    errors = []
+    if not project_name or len(project_name.strip()) < 4:
+        errors.append("项目名称至少4个字符")
+    if not project_brief or len(project_brief.strip()) < 20:
+        errors.append("项目简介至少20个字符，请描述项目核心内容")
+    if not competition:
+        errors.append("请选择赛事组别")
+    if errors:
+        for e in errors:
+            st.error(e)
     else:
         st.session_state.generated = True
         team_members = []
