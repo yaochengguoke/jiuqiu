@@ -302,41 +302,40 @@ if generate:
             agent.current_document = agent.content_generator.generate_all_chapters(
                 agent.current_template, agent.current_data_pool, progress_callback=chapter_cb)
 
-            status.update(label="生成图表...", state="running")
+            status.update(label="生成图表+排版导出...", state="running")
             user_visual = agent._load_visual_style(color_theme)
             from modules.diagram_generator import DiagramGenerator
             dg = DiagramGenerator(visual_style=user_visual)
             diagrams = dg.generate_all_diagrams_for_document(project_name=project_name, competition_name=competition, tech_name=agent.current_data_pool.tech_pool.get("technology_name",""), tech_modules=[], innovations=innovations)
-
-            status.update(label="排版导出...", state="running")
             from modules.layout_engine import LayoutEngine
             from modules.output_exporter import OutputExporter
             agent.current_export = OutputExporter().export_all(document=agent.current_document, layout_engine=LayoutEngine(user_visual))
 
-            status.update(label="查重预检中...", state="running")
-            from modules.plagiarism_checker import PlagiarismChecker
-            from modules.defense_prep import DefensePrep
-            from utils.helpers import ensure_dir, write_text_file
+            # 耗时任务放后台线程
+            import threading
             full_text = agent.current_document.get_full_text()
-            out = agent.current_export.output_dir; ensure_dir(out)
-            pc = PlagiarismChecker()
-            write_text_file(out / "plagiarism_report.md", pc.format_markdown(pc.check(full_text)))
-            status.update(label="生成摘要+路演稿...", state="running")
-            dp = DefensePrep()
-            write_text_file(out / "executive_summary.md", dp.generate_summary(full_text, agent.current_document.project_name))
-            status.update(label="生成答辩手册...", state="running")
-            write_text_file(out / "defense_prep_report.md", dp.print_report(dp.generate_defense_prep(full_text, agent.current_document.project_name)))
-            # 生成PPT+竞品对标
-            from modules.ppt_generator import PPTGenerator
-            pptg = PPTGenerator()
-            pptg.generate_ppt(full_text, agent.current_document.project_name, out / "defense.pptx")
-            ca = pptg.format_competitor_table(pptg.analyze_competitors(full_text))
-            if ca: write_text_file(out / "competitor_analysis.md", ca)
+            out = agent.current_export.output_dir
+            def bg_tasks():
+                from utils.helpers import ensure_dir, write_text_file
+                ensure_dir(out)
+                from modules.plagiarism_checker import PlagiarismChecker
+                pc = PlagiarismChecker()
+                write_text_file(out / "plagiarism_report.md", pc.format_markdown(pc.check(full_text)))
+                from modules.defense_prep import DefensePrep
+                dp = DefensePrep()
+                write_text_file(out / "executive_summary.md", dp.generate_summary(full_text, agent.current_document.project_name))
+                write_text_file(out / "defense_prep_report.md", dp.print_report(dp.generate_defense_prep(full_text, agent.current_document.project_name)))
+                from modules.ppt_generator import PPTGenerator
+                pptg = PPTGenerator()
+                pptg.generate_ppt(full_text, agent.current_document.project_name, out / "defense.pptx")
+                ca = pptg.format_competitor_table(pptg.analyze_competitors(full_text))
+                if ca: write_text_file(out / "competitor_analysis.md", ca)
+            th = threading.Thread(target=bg_tasks); th.start()
 
             status.update(label="生成完毕", state="complete")
-        st.success(f"已生成 · {agent.current_document.total_word_count} 字 · {len(agent.current_template.chapters)} 章 · {len(diagrams)} 张图表")
 
-        # 分类下载
+        st.success(f"已生成 · {agent.current_document.total_word_count} 字 · {len(agent.current_template.chapters)} 章 · {len(diagrams)} 张图表")
+        st.caption("PDF/PPT/报告正在后台生成，稍后刷新即可下载")
         _show_downloads(agent.current_export.output_dir)
 
         with st.expander("查看正文"): st.markdown(agent.current_document.get_full_text())
