@@ -93,7 +93,7 @@ with st.sidebar:
     competition = st.selectbox("赛事组别", SUPPORTED_COMPETITIONS)
 
     # 必填项加 *
-    # 导入功能
+    st.markdown('<p style="font-size:0.7rem;color:#9CA3AF;text-transform:uppercase;letter-spacing:1px;margin:0.5rem 0 0.2rem;">📥 快速导入</p>', unsafe_allow_html=True)
     with st.expander("📥 导入资料 / AI设置", expanded=False):
         uploaded = st.file_uploader("上传项目文件", type=["json", "txt", "docx"],
                                      help="支持JSON配置文件、TXT文本、Word文档")
@@ -135,6 +135,8 @@ with st.sidebar:
 
     project_name = st.text_input("项目名称 *", placeholder="例：晶源新材——钙钛矿光伏电池关键材料国产化")
 
+    st.markdown('<hr style="margin:0.8rem 0;border-color:#E5E7EB;">', unsafe_allow_html=True)
+    st.markdown('<p style="font-size:0.7rem;color:#9CA3AF;text-transform:uppercase;letter-spacing:1px;margin:0 0 0.3rem;">✏️ 手动填写</p>', unsafe_allow_html=True)
     with st.expander("项目核心资料", expanded=True):
         project_brief = st.text_area("项目简介 *", height=120, placeholder="请描述：项目做什么、核心技术、成果、市场前景")
         tech_principles = st.text_area("技术原理与核心创新", height=90, placeholder="越详细生成质量越高")
