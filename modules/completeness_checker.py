@@ -301,25 +301,25 @@ class CompletenessChecker:
             except Exception:
                 pass
 
-        # 模板化问题生成
+        # 智能引导问题（含具体示例，帮助客户快速理解该填什么）
         questions = []
         question_templates = {
-            "tech_principles": f"请问您在{chapter_title}中涉及的核心技术原理是什么？请详细描述技术路线和关键工艺。",
-            "market_data": f"关于{chapter_title}，您是否已有市场调研数据？如目标市场规模、增长率、竞争格局等。",
-            "innovations": "您的项目有哪些核心创新点？请列出3-5个最重要的技术创新。",
-            "tech_params": "请提供关键的技术性能参数，如效率、精度、速度等具体数值指标。",
-            "patents": "项目是否已申请专利？请提供专利名称、类型和申请/授权情况。",
-            "papers": "团队是否发表了相关学术论文？请提供论文标题、期刊和发表时间。",
-            "past_awards": "团队过往获得过哪些竞赛奖项或荣誉？请列出最重要的3-5项。",
-            "team_members": "请补充团队成员的详细信息（姓名、专业、学历、分工、成就）。",
-            "project_leader": "请提供项目负责人的详细信息。",
-            "advisor_name": "请补充指导老师的姓名和基本信息。",
-            "advisor_achievements": "请介绍指导老师的主要学术成就和行业影响力。",
-            "product_photos": "是否有产品样机或原型系统的照片？请提供以便在策划书中展示。",
-            "cooperation_info": "项目是否已有合作企业或落地应用？请提供合作详情。",
-            "cooperation_agreements": "是否有校企合作协议或落地证明文件？",
-            "industry_analysis": "请提供您对所属行业的分析，包括产业链位置和发展趋势。",
-            "market_size": "请补充目标市场的规模数据，最好引用权威第三方报告。",
+            "tech_principles": f"【{chapter_title}】核心技术原理是什么？请描述技术路线和关键工艺步骤（例：采用XX方法，通过YY步骤，实现ZZ效果）。",
+            "market_data": f"【{chapter_title}】目标市场规模多大？增长率多少？主要竞品是谁？（例：据IDC报告，2023年全球XX市场规模达50亿美元，CAGR超30%）",
+            "innovations": "核心创新点有哪些？请列出3-5个，每个附一句话说明其独特之处。（例：AI预测调度——提前15分钟预判负载，准确率94%）",
+            "tech_params": "关键技术参数是什么？请提供至少3个量化指标及其测试条件。（例：能效比6.8@25℃/50%RH；响应时间<3秒）",
+            "patents": "已申请/授权哪些专利？请提供专利名称、类型、申请号。（例：发明专利《一种XXX方法》CN2025XXXXXX，已授权）",
+            "papers": "团队发表过哪些学术论文？请提供3-5篇代表性论文的标题、期刊和发表时间。",
+            "past_awards": "团队获得过哪些竞赛奖项或荣誉？（例：2025年全国大学生节能减排大赛全国一等奖）",
+            "team_members": "团队成员详细信息？每人请写明：姓名、专业、学历、在项目中的分工、主要成就。",
+            "project_leader": "项目负责人是谁？请提供姓名、专业背景和核心优势。",
+            "advisor_name": "指导教师是谁？请提供姓名。",
+            "advisor_achievements": "指导教师有哪些学术成就？（例：主持国家级项目X项，发表SCI论文Y篇，获国家科技进步二等奖）",
+            "product_photos": "有产品样机或原型照片吗？请提供至少2张清晰照片，展示核心功能。",
+            "cooperation_info": "项目有合作企业或落地应用吗？（例：已与XX公司达成合作，产品在YY场景运行6个月）",
+            "cooperation_agreements": "有校企合作协议或落地证明文件吗？请提供扫描件或照片。",
+            "industry_analysis": f"【{chapter_title}】所在行业的产业链结构如何？技术发展趋势是什么？有哪些政策利好？",
+            "market_size": "目标市场具体规模多大？请引用权威第三方报告数据（注明报告名称和年份）。",
         }
 
         for item in missing:

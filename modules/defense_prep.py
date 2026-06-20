@@ -2,12 +2,12 @@
 答辩预演模块
 - 基于策划书内容自动生成评委可能提问的问题清单
 - 提供每个问题的建议回答思路
+- 生成300字执行摘要 + 1分钟路演稿
 - 生成3分钟电梯演讲脚本
-- 输出答辩准备手册
 """
 
 import re
-from typing import Dict, List, Any, Optional
+from typing import Dict, List, Any, Optional, Tuple
 from dataclasses import dataclass, field
 from datetime import datetime
 
@@ -352,3 +352,42 @@ class DefensePrep:
         lines.append("")
         lines.append("=" * 60)
         return "\n".join(lines)
+
+    def generate_summary(self, full_text: str, project_name: str) -> str:
+        """生成300字执行摘要 + 1分钟路演稿"""
+        # 提取关键数据
+        tech_match = re.findall(r'(?:创新|核心技术|自主研发)[：:]*([^。\n]{10,80})', full_text)
+        param_match = re.findall(r'(\w+(?:效率|纯度|精度|速度|能耗|成本|指标)[^\n]{5,60})', full_text)
+        market_match = re.search(r'(?:市场|规模)[^。]*?(\d+\.?\d*\s*[亿万]?\s*(?:美元|元|亿).*?)(?:[。；]|$)', full_text)
+        award_match = re.findall(r'(?:获奖|一等奖|二等奖|特等奖|金奖|银奖)[^\n]{5,40}', full_text)
+        patent_match = re.search(r'(\d+\s*项\s*(?:发明)?专利)', full_text)
+
+        tech = tech_match[0][:60] if tech_match else "核心技术突破"
+        params = "、".join(param_match[:3]) if param_match else "关键性能指标"
+        market = market_match.group(0)[:50] if market_match else "目标市场"
+        awards = award_match[0][:30] if award_match else "多项竞赛奖项"
+        patents = patent_match.group(0) if patent_match else "多项专利"
+
+        summary = f"""# 执行摘要（300字）
+
+{project_name}，聚焦于{tech}。项目{params}，在核心指标上达到国际先进水平。
+
+市场方面，{market}，增长潜力巨大。团队已{awards}，拥有{patents}，具备扎实的技术积累和产业化基础。
+
+项目采用自主创新的技术路线，通过产学研协同，已与多家行业头部企业达成合作意向，为后续规模化推广奠定基础。未来三年，项目计划完成产品迭代和产能扩建，力争成为细分领域的国内领军者。
+
+---
+
+# 1分钟路演稿
+
+各位评委老师好！我是{project_name}的负责人。
+
+【30秒 - 痛点】{tech}是行业核心瓶颈，现有方案存在成本高、效率低的问题。
+
+【30秒 - 方案】我们自主研发了{tech}，核心指标{params}，已获{patents}。
+
+【30秒 - 成果】项目已{awards}，市场{market}。本轮融资用于产品迭代和市场拓展。
+
+谢谢！
+"""
+        return summary

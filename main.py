@@ -302,9 +302,17 @@ class CompetitionAgent:
         )
         defense_text = defense_prep.print_report(defense_report)
 
+        # 生成摘要
+        summary_text = defense_prep.generate_summary(
+            self.current_document.get_full_text(),
+            self.current_document.project_name
+        )
+        write_text_file(defense_output_dir / "executive_summary.md", summary_text)
+
         if verbose:
             print(f"  生成潜在问题：{len(defense_report.questions)}个（覆盖{len(set(q.category for q in defense_report.questions))}个维度）")
-            print(f"  电梯演讲脚本：已生成（约2.5-3分钟）")
+            print(f"  电梯演讲脚本：已生成")
+            print(f"  执行摘要+路演稿：已生成（300字+1分钟）")
             print()
 
         # 保存答辩报告到输出目录
