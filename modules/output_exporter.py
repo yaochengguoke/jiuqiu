@@ -222,7 +222,10 @@ class OutputExporter:
             pdf = FPDF()
             pdf.add_page()
             for fp in [r"C:\Windows\Fonts\msyh.ttc", r"C:\Windows\Fonts\simhei.ttf",
-                        r"C:\Windows\Fonts\simsun.ttc", r"C:\Windows\Fonts\STXIHEI.TTF"]:
+                        r"C:\Windows\Fonts\simsun.ttc", r"C:\Windows\Fonts\STXIHEI.TTF",
+                        "/usr/share/fonts/truetype/noto/NotoSansCJK-Regular.ttc",
+                        "/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc",
+                        "fonts/chinese.otf", "fonts/chinese.ttc"]:
                 if _os.path.exists(fp):
                     try:
                         pdf.add_font("zh", "", fp)
