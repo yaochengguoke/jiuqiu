@@ -42,6 +42,42 @@ def _label(fn):
 if "generated" not in st.session_state:
     st.session_state.generated = False
 
+
+def _show_downloads(out_dir):
+    """分类展示下载文件"""
+    categories = {
+        "项目核心文稿": ["final_plan.docx", "final_plan.html", "final_plan.md", "final_plan.pdf", "executive_summary.md", "defense_prep_report.md", "defense.pptx"],
+        "调研辅助材料": ["competitor_analysis.md", "client_supplement_guide.md", "missing_checklist.md"],
+        "合规/财务/检测": ["DATA_PRIVACY.txt", "financial_questionnaire.md", "plagiarism_report.md", "quality_report.md"],
+        "配置文件": ["metadata.json", "change_log.md"],
+    }
+    # Flat list of all handled files
+    all_handled = set()
+    for files in categories.values():
+        all_handled.update(files)
+    
+    for cat_name, cat_files in categories.items():
+        existing = [(f, out_dir / f) for f in cat_files if (out_dir / f).exists()]
+        if existing:
+            st.markdown(f"**{cat_name}**")
+            cols = st.columns(min(len(existing), 3))
+            for i, (fname, fpath) in enumerate(existing):
+                with cols[i % 3]:
+                    with open(fpath, "rb") as fh:
+                        st.download_button(_label(fname), fh.read(), fname, use_container_width=True)
+    
+    # Others
+    remaining = [f for f in sorted(out_dir.glob("*")) if f.is_file() and f.name not in all_handled]
+    if remaining:
+        with st.expander("其他文件"):
+            cols = st.columns(3)
+            for i, f in enumerate(remaining):
+                with cols[i % 3]:
+                    with open(f, "rb") as fh:
+                        st.download_button(_label(f.name), fh.read(), f.name, use_container_width=True)
+
+
+
 # ── Hero ──
 st.markdown("""<div style="text-align:center;padding:2rem 1rem 1rem;">
     <h1 style="font-size:3rem;font-weight:700;color:#111827;letter-spacing:-0.8px;margin:0;">⚡ 竞赛策划智能体</h1>
@@ -147,15 +183,7 @@ if st.session_state.get("demo_result"):
     t1, t2 = st.tabs(["策划书正文", "下载文件"])
     with t1: st.markdown(ft)
     with t2:
-        st.markdown("### 推荐下载")
-        for key in ["final_plan.docx", "final_plan.html"]:
-            fp = out / key
-            if fp.exists():
-                with open(fp, "rb") as fh: st.download_button(_label(key), fh.read(), key)
-        with st.expander("其他文件"):
-            for f in sorted(out.glob("*")):
-                if f.is_file() and f.name not in ["final_plan.docx", "final_plan.html"]:
-                    with open(f, "rb") as fh: st.download_button(_label(f.name), fh.read(), f.name)
+        _show_downloads(out)
 
 # ── 生成逻辑 ──
 if generate:
@@ -231,19 +259,8 @@ if generate:
             status.update(label="生成完毕", state="complete")
         st.success(f"已生成 · {agent.current_document.total_word_count} 字 · {len(agent.current_template.chapters)} 章 · {len(diagrams)} 张图表")
 
-        # 改动4：下载区分优先级
-        exp = agent.current_export.output_dir
-        st.markdown("### 推荐下载")
-        c1, c2 = st.columns(2)
-        for i, (col, key) in enumerate(zip([c1, c2], ["final_plan.pdf", "final_plan.docx"])):
-            with col:
-                fp = exp / key
-                if fp.exists():
-                    with open(fp, "rb") as fh: st.download_button(_label(key), fh.read(), key, use_container_width=True)
-        with st.expander("其他文件"):
-            for f in sorted(exp.glob("*")):
-                if f.is_file() and f.name not in ["final_plan.docx", "final_plan.html"]:
-                    with open(f, "rb") as fh: st.download_button(_label(f.name), fh.read(), f.name)
+        # 分类下载
+        _show_downloads(agent.current_export.output_dir)
 
         with st.expander("查看正文"): st.markdown(agent.current_document.get_full_text())
 
