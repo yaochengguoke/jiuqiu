@@ -93,10 +93,9 @@ with st.sidebar:
     competition = st.selectbox("赛事组别", SUPPORTED_COMPETITIONS)
 
     # 必填项加 *
-    st.markdown('<p style="font-size:0.7rem;color:#9CA3AF;text-transform:uppercase;letter-spacing:1px;margin:0.5rem 0 0.2rem;">📥 快速导入</p>', unsafe_allow_html=True)
-    with st.expander("📥 导入资料 / AI 生成配置", expanded=False):
-        uploaded = st.file_uploader("上传项目文件", type=["json", "txt", "docx"],
-                                     help="支持 JSON 配置文件、Word 文档、TXT 文本")
+    with st.expander("📂 导入资料 · 🤖 AI 生成配置", expanded=False):
+        st.caption("上传 JSON / Word / TXT 文件，自动填充下方表单")
+        uploaded = st.file_uploader("选择文件", type=["json", "txt", "docx"], label_visibility="collapsed")
         if uploaded:
             try:
                 if uploaded.name.endswith('.json'):
@@ -108,34 +107,28 @@ with st.sidebar:
                         st.session_state.market_data = data["project_material"].get("market_data", "")
                         st.session_state.leader = data["team_info"].get("project_leader", "")
                         st.session_state.advisor = data["team_info"].get("advisor_name", "")
-                        st.success("已加载配置文件")
+                        st.success("配置加载成功，表单已自动填充")
                         st.rerun()
                 elif uploaded.name.endswith('.docx'):
                     from docx import Document
-                    doc = Document(uploaded)
-                    text = '\n'.join([p.text for p in doc.paragraphs])
+                    text = '\n'.join([p.text for p in Document(uploaded).paragraphs])
                     st.session_state.project_brief = text[:2000]
-                    st.success("已提取Word内容到项目简介")
+                    st.success("Word 解析完成，已填入项目简介")
                     st.rerun()
                 else:
-                    text = uploaded.read().decode('utf-8')
-                    st.session_state.project_brief = text[:2000]
-                    st.success("已加载文本内容")
+                    st.session_state.project_brief = uploaded.read().decode('utf-8')[:2000]
+                    st.success("文本已加载到项目简介")
                     st.rerun()
             except Exception as e:
                 st.error(f"导入失败: {e}")
-
-        # AI模式
-        api_key = st.text_input("AI 密钥", type="password",
-                                 placeholder="sk-ant-... 填入后启用AI国奖级内容生成",
-                                 help="填入后自动启用AI国奖级内容生成")
+        st.markdown('<p style="font-size:0.7rem;color:#9CA3AF;margin:0.3rem 0;">🤖 AI 增强生成（可选）</p>', unsafe_allow_html=True)
+        api_key = st.text_input("AI 密钥", type="password", placeholder="sk-ant-...", label_visibility="collapsed")
         if api_key:
             import os; os.environ["ANTHROPIC_API_KEY"] = api_key
-            st.success("AI 模式已启用")
+            st.caption("AI 模式已启用，内容质量将大幅提升")
 
+    st.markdown('<hr style="margin:0.6rem 0;border-color:#E5E7EB;">', unsafe_allow_html=True)
     project_name = st.text_input("项目名称 *", placeholder="例：晶源新材——钙钛矿光伏电池关键材料国产化")
-
-    st.markdown('<hr style="margin:0.8rem 0;border-color:#E5E7EB;">', unsafe_allow_html=True)
     st.markdown('<p style="font-size:0.7rem;color:#9CA3AF;text-transform:uppercase;letter-spacing:1px;margin:0 0 0.3rem;">✏️ 手动填写</p>', unsafe_allow_html=True)
     with st.expander("项目核心资料", expanded=True):
         project_brief = st.text_area("项目简介 *", height=120, placeholder="请描述：项目做什么、核心技术、成果、市场前景")
