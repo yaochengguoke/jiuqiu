@@ -1,102 +1,9 @@
-"""
-全自动竞赛策划智能体 - Streamlit Web 应用
-"""
+    tab1, tab2 = st.tabs(["📂 导入 / AI配置", "✏️ 手动填写"])
 
-import sys, json
-from pathlib import Path
-sys.path.insert(0, str(Path(__file__).parent))
-
-import streamlit as st
-from main import CompetitionAgent
-from config import SUPPORTED_COMPETITIONS, SUPPORTED_THEMES
-
-st.set_page_config(page_title="竞赛策划智能体", page_icon="🏆", layout="wide", initial_sidebar_state="expanded")
-
-# ── 极简白风格 ──
-st.markdown("""<style>
-    .stApp { background: #FFFFFF; }
-    .main .block-container { padding: 2rem 3rem; max-width: 900px; }
-    [data-testid="stSidebar"] { background: #FAFBFC; border-right: 1px solid #E5E7EB; }
-    [data-testid="stSidebar"] label { color: #1F2937 !important; }
-    [data-testid="stSidebar"] [data-testid="stExpander"] { background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%); border-radius: 12px; border: 1px solid #E5E7EB; border-top: 3px solid #111827; box-shadow: 0 1px 3px rgba(0,0,0,0.04); margin-bottom: 0.5rem; }
-    .stTextInput input, .stTextArea textarea { border-radius: 8px !important; border: 1px solid #E5E7EB !important; background: #FAFBFC !important; color: #1F2937 !important; }
-    .stTextInput input:focus, .stTextArea textarea:focus { border-color: #111827 !important; box-shadow: 0 0 0 4px rgba(17,24,39,0.08) !important; }
-    .stButton > button { background: #111827 !important; color: #fff !important; border: none !important; border-radius: 8px !important; padding: 0.6rem 1.6rem !important; font-size: 0.9rem !important; font-weight: 500 !important; transition: all 0.3s cubic-bezier(0.4,0,0.2,1) !important; }
-    .stButton > button:hover { transform: translateY(-2px) !important; box-shadow: 0 8px 30px rgba(17,24,39,0.25) !important; }
-    .stProgress > div { background: #E5E7EB !important; border-radius: 20px !important; height: 6px !important; }
-    .stProgress > div > div > div { background: linear-gradient(90deg, #111827, #3B82F6) !important; border-radius: 20px !important; }
-    [data-testid="stAlert"] { border-radius: 12px !important; border: 1px solid #E5E7EB !important; background: #FAFBFC !important; }
-    .stDownloadButton > button { border-radius: 8px !important; font-size: 0.85rem !important; }
-    .required label::after { content: " *"; color: #e53e3e; font-weight: 700; }
-    @media (max-width: 768px) { .main .block-container { padding: 1rem; } }
-</style>""", unsafe_allow_html=True)
-
-# ── 工具 ──
-def _label(fn):
-    m = {"final_plan.md":"策划书正文(Markdown)","final_plan.html":"网页预览版","final_plan.docx":"Word可编辑版","final_plan.pdf":"PDF提交版",
-         "quality_report.md":"质量检查报告","missing_checklist.md":"待补充清单","plagiarism_report.md":"查重预检报告","executive_summary.md":"执行摘要+路演稿",
-         "client_supplement_guide.md":"补充资料引导","financial_questionnaire.md":"财务补充问卷","defense_prep_report.md":"答辩预演手册","defense.pptx":"答辩PPT","DATA_PRIVACY.txt":"数据隐私承诺","competitor_analysis.md":"竞品对标分析"}
-    return m.get(fn, fn)
-
-# ── Session state init ──
-if "generated" not in st.session_state:
-    st.session_state.generated = False
-
-
-def _show_downloads(out_dir):
-    """分类展示下载文件"""
-    icons = {"项目核心文稿": "📄", "调研辅助材料": "📊", "合规/财务/检测": "🛡️", "配置文件": "⚙️"}
-    subtitles = {"项目核心文稿": "用于申报提交与答辩展示", "调研辅助材料": "竞品对标与资料补全参考", "合规/财务/检测": "查重、隐私、财务合规文件", "配置文件": "系统元数据与变更记录"}
-    categories = {
-        "项目核心文稿": ["final_plan.docx", "final_plan.html", "final_plan.md", "final_plan.pdf", "executive_summary.md", "defense_prep_report.md", "defense.pptx"],
-        "调研辅助材料": ["competitor_analysis.md", "client_supplement_guide.md", "missing_checklist.md"],
-        "合规/财务/检测": ["DATA_PRIVACY.txt", "financial_questionnaire.md", "plagiarism_report.md", "quality_report.md"],
-        "配置文件": ["metadata.json", "change_log.md"],
-    }
-    all_handled = set()
-    for files in categories.values():
-        all_handled.update(files)
-    
-    for cat_name, cat_files in categories.items():
-        existing = [(f, out_dir / f) for f in cat_files if (out_dir / f).exists()]
-        if existing:
-            icon = icons.get(cat_name, "")
-            sub = subtitles.get(cat_name, "")
-            st.markdown(f'<div class="download-cat">{icon} {cat_name}<span>{sub}</span></div>', unsafe_allow_html=True)
-            cols = st.columns(min(len(existing), 3))
-            for i, (fname, fpath) in enumerate(existing):
-                with cols[i % 3]:
-                    with open(fpath, "rb") as fh:
-                        st.download_button(_label(fname), fh.read(), fname, use_container_width=True)
-    
-    remaining = [f for f in sorted(out_dir.glob("*")) if f.is_file() and f.name not in all_handled]
-    if remaining:
-        with st.expander("其他文件"):
-            cols = st.columns(3)
-            for i, f in enumerate(remaining):
-                with cols[i % 3]:
-                    with open(f, "rb") as fh:
-                        st.download_button(_label(f.name), fh.read(), f.name, use_container_width=True)
-
-
-
-# ── Hero ──
-st.markdown("""<div style="text-align:center;padding:2rem 1rem 1rem;">
-    <h1 style="font-size:3rem;font-weight:700;color:#111827;letter-spacing:-0.8px;margin:0;">⚡ 竞赛策划智能体</h1>
-    <p style="font-size:1.1rem;color:#6B7280;margin-top:0.5rem;">输入项目资料，自动生成国奖级竞赛策划书</p>
-</div>""", unsafe_allow_html=True)
-
-# ── 侧边栏 ──
-with st.sidebar:
-    st.markdown('<p style="font-size:0.75rem;font-weight:600;color:#86868b;text-transform:uppercase;letter-spacing:1px;">项目资料</p>', unsafe_allow_html=True)
-
-    competition = st.selectbox("赛事组别", SUPPORTED_COMPETITIONS)
-
-    # 必填项加 *
-    st.markdown('<p style="font-size:0.7rem;color:#9CA3AF;text-transform:uppercase;letter-spacing:1px;margin:0.5rem 0 0.2rem;">📥 快速导入</p>', unsafe_allow_html=True)
-    with st.expander("📥 导入资料 / AI设置", expanded=False):
-        uploaded = st.file_uploader("上传项目文件", type=["json", "txt", "docx"],
-                                     help="支持JSON配置文件、TXT文本、Word文档")
+    with tab1:
+        st.caption("上传文件自动填充，或输入API Key启用AI")
+        uploaded = st.file_uploader("上传项目文件", type=["json", "txt", "docx"], label_visibility="collapsed")
+        st.caption("支持 JSON 配置 / Word 文档 / TXT 文本")
         if uploaded:
             try:
                 if uploaded.name.endswith('.json'):
@@ -108,31 +15,27 @@ with st.sidebar:
                         st.session_state.market_data = data["project_material"].get("market_data", "")
                         st.session_state.leader = data["team_info"].get("project_leader", "")
                         st.session_state.advisor = data["team_info"].get("advisor_name", "")
-                        st.success("已加载配置文件")
+                        st.success("已自动填充")
                         st.rerun()
                 elif uploaded.name.endswith('.docx'):
                     from docx import Document
-                    doc = Document(uploaded)
-                    text = '\n'.join([p.text for p in doc.paragraphs])
+                    text = '
+'.join([p.text for p in Document(uploaded).paragraphs])
                     st.session_state.project_brief = text[:2000]
-                    st.success("已提取Word内容到项目简介")
+                    st.success("文档解析成功")
                     st.rerun()
                 else:
-                    text = uploaded.read().decode('utf-8')
-                    st.session_state.project_brief = text[:2000]
-                    st.success("已加载文本内容")
+                    st.session_state.project_brief = uploaded.read().decode('utf-8')[:2000]
+                    st.success("文本已加载")
                     st.rerun()
             except Exception as e:
                 st.error(f"导入失败: {e}")
-
-        # AI模式
-        api_key = st.text_input("Anthropic API Key", type="password",
-                                 placeholder="sk-ant-... (可选，启用AI生成)",
-                                 help="填入后自动启用AI国奖级内容生成")
+        st.markdown('<hr style="margin:0.6rem 0;border-color:#E5E7EB;">', unsafe_allow_html=True)
+        api_key = st.text_input("Anthropic API Key", type="password", placeholder="sk-ant-... 启用AI国奖级生成", label_visibility="collapsed")
         if api_key:
-            import os; os.environ["ANTHROPIC_API_KEY"] = api_key
-            st.success("AI模式已启用")
+            import os; os.environ["ANTHROPIC_API_KEY"] = api_key; st.success("AI已启用")
 
+    with tab2:
     project_name = st.text_input("项目名称 *", placeholder="例：晶源新材——钙钛矿光伏电池关键材料国产化")
 
     st.markdown('<hr style="margin:0.8rem 0;border-color:#E5E7EB;">', unsafe_allow_html=True)
