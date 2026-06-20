@@ -123,6 +123,9 @@ with st.sidebar:
         patents = st.text_input("专利 / 软著", placeholder="例：发明专利5项（2项已授权）")
         evidence_text = st.text_area("其他佐证", height=50, placeholder="产品照片描述、检测报告等")
 
+    fields_check = [project_name, project_brief, leader, advisor, tech_principles, market_data]
+    filled = sum(1 for v in fields_check if v and (isinstance(v, str) and len(v.strip()) > 0))
+    st.markdown(f'<p style="font-size:0.72rem;color:#9CA3AF;text-align:center;margin:0.3rem 0;">已填写 {filled}/{len(fields_check)} 项核心字段</p>', unsafe_allow_html=True)
     generate = st.button("生成策划书", type="primary", use_container_width=True)
 
 # ── 空状态提示 ──
