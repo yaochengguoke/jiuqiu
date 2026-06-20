@@ -89,38 +89,6 @@ st.markdown("""<div style="text-align:center;padding:2rem 1rem 1rem;">
 # ── 侧边栏 ──
 with st.sidebar:
     st.markdown('<p style="font-size:0.75rem;font-weight:600;color:#86868b;text-transform:uppercase;letter-spacing:1px;">项目资料</p>', unsafe_allow_html=True)
-	with st.expander("📂 导入资料 / 🤖 AI配置", expanded=False):
-		uploaded = st.file_uploader("上传项目文件", type=["json","txt","docx"], label_visibility="collapsed")
-		st.caption("支持 JSON / Word / TXT，自动填充表单")
-		if uploaded:
-			try:
-				if uploaded.name.endswith(".json"):
-					data = json.loads(uploaded.read())
-					if "project_material" in data:
-						st.session_state.project_name = data["project_material"].get("project_name","")
-						st.session_state.project_brief = data["project_material"].get("project_brief","")
-						st.session_state.tech_principles = data["project_material"].get("tech_principles","")
-						st.session_state.market_data = data["project_material"].get("market_data","")
-						st.session_state.leader = data["team_info"].get("project_leader","")
-						st.session_state.advisor = data["team_info"].get("advisor_name","")
-						st.success("已自动填充基础信息")
-						st.rerun()
-				elif uploaded.name.endswith(".docx"):
-					from docx import Document
-					text = "
-".join([p.text for p in Document(uploaded).paragraphs])
-					st.session_state.project_brief = text[:2000]
-					st.success("文档解析成功")
-					st.rerun()
-				else:
-					st.session_state.project_brief = uploaded.read().decode("utf-8")[:2000]
-					st.success("文本已加载")
-					st.rerun()
-			except Exception as e:
-				st.error(f"导入失败: {e}")
-		api_key = st.text_input("Anthropic API Key", type="password", placeholder="sk-ant-... 启用AI国奖级生成", label_visibility="collapsed")
-		if api_key:
-			import os; os.environ["ANTHROPIC_API_KEY"] = api_key; st.success("AI已启用")
 
     competition = st.selectbox("赛事组别", SUPPORTED_COMPETITIONS)
 
