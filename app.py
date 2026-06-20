@@ -113,11 +113,11 @@ with st.sidebar:
                     from docx import Document
                     text = '\n'.join([p.text for p in Document(uploaded).paragraphs])
                     st.session_state.project_brief = text[:2000]
-                    st.success("Word 解析完成，已填入项目简介")
+                    st.success("Word 解析完成")
                     st.rerun()
                 else:
                     st.session_state.project_brief = uploaded.read().decode('utf-8')[:2000]
-                    st.success("文本已加载到项目简介")
+                    st.success("文本已加载")
                     st.rerun()
             except Exception as e:
                 st.error(f"导入失败: {e}")
