@@ -133,8 +133,7 @@ with st.sidebar:
                 os.environ["ANTHROPIC_API_KEY"] = api_key
             else:
                 os.environ["DEEPSEEK_API_KEY"] = api_key
-            st.session_state._api_key = api_key
-            st.success("AI 已接入")
+            st.success("AI 已接入，生成质量将大幅提升")
 
     st.markdown('<hr style="margin:0.6rem 0;border-color:#E5E7EB;">', unsafe_allow_html=True)
     project_name = st.text_input("项目名称 *", value=st.session_state.get("project_name",""), placeholder="例：晶源新材——钙钛矿光伏电池关键材料国产化")
@@ -180,7 +179,7 @@ if not st.session_state.generated:
 
     if st.session_state.get("run_demo"):
         st.success("正在生成演示案例...")
-        agent = CompetitionAgent(api_key=st.session_state.get("_api_key", ""))
+        agent = CompetitionAgent()
         agent.run_demo()
         st.session_state.demo_result = agent
         st.session_state.generated = True
@@ -254,7 +253,6 @@ if generate:
             st.error(e)
     else:
         st.session_state.generated = True
-        st.session_state._last_agent = None  # will be set after generation
         team_members = []
         if team_text:
             for line in team_text.strip().split('\n'):
@@ -273,7 +271,7 @@ if generate:
         }
 
         with st.status("正在生成策划书...", expanded=True) as status:
-            agent = CompetitionAgent(api_key=st.session_state.get("_api_key", ""))
+            agent = CompetitionAgent()
 
             status.update(label="校验资料 + 匹配模板...", state="running")
             submission, _ = agent.input_processor.process_submission(raw_data)
@@ -321,16 +319,10 @@ if generate:
             if ca: write_text_file(out / "competitor_analysis.md", ca)
 
             status.update(label="生成完毕", state="complete")
-        st.session_state._last_agent = agent
-        st.session_state._last_diagrams = diagrams
-        st.rerun()
+        st.success(f"已生成 · {agent.current_document.total_word_count} 字 · {len(agent.current_template.chapters)} 章 · {len(diagrams)} 张图表")
 
-# 持久化显示上次生成结果
-if st.session_state.get("_last_agent"):
-    agent = st.session_state._last_agent
-    diagrams = st.session_state.get("_last_diagrams", [])
-    st.success(f"已生成 · {agent.current_document.total_word_count} 字 · {len(agent.current_template.chapters)} 章 · {len(diagrams)} 张图表")
-    _show_downloads(agent.current_export.output_dir)
+        # 分类下载
+        _show_downloads(agent.current_export.output_dir)
 
         with st.expander("查看正文"): st.markdown(agent.current_document.get_full_text())
 
