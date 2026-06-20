@@ -301,6 +301,8 @@ class CompetitionAgent:
             project_name=self.current_document.project_name,
         )
         defense_text = defense_prep.print_report(defense_report)
+        defense_output_dir = OUTPUT_DIR / "current"
+        ensure_dir(defense_output_dir)
 
         # 生成摘要
         summary_text = defense_prep.generate_summary(
@@ -316,9 +318,6 @@ class CompetitionAgent:
             print()
 
         # 保存答辩报告到输出目录
-        from utils.helpers import ensure_dir, write_text_file
-        defense_output_dir = OUTPUT_DIR / "current"
-        ensure_dir(defense_output_dir)
         write_text_file(defense_output_dir / "defense_prep_report.md", defense_text)
 
         # ===== 阶段9：输出导出 =====
