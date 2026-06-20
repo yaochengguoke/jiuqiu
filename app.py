@@ -34,8 +34,8 @@ st.markdown("""<style>
 # ── 工具 ──
 def _label(fn):
     m = {"final_plan.md":"策划书正文(Markdown)","final_plan.html":"网页预览版","final_plan.docx":"Word可编辑版","final_plan.pdf":"PDF提交版",
-         "quality_report.md":"质量检查报告","missing_checklist.md":"待补充清单","plagiarism_report.md":"查重预检报告","client_supplement_guide.md":"补充资料引导",
-         "financial_questionnaire.md":"财务补充问卷","defense_prep_report.md":"答辩预演手册","DATA_PRIVACY.txt":"数据隐私承诺"}
+         "quality_report.md":"质量检查报告","missing_checklist.md":"待补充清单","plagiarism_report.md":"查重预检报告","executive_summary.md":"执行摘要+路演稿",
+         "client_supplement_guide.md":"补充资料引导","financial_questionnaire.md":"财务补充问卷","defense_prep_report.md":"答辩预演手册","DATA_PRIVACY.txt":"数据隐私承诺"}
     return m.get(fn, fn)
 
 # ── Session state init ──
@@ -178,6 +178,22 @@ if generate:
             from modules.layout_engine import LayoutEngine
             from modules.output_exporter import OutputExporter
             agent.current_export = OutputExporter().export_all(document=agent.current_document, layout_engine=LayoutEngine(user_visual))
+
+            status.update(label="查重预检 + 生成摘要...", state="running")
+            from modules.plagiarism_checker import PlagiarismChecker
+            from modules.defense_prep import DefensePrep
+            from utils.helpers import ensure_dir, write_text_file
+            full_text = agent.current_document.get_full_text()
+            # 查重
+            pc = PlagiarismChecker()
+            pr = pc.check(full_text)
+            rep_dir = agent.current_export.output_dir
+            ensure_dir(rep_dir)
+            write_text_file(rep_dir / "plagiarism_report.md", pc.format_markdown(pr))
+            # 摘要
+            dp = DefensePrep()
+            summary = dp.generate_summary(full_text, agent.current_document.project_name)
+            write_text_file(rep_dir / "executive_summary.md", summary)
 
             status.update(label="生成完毕", state="complete")
         st.success(f"已生成 · {agent.current_document.total_word_count} 字 · {len(agent.current_template.chapters)} 章 · {len(diagrams)} 张图表")
