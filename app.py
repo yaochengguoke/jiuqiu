@@ -10,7 +10,7 @@ import streamlit as st
 from main import CompetitionAgent
 from config import SUPPORTED_COMPETITIONS, SUPPORTED_THEMES
 
-st.set_page_config(page_title="竞赛策划智能体", page_icon="🏆", layout="wide", initial_sidebar_state="expanded")
+st.set_page_config(page_title="竞赛策划智能体 v2", page_icon="🏆", layout="wide", initial_sidebar_state="expanded")
 
 # ── 极简白风格 ──
 st.markdown("""<style>
