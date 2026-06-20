@@ -121,7 +121,7 @@ if st.session_state.get("demo_result"):
     from utils.helpers import ensure_dir, write_text_file
     ft = a.current_document.get_full_text()
     ensure_dir(out)
-    PlagiarismChecker(); pc = PlagiarismChecker()
+    pc = PlagiarismChecker()
     write_text_file(out / "plagiarism_report.md", PlagiarismChecker().format_markdown(pc.check(ft)))
     dp = DefensePrep()
     write_text_file(out / "executive_summary.md", dp.generate_summary(ft, a.current_document.project_name))
@@ -192,21 +192,19 @@ if generate:
             from modules.output_exporter import OutputExporter
             agent.current_export = OutputExporter().export_all(document=agent.current_document, layout_engine=LayoutEngine(user_visual))
 
-            status.update(label="查重预检 + 生成摘要...", state="running")
+            status.update(label="查重预检中...", state="running")
             from modules.plagiarism_checker import PlagiarismChecker
             from modules.defense_prep import DefensePrep
             from utils.helpers import ensure_dir, write_text_file
             full_text = agent.current_document.get_full_text()
-            # 查重
+            out = agent.current_export.output_dir; ensure_dir(out)
             pc = PlagiarismChecker()
-            pr = pc.check(full_text)
-            rep_dir = agent.current_export.output_dir
-            ensure_dir(rep_dir)
-            write_text_file(rep_dir / "plagiarism_report.md", pc.format_markdown(pr))
-            # 摘要
+            write_text_file(out / "plagiarism_report.md", pc.format_markdown(pc.check(full_text)))
+            status.update(label="生成摘要+路演稿...", state="running")
             dp = DefensePrep()
-            summary = dp.generate_summary(full_text, agent.current_document.project_name)
-            write_text_file(rep_dir / "executive_summary.md", summary)
+            write_text_file(out / "executive_summary.md", dp.generate_summary(full_text, agent.current_document.project_name))
+            status.update(label="生成答辩手册...", state="running")
+            write_text_file(out / "defense_prep_report.md", dp.print_report(dp.generate_defense_prep(full_text, agent.current_document.project_name)))
 
             status.update(label="生成完毕", state="complete")
         st.success(f"已生成 · {agent.current_document.total_word_count} 字 · {len(agent.current_template.chapters)} 章 · {len(diagrams)} 张图表")
