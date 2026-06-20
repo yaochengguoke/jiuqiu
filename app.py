@@ -93,6 +93,46 @@ with st.sidebar:
     competition = st.selectbox("赛事组别", SUPPORTED_COMPETITIONS)
 
     # 必填项加 *
+    # 导入功能
+    with st.expander("📥 导入资料 / AI设置", expanded=False):
+        uploaded = st.file_uploader("上传项目文件", type=["json", "txt", "docx"],
+                                     help="支持JSON配置文件、TXT文本、Word文档")
+        if uploaded:
+            try:
+                if uploaded.name.endswith('.json'):
+                    data = json.loads(uploaded.read())
+                    if "project_material" in data:
+                        st.session_state.project_name = data["project_material"].get("project_name", "")
+                        st.session_state.project_brief = data["project_material"].get("project_brief", "")
+                        st.session_state.tech_principles = data["project_material"].get("tech_principles", "")
+                        st.session_state.market_data = data["project_material"].get("market_data", "")
+                        st.session_state.leader = data["team_info"].get("project_leader", "")
+                        st.session_state.advisor = data["team_info"].get("advisor_name", "")
+                        st.success("已加载配置文件")
+                        st.rerun()
+                elif uploaded.name.endswith('.docx'):
+                    from docx import Document
+                    doc = Document(uploaded)
+                    text = '\n'.join([p.text for p in doc.paragraphs])
+                    st.session_state.project_brief = text[:2000]
+                    st.success("已提取Word内容到项目简介")
+                    st.rerun()
+                else:
+                    text = uploaded.read().decode('utf-8')
+                    st.session_state.project_brief = text[:2000]
+                    st.success("已加载文本内容")
+                    st.rerun()
+            except Exception as e:
+                st.error(f"导入失败: {e}")
+
+        # AI模式
+        api_key = st.text_input("Anthropic API Key", type="password",
+                                 placeholder="sk-ant-... (可选，启用AI生成)",
+                                 help="填入后自动启用AI国奖级内容生成")
+        if api_key:
+            import os; os.environ["ANTHROPIC_API_KEY"] = api_key
+            st.success("AI模式已启用")
+
     project_name = st.text_input("项目名称 *", placeholder="例：晶源新材——钙钛矿光伏电池关键材料国产化")
 
     with st.expander("项目核心资料", expanded=True):
