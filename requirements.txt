@@ -1,8 +1,7 @@
 # 全自动竞赛策划智能体 - 依赖
 
-# LLM API (支持 Anthropic Claude + DeepSeek)
+# LLM API
 anthropic>=0.39.0
-openai>=1.0.0
 
 # 文档处理
 python-docx>=1.1.0
