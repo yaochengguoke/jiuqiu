@@ -217,13 +217,13 @@ if not st.session_state.generated:
             st.session_state.run_demo = True
 
     if st.session_state.get("run_demo"):
-        st.success("正在生成演示案例...")
-        agent = CompetitionAgent()
-        agent.run_demo()
-        st.session_state.demo_result = agent
-        st.session_state.generated = True
-        st.session_state.run_demo = False
-        st.rerun()
+        with st.spinner("正在生成..."):
+            agent = CompetitionAgent()
+            agent.run_demo()
+            st.session_state.demo_result = agent
+            st.session_state.generated = True
+            st.session_state.run_demo = False
+            st.rerun()
 
     with st.expander("这是什么？"):
         st.markdown("""### 竞赛策划智能体
