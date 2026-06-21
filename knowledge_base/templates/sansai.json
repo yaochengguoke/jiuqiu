@@ -1,0 +1,66 @@
+{
+  "meta": {
+    "competition": "三创赛",
+    "version": "1.0.0",
+    "typical_pages": 50,
+    "typical_words": 12000,
+    "visual_style": "warm_orange"
+  },
+  "L1_skeleton": {
+    "chapters": [
+      {
+        "id": "executive_summary", "title": "项目概述",
+        "page_range": "2-3页", "word_count_range": "500-700字", "ratio": 0.05, "order": 1,
+        "required_elements": ["项目创意来源","核心产品或服务","目标用户","创新点概述"],
+        "paragraph_structure": ["创意来源","产品/服务简介","市场定位","创新亮点"]
+      },
+      {
+        "id": "background", "title": "市场分析与需求调研",
+        "page_range": "8-10页", "word_count_range": "2000-2600字", "ratio": 0.18, "order": 2,
+        "required_elements": ["用户调研数据","需求分析","市场细分","竞品对比"],
+        "paragraph_structure": ["行业现状","用户调研方法与发现","需求分析","竞品对比"]
+      },
+      {
+        "id": "product", "title": "产品设计与创新点",
+        "page_range": "10-14页", "word_count_range": "2800-3600字", "ratio": 0.25, "order": 3,
+        "required_elements": ["产品原型或设计","技术创新点","商业模式创新","用户体验设计"],
+        "paragraph_structure": ["产品设计理念","功能架构","技术创新详述","用户体验"]
+      },
+      {
+        "id": "business_model", "title": "商业模式与运营",
+        "page_range": "6-8页", "word_count_range": "1600-2200字", "ratio": 0.15, "order": 4,
+        "required_elements": ["商业模式画布","盈利模式","供应链或运营流程","合作伙伴"],
+        "paragraph_structure": ["商业模式设计","盈利路径","运营流程","资源整合"]
+      },
+      {
+        "id": "marketing", "title": "营销策略与推广",
+        "page_range": "6-8页", "word_count_range": "1600-2000字", "ratio": 0.14, "order": 5,
+        "required_elements": ["电商营销策略","社交媒体推广","用户增长计划"],
+        "paragraph_structure": ["品牌定位","电商与社媒策略","用户增长","数据驱动优化"]
+      },
+      {
+        "id": "team_intro", "title": "创业团队",
+        "page_range": "4-6页", "word_count_range": "1000-1400字", "ratio": 0.10, "order": 6,
+        "required_elements": ["团队成员与分工","创业经历","专业背景"],
+        "paragraph_structure": ["团队核心成员","顾问导师","分工协作"]
+      },
+      {
+        "id": "financial", "title": "财务预测与融资",
+        "page_range": "5-7页", "word_count_range": "1400-1800字", "ratio": 0.13, "order": 7,
+        "required_elements": ["收入预测","成本预算","融资需求"],
+        "paragraph_structure": ["收入模型","成本分析","融资规划"]
+      }
+    ]
+  },
+  "L2_rhetoric": {
+    "rhetoric_lib_mapping": {
+      "background": "rhetoric_background.json",
+      "executive_summary": "rhetoric_executive.json",
+      "team_intro": "rhetoric_team.json",
+      "business_model": "rhetoric_market.json",
+      "financial": "rhetoric_financial.json"
+    }
+  },
+  "L3_visual": { "default_style": "warm_orange", "style_file_mapping": { "warm_orange": "visual_warm_orange.json" } },
+  "L4_graphic": { "component_library": { "arch_diagrams": "arch_diagram_templates.json", "flow_charts": "flow_chart_templates.json", "chart_styles": "chart_styles.json" } }
+}

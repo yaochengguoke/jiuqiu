@@ -52,20 +52,20 @@
       "keywords": ["节能减排", "双碳目标", "科研创新", "研究生"]
     },
     "创青春创业计划赛": {
-      "template_file": "internet_plus_main.json",
-      "description": "创青春中国青年创新创业大赛国奖模板（复用互联网+框架）",
-      "typical_pages": 70,
-      "typical_words": 18000,
+      "template_file": "chuangqingchun.json",
+      "description": "创青春中国青年创新创业大赛国奖模板",
+      "typical_pages": 55,
+      "typical_words": 14000,
       "visual_style": "deep_blue",
-      "keywords": ["创业计划", "商业模式", "青年创业", "社会价值"]
+      "keywords": ["创业计划", "商业模式", "青年创业", "融资路演"]
     },
     "三创赛": {
-      "template_file": "internet_plus_main.json",
-      "description": "全国大学生电子商务三创赛国奖模板（复用互联网+框架）",
-      "typical_pages": 60,
-      "typical_words": 15000,
-      "visual_style": "deep_blue",
-      "keywords": ["电子商务", "创新创意", "创业实践"]
+      "template_file": "sansai.json",
+      "description": "全国大学生电子商务三创赛国奖模板",
+      "typical_pages": 50,
+      "typical_words": 12000,
+      "visual_style": "warm_orange",
+      "keywords": ["电子商务", "创新创意", "创业实践", "三创"]
     }
   }
 }

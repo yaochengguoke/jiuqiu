@@ -1,0 +1,66 @@
+{
+  "meta": {
+    "competition": "创青春创业计划赛",
+    "version": "1.0.0",
+    "typical_pages": 55,
+    "typical_words": 14000,
+    "visual_style": "deep_blue"
+  },
+  "L1_skeleton": {
+    "chapters": [
+      {
+        "id": "executive_summary", "title": "项目概要",
+        "page_range": "2-3页", "word_count_range": "600-800字", "ratio": 0.05, "order": 1,
+        "required_elements": ["项目一句话定位","核心产品或服务","目标市场与用户","商业模式概述","团队亮点"],
+        "paragraph_structure": ["项目定位","产品/服务介绍","市场机会","团队优势"]
+      },
+      {
+        "id": "background", "title": "市场分析与项目背景",
+        "page_range": "8-10页", "word_count_range": "2000-2800字", "ratio": 0.18, "order": 2,
+        "required_elements": ["目标市场规模数据","用户痛点描述","竞品分析","市场机会论证"],
+        "paragraph_structure": ["行业宏观背景","目标用户画像与痛点","竞品分析","市场切入机会"]
+      },
+      {
+        "id": "product", "title": "产品与服务",
+        "page_range": "10-14页", "word_count_range": "2800-3800字", "ratio": 0.24, "order": 3,
+        "required_elements": ["产品功能介绍","技术实现方案","差异化优势","用户反馈"],
+        "paragraph_structure": ["产品体系总览","核心功能详述","技术实现","与竞品差异化对比"]
+      },
+      {
+        "id": "business_model", "title": "商业模式与盈利规划",
+        "page_range": "8-10页", "word_count_range": "2200-2800字", "ratio": 0.18, "order": 4,
+        "required_elements": ["商业模式画布","收入来源","成本结构","盈利预测"],
+        "paragraph_structure": ["商业模式设计","收入来源拆解","定价策略","成本与盈利预测"]
+      },
+      {
+        "id": "marketing", "title": "市场营销与推广策略",
+        "page_range": "6-8页", "word_count_range": "1600-2200字", "ratio": 0.13, "order": 5,
+        "required_elements": ["目标市场细分","推广渠道","获客成本","增长策略"],
+        "paragraph_structure": ["市场细分与定位","推广渠道矩阵","获客与转化","增长飞轮设计"]
+      },
+      {
+        "id": "team_intro", "title": "创业团队",
+        "page_range": "4-6页", "word_count_range": "1200-1600字", "ratio": 0.10, "order": 6,
+        "required_elements": ["创始人背景","核心成员分工","顾问团队","团队互补性"],
+        "paragraph_structure": ["创始人介绍","核心团队","顾问与导师","团队文化"]
+      },
+      {
+        "id": "financial", "title": "财务预测与融资计划",
+        "page_range": "6-8页", "word_count_range": "1600-2200字", "ratio": 0.12, "order": 7,
+        "required_elements": ["三年财务预测","融资需求","资金用途","估值依据"],
+        "paragraph_structure": ["收入预测","成本与利润","融资计划","退出机制"]
+      }
+    ]
+  },
+  "L2_rhetoric": {
+    "rhetoric_lib_mapping": {
+      "background": "rhetoric_background.json",
+      "executive_summary": "rhetoric_executive.json",
+      "team_intro": "rhetoric_team.json",
+      "business_model": "rhetoric_market.json",
+      "financial": "rhetoric_financial.json"
+    }
+  },
+  "L3_visual": { "default_style": "deep_blue", "style_file_mapping": { "deep_blue": "visual_deep_blue.json" } },
+  "L4_graphic": { "component_library": { "arch_diagrams": "arch_diagram_templates.json", "flow_charts": "flow_chart_templates.json", "chart_styles": "chart_styles.json" } }
+}
