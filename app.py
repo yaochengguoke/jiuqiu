@@ -12,22 +12,32 @@ from config import SUPPORTED_COMPETITIONS, SUPPORTED_THEMES
 
 st.set_page_config(page_title="AI竞赛策划智能体", page_icon="🏆", layout="wide", initial_sidebar_state="expanded")
 
-# ── 极简白风格 ──
+# ── 惊艳风格 ──
 st.markdown("""<style>
-    .stApp { background: #FFFFFF; }
-    .main .block-container { padding: 2rem 3rem; max-width: 900px; }
-    [data-testid="stSidebar"] { background: #FAFBFC; border-right: 1px solid #E5E7EB; }
-    [data-testid="stSidebar"] label { color: #1F2937 !important; }
-    [data-testid="stSidebar"] [data-testid="stExpander"] { background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%); border-radius: 12px; border: 1px solid #E5E7EB; border-top: 3px solid #111827; box-shadow: 0 1px 3px rgba(0,0,0,0.04); margin-bottom: 0.5rem; }
-    .stTextInput input, .stTextArea textarea { border-radius: 8px !important; border: 1px solid #E5E7EB !important; background: #FAFBFC !important; color: #1F2937 !important; }
-    .stTextInput input:focus, .stTextArea textarea:focus { border-color: #111827 !important; box-shadow: 0 0 0 4px rgba(17,24,39,0.08) !important; }
-    .stButton > button { background: #111827 !important; color: #fff !important; border: none !important; border-radius: 8px !important; padding: 0.6rem 1.6rem !important; font-size: 0.9rem !important; font-weight: 500 !important; transition: all 0.3s cubic-bezier(0.4,0,0.2,1) !important; }
-    .stButton > button:hover { transform: translateY(-2px) !important; box-shadow: 0 8px 30px rgba(17,24,39,0.25) !important; }
-    .stProgress > div { background: #E5E7EB !important; border-radius: 20px !important; height: 6px !important; }
-    .stProgress > div > div > div { background: linear-gradient(90deg, #111827, #3B82F6) !important; border-radius: 20px !important; }
-    [data-testid="stAlert"] { border-radius: 12px !important; border: 1px solid #E5E7EB !important; background: #FAFBFC !important; }
-    .stDownloadButton > button { border-radius: 8px !important; font-size: 0.85rem !important; }
-    .required label::after { content: " *"; color: #e53e3e; font-weight: 700; }
+    :root { --blue: #2563EB; --ink: #111827; }
+    .stApp { background: #FAFBFC; }
+    .main .block-container { padding: 1.5rem 3rem; max-width: 960px; }
+    [data-testid="stSidebar"] { background: #FFFFFF; border-right: 1px solid #F3F4F6; }
+    [data-testid="stSidebar"] label { color: #374151 !important; font-weight: 500 !important; }
+    [data-testid="stSidebar"] [data-testid="stExpander"] { background: #fff; border-radius: 14px; border: 1px solid #F3F4F6; box-shadow: 0 1px 3px rgba(0,0,0,0.04); margin-bottom: 0.6rem; }
+    .stTextInput input, .stTextArea textarea { border-radius: 10px !important; border: 1px solid #E5E7EB !important; background: #fff !important; }
+    .stTextInput input:focus, .stTextArea textarea:focus { border-color: var(--blue) !important; box-shadow: 0 0 0 4px rgba(37,99,235,0.08) !important; }
+    .stButton > button { background: var(--ink) !important; color: #fff !important; border: none !important; border-radius: 12px !important; padding: 0.65rem 1.6rem !important; font-size: 0.92rem !important; font-weight: 500 !important; transition: all 0.25s ease !important; letter-spacing: -0.2px; }
+    .stButton > button:hover { background: #1F2937 !important; transform: translateY(-1px); box-shadow: 0 6px 24px rgba(0,0,0,0.12) !important; }
+    .stButton > button:active { transform: scale(0.98); }
+    .stProgress > div { background: #F3F4F6 !important; border-radius: 10px !important; height: 5px !important; }
+    .stProgress > div > div > div { background: var(--blue) !important; border-radius: 10px !important; animation: shimmer 2s infinite; }
+    @keyframes shimmer { 0%,100% { opacity:1; } 50% { opacity:0.7; } }
+    [data-testid="stAlert"] { border-radius: 14px !important; border: 1px solid #F3F4F6 !important; background: #fff !important; }
+    .stDownloadButton > button { border-radius: 10px !important; font-size: 0.85rem !important; }
+    .download-cat { font-size: 0.82rem; font-weight: 600; color: #374151; margin: 0.8rem 0 0.3rem 0; padding: 0 0 0.3rem 0; border-bottom: 1px solid #F3F4F6; }
+    .download-cat span { font-size: 0.7rem; color: #9CA3AF; font-weight: 400; margin-left: 0.4rem; }
+    .demo-card { background: #fff; border-radius: 16px; padding: 1.8rem; box-shadow: 0 1px 4px rgba(0,0,0,0.04); border: 1px solid #F3F4F6; text-align: center; transition: all 0.2s; }
+    .demo-card:hover { box-shadow: 0 8px 30px rgba(0,0,0,0.08); transform: translateY(-2px); }
+    .demo-card .num { font-size: 2rem; font-weight: 700; color: var(--ink); letter-spacing: -1px; }
+    .demo-card .lbl { font-size: 0.8rem; color: #6B7280; margin-top: 0.3rem; }
+    @keyframes fadeIn { from { opacity:0; transform: translateY(8px); } to { opacity:1; transform: translateY(0); } }
+    .fade-in { animation: fadeIn 0.4s ease-out; }
     @media (max-width: 768px) { .main .block-container { padding: 1rem; } }
 </style>""", unsafe_allow_html=True)
 
@@ -85,10 +95,24 @@ def _show_downloads(out_dir):
 
 
 # ── Hero ──
-st.markdown("""<div style="text-align:center;padding:2rem 1rem 1rem;">
-    <h1 style="font-size:3rem;font-weight:700;color:#111827;letter-spacing:-0.8px;margin:0;">⚡ 竞赛策划智能体</h1>
-    <p style="font-size:1.1rem;color:#6B7280;margin-top:0.5rem;">输入项目资料，自动生成国奖级竞赛策划书</p>
-</div>""", unsafe_allow_html=True)
+if not st.session_state.get("generated") and not st.session_state.get("_result"):
+    st.markdown("""<div style="text-align:center;padding:2rem 1rem 0.5rem;">
+        <h1 style="font-size:3rem;font-weight:700;color:#111827;letter-spacing:-0.8px;margin:0;">AI 竞赛策划智能体</h1>
+        <p style="font-size:1.1rem;color:#6B7280;margin-top:0.4rem;">输入项目资料，自动生成国奖级竞赛策划书</p>
+    </div>""", unsafe_allow_html=True)
+    # 成果预览卡片
+    c1, c2, c3 = st.columns(3)
+    with c1:
+        st.markdown('<div class="demo-card"><div class="num">16</div><div class="lbl">输出文件</div></div>', unsafe_allow_html=True)
+    with c2:
+        st.markdown('<div class="demo-card"><div class="num">8</div><div class="lbl">赛事模板</div></div>', unsafe_allow_html=True)
+    with c3:
+        st.markdown('<div class="demo-card"><div class="num">5</div><div class="lbl">输出格式</div></div>', unsafe_allow_html=True)
+    st.markdown('<p style="text-align:center;color:#9CA3AF;font-size:0.85rem;margin:1rem 0;">Word · PPT · PDF · HTML · Markdown &nbsp;|&nbsp; 6 种图表 &nbsp;|&nbsp; 查重 + 答辩 + 竞品对标</p>', unsafe_allow_html=True)
+else:
+    st.markdown("""<div style="text-align:center;padding:1rem 1rem 0.3rem;">
+        <h1 style="font-size:2rem;font-weight:700;color:#111827;letter-spacing:-0.5px;margin:0;">AI 竞赛策划智能体</h1>
+    </div>""", unsafe_allow_html=True)
 
 # ── 侧边栏 ──
 with st.sidebar:
