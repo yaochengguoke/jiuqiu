@@ -367,6 +367,15 @@ class CompetitionAgent:
 
         # ===== 阶段10：完成 =====
         self._print_stage(10, "[OK] 完成！")
+
+        # 持久化到 SQLite 数据库
+        try:
+            from modules.project_store import save_project_from_agent
+            pid = save_project_from_agent(self, raw_submission)
+            print(f"  [DB] 项目已保存 (ID={pid})")
+        except Exception as e:
+            print(f"  [DB] 数据库保存跳过: {e}")
+
         print(f"  策划书已生成完毕，可直接提交参赛。")
         print(f"  输出位置：{self.current_export.output_dir}")
         print()

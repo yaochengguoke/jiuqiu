@@ -373,8 +373,39 @@ if generate:
 if st.session_state.get("_result"):
     a = st.session_state._result
     st.success(f"已生成 · {a.current_document.total_word_count} 字 · {len(a.current_template.chapters)} 章")
-    _show_downloads(a.current_export.output_dir)
-    with st.expander("查看正文"): st.markdown(a.current_document.get_full_text())
+
+    # 交互图表 (Plotly)
+    import_dir = a.current_export.output_dir / "generated_images"
+    html_charts = sorted(import_dir.glob("*.html")) if import_dir.exists() else []
+    other_charts = sorted(import_dir.glob("*.png")) if import_dir.exists() else []
+
+    tabs_list = ["策划书正文", "交互图表", "下载文件"] if html_charts else ["策划书正文", "下载文件"]
+    tabs = st.tabs(tabs_list)
+
+    with tabs[0]:
+        st.markdown(a.current_document.get_full_text())
+
+    tab_idx = 1
+    if html_charts:
+        with tabs[tab_idx]:
+            st.caption("鼠标悬停查看数值，支持缩放/平移")
+            for chart_path in html_charts:
+                name = chart_path.stem.replace('_', ' ').title()
+                st.markdown(f"**{name}**")
+                st.components.v1.html(chart_path.read_text(encoding='utf-8'), height=450)
+        tab_idx += 1
+        if other_charts:
+            with tabs[tab_idx]:
+                st.caption("静态图表")
+                cols = st.columns(min(len(other_charts), 3))
+                for i, p in enumerate(other_charts):
+                    cols[i % 3].image(str(p), caption=p.stem, use_container_width=True)
+                tab_idx += 1
+        with tabs[tab_idx]:
+            _show_downloads(a.current_export.output_dir)
+    else:
+        with tabs[1]:
+            _show_downloads(a.current_export.output_dir)
 
 # ── 底部 ──
 st.markdown("""<div style="text-align:center;padding:3rem 0 2rem;color:#86868b;font-size:0.85rem;">

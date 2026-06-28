@@ -3,6 +3,7 @@
 """
 
 import os
+import json
 from pathlib import Path
 
 # 项目根目录
@@ -59,17 +60,29 @@ DATA_RETENTION_DAYS = 7  # 任务交付后N天自动清除客户数据
 ENABLE_AI_JUDGE = True   # 是否启用AI评审官
 PLAGIARISM_THRESHOLD = 0.30  # 查重率阈值
 
-# 支持的赛事组别
-SUPPORTED_COMPETITIONS = [
-    "互联网+高教主赛道",
-    "互联网+青年红色筑梦之旅",
-    "挑战杯科技发明A类",
-    "挑战杯科技发明B类",
-    "节能减排本科组",
-    "节能减排研究生组",
-    "创青春创业计划赛",
-    "三创赛",
-]
+# 支持的赛事组别 (从模板索引动态加载)
+def _load_competitions():
+    """从 templates/index.json 动态加载赛事列表"""
+    index_path = ROOT_DIR / "knowledge_base" / "templates" / "index.json"
+    try:
+        with open(index_path, "r", encoding="utf-8") as f:
+            data = json.load(f)
+        return list(data.get("competitions", {}).keys())
+    except Exception:
+        # fallback: 扫描templates目录
+        import glob
+        templates = glob.glob(str(TEMPLATES_DIR / "*.json"))
+        names = []
+        for t in templates:
+            try:
+                with open(t, "r", encoding="utf-8") as f:
+                    d = json.load(f)
+                    if "competition_name" in d:
+                        names.append(d["competition_name"])
+            except: pass
+        return names if names else ["互联网+高教主赛道"]  # 保底
+
+SUPPORTED_COMPETITIONS = _load_competitions()
 
 # 支持的配色方案
 SUPPORTED_THEMES = {
@@ -80,6 +93,17 @@ SUPPORTED_THEMES = {
     "warm_orange": "活力橙",
     "elegant_gold": "典雅金",
 }
+
+# 加载赛事详细元数据 (模板文件/页数/风格等)
+def get_competition_metadata():
+    """返回 {赛事名: {template_file, typical_pages, visual_style, ...}}"""
+    index_path = ROOT_DIR / "knowledge_base" / "templates" / "index.json"
+    try:
+        with open(index_path, "r", encoding="utf-8") as f:
+            data = json.load(f)
+        return data.get("competitions", {})
+    except Exception:
+        return {}
 
 # 日志配置
 LOG_LEVEL = os.getenv("LOG_LEVEL", "INFO")
